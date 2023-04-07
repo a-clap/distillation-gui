@@ -1,4 +1,4 @@
-import {createI18n} from "vue-i18n";
+import { createI18n } from "vue-i18n";
 import messages from "@intlify/unplugin-vue-i18n/messages";
 
 // List of all locales.
@@ -8,7 +8,7 @@ export const allLocales = ["en", "pl"];
 export const i18n = createI18n({
     legacy: false,
     globalInjection: true,
-    locale: "en",
+    locale: "pl",
     fallbackLocale: "en",
     messages: messages,
 });

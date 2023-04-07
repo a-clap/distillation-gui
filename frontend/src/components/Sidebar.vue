@@ -16,14 +16,33 @@ const ToggleMenu = () => {
         <h3>Menu</h3>
         <div class="menu">
             <router-link class="button" to="/">
-                <span class="material-icons">home</span>
-                <span class="text">Home</span>
+                <span class="material-icons">factory</span>
+                <span class="text">{{$t('menu.process')}}</span>
             </router-link>
-            <router-link class="button" to="/about">
+            <router-link class="button" to="/phases">
                 <span class="material-icons">settings</span>
-                <span class="text">About</span>
+                <span class="text">{{$t('menu.phases')}}</span>
             </router-link>
-
+            <router-link class="button" to="/wifi">
+                <span class="material-icons">wifi</span>
+                <span class="text">{{$t('menu.wifi')}}</span>
+            </router-link>
+            <router-link class="button" to="/pt100">
+                <span class="material-icons">thermostat</span>
+                <span class="text">{{$t('menu.pt100')}}</span>
+            </router-link>
+            <router-link class="button" to="/ds">
+                <span class="material-icons">thermostat</span>
+                <span class="text">{{$t('menu.ds')}}</span>
+            </router-link>
+            <router-link class="button" to="/heaters">
+                <span class="material-icons">microwave</span>
+                <span class="text">{{$t('menu.heaters')}}</span>
+            </router-link>
+            <router-link class="button" to="/outputs">
+                <span class="material-icons">output</span>
+                <span class="text">{{$t('menu.outputs')}}</span>
+            </router-link>
         </div>
     </aside>
 </template>

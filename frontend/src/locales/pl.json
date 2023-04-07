@@ -1,3 +1,34 @@
 {
-  "message": "dzień dobry"
+  "menu": {
+    "process": "Proces",
+    "phases": "Fazy",
+    "wifi": "WiFi",
+    "pt100": "PT100",
+    "ds": "DS18B20",
+    "heaters": "Grzałki",
+    "outputs": "Wyjścia"
+  },
+  "process": {
+    "title": "Główne okno procesu",
+    "enable_btn": "Uruchom",
+    "hello": "hello message"
+  },
+  "phases": {
+    "title": "Ustawienia procesu"
+  },
+  "wifi": {
+    "title": "Konfiguracja WIFI"
+  },
+  "pt100": {
+    "title": "Konfiguracja czujników PT100"
+  },
+  "ds": {
+    "title": "Konfiguracja czujników DS18B20"
+  },
+  "heaters": {
+    "title": "Konfiguracja grzałek"
+  },
+  "outputs": {
+    "title": "Konfiguracja wyjść"
+  }
 }
