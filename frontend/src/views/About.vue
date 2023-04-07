@@ -5,3 +5,6 @@
     </main>
 </template>
 
+<script setup>
+import LocaleSelect from "../components/LocaleSelect.vue";
+</script>
