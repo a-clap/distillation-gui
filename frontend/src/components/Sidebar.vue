@@ -1,10 +1,4 @@
 <script setup>
-import {ref} from "vue";
-
-const is_expanded = ref(false)
-const ToggleMenu = () => {
-    is_expanded.value = !is_expanded.value
-}
 </script>
 
 <template>
