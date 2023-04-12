@@ -1,21 +1,22 @@
 <script setup>
 import Keyboard from "../components/Keyboard.vue"
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 
-const visible = ref(false)
-const input = ref("test")
+const normal = ref(false)
+const numeric = ref(false)
 
 function toggle() {
-    console.log(visible.value)
-    visible.value = !visible.value
+    normal.value = !normal.value
 }
-
 </script>
 
 <template>
     <main class="ds-page">
         <h1>{{ $t('ds.title') }}</h1>
-        <button @click="toggle">add 1 </button>
-        <Keyboard layout="normal" v-bind:visible="visible" />
+        <button @click="toggle">normal</button>
+        <br>
+        <button @click="numeric = !numeric">numeric {{ numeric }}</button>
+        <Keyboard layout="numeric" v-bind:visible="numeric" />
+        <Keyboard layout="normal" v-bind:visible="normal" />
     </main>
 </template>

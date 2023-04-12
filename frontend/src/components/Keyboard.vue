@@ -1,16 +1,17 @@
 <template>
-    <div class="vkeyboard">
-        <table class="keyboard" v-for="(cline, index) in keySet" :key="index">
-            <tbody>
-                <td v-for="(key, index) in cline" :key="index" :class="getClassesOfKey(key)" v-text="getCaptionOfKey(key)"
-                    :style="getKeyStyle(key)" @mousedown="mousedown" @click="e => clickKey(e, key)" />
-            </tbody>
-        </table>
-    </div>
+    <main :class="getBaseWindow" v-if="props.visible">
+        <input class="text">
+        <div v-for="(keys, index) in keySet" :key="index">
+            <section class="line">
+                <div v-for="(key, index) in keys" :key="index" :class="getClassesOfKey(key)"> {{ getCaptionOfKey(key) }}
+                </div>
+            </section>
+        </div>
+    </main>
 </template>
 
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, watch } from "vue";
 import { Layouts } from "./KeyboardLayouts.js";
 import isString from "lodash/isString";
 import isObject from "lodash/isObject";
@@ -43,6 +44,13 @@ watch(() => props.visible, (first) => {
     );
 });
 
+const getBaseWindow = computed(() => {
+    let base = props.layout + " keyboard-window"
+    console.log(base)
+    return base
+})
+
+
 const keySet = computed(() => {
     let layout = getLayout();
     if (!layout) {
@@ -53,6 +61,7 @@ const keySet = computed(() => {
     if (!keys) {
         return;
     }
+
     let res = [];
     let meta = layout["_meta"] || {};
     keys.forEach((line) => {
@@ -60,29 +69,24 @@ const keySet = computed(() => {
         line.split(" ").forEach((item) => {
             if (isObject(item)) {
                 row.push(item);
+                return
             }
-            else if (isString(item)) {
-                if (item.length > 2 && item[0] == "{" && item[item.length - 1] == "}") {
-                    let name = item.substring(1, item.length - 1);
-                    if (meta[name])
-                        row.push(meta[name]);
-                    else
-                        console.warn("Missing named key from meta: " + name);
-                } else {
-                    if (item == "") {
-                        // Placeholder
-                        row.push({
-                            placeholder: true
-                        });
 
-                    } else {
-                        // Normal key
-                        row.push({
-                            key: item,
-                            text: item
-                        });
-                    }
-                }
+            if (!isString(item)) {
+                return
+            }
+
+            if (item.length > 2 && item[0] == "{" && item[item.length - 1] == "}") {
+                let name = item.substring(1, item.length - 1);
+                if (meta[name])
+                    row.push(meta[name]);
+                else
+                    console.error("Missing named key from meta: " + name);
+            } else {
+                row.push({
+                    key: item,
+                    text: item
+                });
             }
         });
         res.push(row);
@@ -90,10 +94,6 @@ const keySet = computed(() => {
     return res;
 })
 
-// TODO: add watch
-function layout() {
-    props.currentKeySet = "default";
-}
 
 function getLayout() {
     if (isString(props.layout)) {
@@ -117,21 +117,15 @@ function getCaptionOfKey(key) {
 }
 
 function getClassesOfKey(key) {
-    if (key.placeholder)
-        return "placeholder";
-    else {
-        let classes = "key " + (key.func || "") + " " + (key.classes || "");
-        if (key.keySet && props.currentKeySet == key.keySet)
-            classes += " activated";
-        return classes;
+    let classes = "key " + (key.func || "") + " " + (key.classes || "");
+    if (key.size) {
+        classes += " size-" + key.size.toString() + " "
     }
-}
+    if (key.keySet && props.currentKeySet == key.keySet) {
+        classes += " activated";
+    }
+    return classes;
 
-function getKeyStyle(key) {
-    if (key.width)
-        return {
-            flex: key.width
-        };
 }
 
 function supportsSelection() {
@@ -178,12 +172,6 @@ function insertChar(caret, text, ch) {
     return text;
 }
 
-function mousedown(e) {
-    if (!props.input) return;
-    if (props.options.preventClickEvent) e.preventDefault();
-    props.inputScrollLeft = props.input.scrollLeft;
-}
-
 function clickKey(e, key) {
     if (!props.input) return;
     if (props.options.preventClickEvent) e.preventDefault();
@@ -192,7 +180,6 @@ function clickKey(e, key) {
 
     let addChar = null;
     if (typeof key == "object") {
-        log.console(key)
         if (key.keySet) {
             toggleKeySet(key.keySet);
         }
@@ -227,6 +214,7 @@ function clickKey(e, key) {
     } else {
         addChar = key;
     }
+
     if (addChar) {
         if (props.input.maxLength <= 0 || text.length < props.input.maxLength) {
             if (props.options.useKbEvents) {
@@ -267,114 +255,131 @@ function setFocusToInput(caret) {
 
 </script>
 <style lang="scss">
-$width: 3rem;
-$height: 2.2em;
-$margin: 0.5em;
-$radius: 0.35em;
+$height: 2.2rem;
+$margin: 0.5rem;
+$radius: 0.35rem;
 
-.vkeyboard {
-    .keyboard {
+.numeric {
+    width: 500px;
+}
+
+.normal {
+    width: 1400px;
+}
+
+.keyboard-window {
+    position: fixed;
+    top: 25%;
+    left: 25%;
+
+    padding: 1rem;
+    background-color: #EEE;
+    box-shadow: 0px 0px 20px rgba(black, 0.3);
+
+    border-radius: 10px;
+
+    input {
+        display: block;
         width: 100%;
-        margin: 0;
+        height: 34px;
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        color: #555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+        margin: 0.5rem auto 0.5rem;
+    }
 
-        .line {
-            display: flex;
-            justify-content: space-around;
+    $sizes: 10;
 
-            &:not(:last-child) {
-                margin-bottom: $margin;
-            }
-        }
-
-        .key {
-            &:not(:last-child) {
-                margin-right: $margin;
-            }
-
-            width: $width;
-            height: $height;
-            line-height: $height;
-            overflow: hidden;
-            vertical-align: middle;
-            border: 1px solid #ccc;
-            color: #333;
-            background-color: #fff;
-            box-shadow: 0px 2px 2px rgba(0, 0, 0, .6);
-            border-radius: $radius;
-            font-size: 1.25em;
-            text-align: center;
-            white-space: nowrap;
-            user-select: none;
-            cursor: pointer;
-
-            &.backspace {
-                width: $width;
-                background-image: url("./icons/backspace.svg");
-                background-position: center center;
-                background-repeat: no-repeat;
-                background-size: 20%;
-            }
-
-            &.half {
-                flex: calc($width / 2);
-            }
-
-            &.control {
-                color: #fff;
-                background-color: #7d7d7d;
-                border-color: #656565;
-            }
-
-            &.featured {
-                color: #fff;
-                background-color: #337ab7;
-                border-color: #2e6da4;
-            }
-
-            &:hover {
-                color: #333;
-                background-color: #d6d6d6;
-                border-color: #adadad;
-            }
-
-            &:active {
-                transform: scale(.98); // translateY(1px);
-                color: #333;
-                background-color: #d4d4d4;
-                border-color: #8c8c8c;
-            }
-
-            &.activated {
-                color: #fff;
-                background-color: #5bc0de;
-                border-color: #46b8da;
-            }
-        }
-
-        .placeholder {
-            flex: calc($width / 2);
-            height: $height;
-            line-height: $height;
-
-            &:not(:last-child) {
-                margin-right: $margin;
-            }
-        }
-
-
-        &:before,
-        &:after {
-            content: "";
-            display: table;
-        }
-
-        &:after {
-            clear: both;
+    @for $i from 1 through $sizes {
+        .size-#{$i} {
+            flex: $i;
         }
     }
 
-    // .keyboard
-}
+    .keyboard {
+        width: 100%;
+        margin: 0;
+    }
 
-// .vue-touch-keyboard
+    .line {
+        display: flex;
+        justify-content: space-around;
+        margin: 0 auto 7px;
+        line-height: $height;
+
+        &:not(:last-child) {
+            margin-bottom: $margin;
+        }
+    }
+
+    .key {
+        &:not(:last-child) {
+            margin-right: $margin;
+        }
+
+        flex: 1;
+        overflow: hidden;
+
+        vertical-align: middle;
+        border: 1px solid #ccc;
+        color: #333;
+        background-color: #fff;
+        box-shadow: 0px 2px 2px rgba(0, 0, 0, .6);
+        border-radius: $radius;
+        font-size: 1.25em;
+        text-align: center;
+        white-space: nowrap;
+        user-select: none;
+        cursor: pointer;
+
+        &.backspace {
+            position: relative;
+        }
+
+        &.backspace:before {
+            font-family: "Material Icons";
+            content: "\e14a";
+            position: absolute;
+            top: 5%;
+            left: 38%;
+        }
+
+        &.control {
+            color: #fff;
+            background-color: #7d7d7d;
+            border-color: #656565;
+        }
+
+        &.featured {
+            color: #fff;
+            background-color: #337ab7;
+            border-color: #2e6da4;
+        }
+
+        &:hover {
+            color: #333;
+            background-color: #d6d6d6;
+            border-color: #adadad;
+        }
+
+        &:active {
+            transform: scale(.98); // translateY(1px);
+            color: #333;
+            background-color: #d4d4d4;
+            border-color: #8c8c8c;
+        }
+
+        &.activated {
+            color: #fff;
+            background-color: #5bc0de;
+            border-color: #46b8da;
+        }
+    }
+}
 </style>
