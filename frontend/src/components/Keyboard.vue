@@ -1,9 +1,10 @@
 <template>
     <main :class="getBaseWindow" v-if="props.visible">
-        <input class="text">
+        <input class="text" v-model="currentValue">
         <div v-for="(keys, index) in keySet" :key="index">
             <section class="line">
-                <div v-for="(key, index) in keys" :key="index" :class="getClassesOfKey(key)"> {{ getCaptionOfKey(key) }}
+                <div v-for="(key, index) in keys" :key="index" :class="getClassesOfKey(key)" @click="e => clickKey(e, key)">
+                    {{ getCaptionOfKey(key) }}
                 </div>
             </section>
         </div>
@@ -11,23 +12,32 @@
 </template>
 
 <script setup>
-import { computed, watch } from "vue";
+
+import { computed, watch, ref } from "vue";
 import { Layouts } from "./KeyboardLayouts.js";
-import isString from "lodash/isString";
 import isObject from "lodash/isObject";
 
-const props = defineProps({
-    visible: Boolean,
-    input: [HTMLInputElement, HTMLTextAreaElement],
-    layout: [String, Object],
-    currentKeySet: {
-        type: String,
-        default: "default",
+const currentValue = ref("start_value")
+const currentLayout = ref("normal")
+const currentKeySet = ref("default")
+
+const emit = defineEmits({
+    enter: (s) => {
+        if (s && (typeof s === 'string' || typeof s === 'number')) {
+            return true
+        } else {
+            console.warn(`Invalid submit event payload!`)
+            return false
+        }
     },
-    accept: Function,
-    cancel: Function,
-    change: Function,
-    next: Function,
+    cancel: () => {
+        return true
+    }
+})
+
+const props = defineProps({
+    value: [String, Number],
+    visible: Boolean,
     options: {
         type: Object,
         default() {
@@ -36,17 +46,27 @@ const props = defineProps({
     }
 })
 
-
 watch(() => props.visible, (first) => {
-    console.log(
-        "Watch props.selected function called with args:",
-        first
-    );
+    // Will get called on each visible change
+    // We should update value in placeholder and change currentLayout depending on type of value
+    if (first) {
+        // Update placeholder value
+        currentValue.value = props.value.toString()
+        // Reset currentKeySet to default
+        currentKeySet.value = "default"
+        // Change layout type
+        if (Number.isInteger(props.value)) {
+            currentLayout.value = "numeric"
+        } else {
+            currentLayout.value = "normal"
+        }
+
+    }
 });
 
+// Check what kind of window we should show 
 const getBaseWindow = computed(() => {
-    let base = props.layout + " keyboard-window"
-    console.log(base)
+    let base = currentLayout.value + " keyboard-window"
     return base
 })
 
@@ -57,13 +77,13 @@ const keySet = computed(() => {
         return;
     }
 
-    let keys = layout[props.currentKeySet];
+    let keys = layout[currentKeySet.value];
     if (!keys) {
         return;
     }
 
     let res = [];
-    let meta = layout["_meta"] || {};
+    let meta = Layouts["_meta"] || {};
     keys.forEach((line) => {
         let row = [];
         line.split(" ").forEach((item) => {
@@ -72,16 +92,8 @@ const keySet = computed(() => {
                 return
             }
 
-            if (!isString(item)) {
-                return
-            }
-
-            if (item.length > 2 && item[0] == "{" && item[item.length - 1] == "}") {
-                let name = item.substring(1, item.length - 1);
-                if (meta[name])
-                    row.push(meta[name]);
-                else
-                    console.error("Missing named key from meta: " + name);
+            if (isSpecial(item)) {
+                row.push(meta[item]);
             } else {
                 row.push({
                     key: item,
@@ -94,22 +106,13 @@ const keySet = computed(() => {
     return res;
 })
 
+function isSpecial(name) {
+    return Layouts["_meta"][name]
+}
+
 
 function getLayout() {
-    if (isString(props.layout)) {
-        return Layouts[props.layout];
-    }
-    return props.layout;
-}
-
-function changeKeySet(name) {
-    let layout = getLayout();
-    if (layout[name] != null)
-        props.currentKeySet = name;
-}
-
-function toggleKeySet(name) {
-    props.currentKeySet = props.currentKeySet == name ? "default" : name;
+    return Layouts[currentLayout.value]
 }
 
 function getCaptionOfKey(key) {
@@ -121,45 +124,10 @@ function getClassesOfKey(key) {
     if (key.size) {
         classes += " size-" + key.size.toString() + " "
     }
-    if (key.keySet && props.currentKeySet == key.keySet) {
-        classes += " activated";
-    }
     return classes;
 
 }
 
-function supportsSelection() {
-    return (/text|password|search|tel|url/).test(props.input.type);
-}
-
-function getCaret() {
-    if (supportsSelection()) {
-        let pos = {
-            start: props.input.selectionStart || 0,
-            end: props.input.selectionEnd || 0
-        };
-        if (pos.end < pos.start)
-            pos.end = pos.start;
-        return pos;
-    } else {
-        let val = props.input.value;
-        return {
-            start: val.length,
-            end: val.length
-        };
-    }
-}
-
-function backspace(caret, text) {
-    if (caret.start < caret.end) {
-        text = text.substring(0, caret.start) + text.substring(caret.end);
-    } else {
-        text = text.substring(0, caret.start - 1) + text.substring(caret.start);
-        caret.start -= 1;
-    }
-    caret.end = caret.start;
-    return text;
-}
 
 function insertChar(caret, text, ch) {
     if (caret.start < caret.end) {
@@ -172,12 +140,24 @@ function insertChar(caret, text, ch) {
     return text;
 }
 
-function clickKey(e, key) {
-    if (!props.input) return;
-    if (props.options.preventClickEvent) e.preventDefault();
-    let caret = getCaret();
-    let text = props.input.value;
+function clickKey(_, key) {
+    if (key.func) {
+        switch (key.func) {
+            case "enter":
+                enter()
+                return
+            case "shift":
+                shift()
+                return
+            case "esc":
+                esc()
+                return
+        }
+    } else {
+    }
+    return
 
+    let text = "blah"
     let addChar = null;
     if (typeof key == "object") {
         if (key.keySet) {
@@ -217,20 +197,12 @@ function clickKey(e, key) {
 
     if (addChar) {
         if (props.input.maxLength <= 0 || text.length < props.input.maxLength) {
-            if (props.options.useKbEvents) {
-                let e = document.createEvent("Event");
-                e.initEvent("keydown", true, true);
-                e.which = e.keyCode = addChar.charCodeAt();
-                if (props.input.dispatchEvent(e)) {
-                    text = insertChar(caret, text, addChar);
-                }
-            } else {
-                text = insertChar(caret, text, addChar);
-            }
+            text = insertChar(caret, text, addChar);
         }
         if (props.currentKeySet == "shifted")
             changeKeySet("default");
     }
+
     props.input.value = text;
     setFocusToInput(caret);
     if (props.change)
@@ -244,12 +216,28 @@ function clickKey(e, key) {
     props.input.dispatchEvent(new Event("input", { bubbles: true }));
 }
 
-function setFocusToInput(caret) {
-    props.input.focus();
-    if (caret && supportsSelection()) {
-        props.input.selectionStart = caret.start;
-        props.input.selectionEnd = caret.end;
+function shift() {
+    if (currentKeySet.value === "default") {
+        currentKeySet.value = "shifted"
+    } else {
+        currentKeySet.value = "default"
     }
+}
+
+function enter() {
+    emit('enter', currentValue.value)
+}
+
+function backspace() {
+    props.visible = false
+}
+
+function clr() {
+    emit('cancel')
+}
+
+function esc() {
+    emit('cancel')
 }
 
 
@@ -338,17 +326,26 @@ $radius: 0.35rem;
         user-select: none;
         cursor: pointer;
 
-        &.backspace {
+
+        &.icons {
+            font-family: "Material Icons";
             position: relative;
+            vertical-align: middle;
+            font-size: 2rem;
         }
 
         &.backspace:before {
-            font-family: "Material Icons";
             content: "\e14a";
-            position: absolute;
-            top: 5%;
-            left: 38%;
         }
+
+        &.esc:before {
+            content: "\e879";
+        }
+
+        &.enter:before {
+            content: "\e5ca";
+        }
+
 
         &.control {
             color: #fff;
@@ -369,16 +366,10 @@ $radius: 0.35rem;
         }
 
         &:active {
-            transform: scale(.98); // translateY(1px);
+            transform: scale(.90); // translateY(1px);
             color: #333;
             background-color: #d4d4d4;
             border-color: #8c8c8c;
-        }
-
-        &.activated {
-            color: #fff;
-            background-color: #5bc0de;
-            border-color: #46b8da;
         }
     }
 }
