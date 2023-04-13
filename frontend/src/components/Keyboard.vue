@@ -252,13 +252,14 @@ $radius: 0.35rem;
 }
 
 .normal {
-    width: 1400px;
+    width: 900px;
 }
 
 .keyboard-window {
     position: fixed;
-    top: 25%;
-    left: 25%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 
     padding: 1rem;
     background-color: #EEE;
