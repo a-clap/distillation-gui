@@ -4,7 +4,8 @@ import { ref, reactive } from "vue";
 
 const delay = reactive({
     show: false,
-    value: 0.0,
+    value: 0.1,
+    isFloat: true,
 
     enter(newValue) {
         delay.value = newValue
@@ -20,6 +21,24 @@ const delay = reactive({
     }
 })
 
+const delayF = reactive({
+    show: false,
+    value: 100.1,
+    isFloat: true,
+
+    enter(newValue) {
+        delayF.value = newValue
+        delayF.cancel()
+    },
+
+    cancel() {
+        delayF.show = false
+    },
+
+    toggle() {
+        delayF.show = !delayF.show
+    }
+})
 const delayStr = reactive({
     show: false,
     value: "0",
@@ -44,13 +63,8 @@ const delayStr = reactive({
     <main class="ds-page">
         <h1>{{ $t('ds.title') }}</h1>
 
-        <input v-model="delay.value" @click="delay.toggle">
-        <Keyboard v-bind:visible="delay.show" v-bind:value="delay.value" @enter="delay.enter" @cancel="delay.cancel" />
-
-        <input v-model="delayStr.value" @click="delayStr.toggle">
-        <Keyboard v-bind:visible="delayStr.show" v-bind:value="delayStr.value" @enter="delayStr.enter"
-            @cancel="delayStr.cancel" />
-
+        <input v-model="delayF.value" @click="delayF.toggle">
+        <Keyboard v-bind="delayF" @enter="delayF.enter" @cancel="delayF.cancel" />
     </main>
 </template>
 <style lang="scss">

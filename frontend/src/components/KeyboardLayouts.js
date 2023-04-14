@@ -4,7 +4,7 @@ var Layouts = {
 		"shift": { func: "shift", text: "Shift", size: 2, classes: "control" },
 		"enter": { func: "enter", text: "", size: 1, classes: "control icons featured" },
 		"backspace": { func: "backspace", classes: "control icons" },
-		"clr": { func: "clear", text: "CLR", size: 2, classes: "control " },
+		"clr": { func: "clr", text: "CLR", size: 2, classes: "control " },
 		"esc": { func: "esc", text: "", size: 2, classes: "control icons" },
 		"space": { key: " ", text: "Space", size: 2 },
 	},

@@ -1,6 +1,6 @@
 <template>
-    <main :class="getBaseWindow" v-if="props.visible">
-        <input class="text" v-model="currentValue">
+    <main :class="getWindowClass" v-if="props.show">
+        <input class="text" v-model="keyboardValue.value">
         <div v-for="(keys, index) in keySet" :key="index">
             <section class="line">
                 <div v-for="(key, index) in keys" :key="index" :class="getClassesOfKey(key)" @click="e => clickKey(e, key)">
@@ -13,13 +13,21 @@
 
 <script setup>
 
-import { computed, watch, ref } from "vue";
+import { computed, watch, ref, reactive } from "vue";
 import { Layouts } from "./KeyboardLayouts.js";
 import isObject from "lodash/isObject";
 
-const currentValue = ref("start_value")
-const currentLayout = ref("normal")
-const currentKeySet = ref("default")
+const props = defineProps({
+    value: [String, Number],
+    isFloat: Boolean,
+    show: Boolean,
+    options: {
+        type: Object,
+        default() {
+            return {};
+        }
+    }
+})
 
 const emit = defineEmits({
     enter: (s) => {
@@ -35,41 +43,137 @@ const emit = defineEmits({
     }
 })
 
-const props = defineProps({
-    value: [String, Number],
-    visible: Boolean,
-    options: {
-        type: Object,
-        default() {
-            return {};
+const intValue = reactive({
+    value: 0,
+    layout: "numeric",
+    justCleared: true,
+
+    update(val) {
+        intValue.value = val
+    },
+    add(ch) {
+        let val = intValue.value.toString()
+
+        if (!intValue.justCleared && val !== "0") {
+            switch (ch) {
+                case '.':
+                    return
+                case '-':
+                    if (val.startsWith('-')) {
+                        val = val.slice(-(val.length - 1))
+                    } else {
+                        val = "-" + val
+                    }
+                    intValue.update(val)
+                    return
+            }
+            val += ch
+        } else {
+            intValue.justCleared = false
+            val = ch
         }
+        intValue.update(val)
+    },
+    clr() {
+        intValue.justCleared = true
+        intValue.value = 0
+    },
+    get() {
+        return Number(intValue.value)
     }
 })
 
-watch(() => props.visible, (first) => {
-    // Will get called on each visible change
-    // We should update value in placeholder and change currentLayout depending on type of value
-    if (first) {
-        // Update placeholder value
-        currentValue.value = props.value.toString()
-        // Reset currentKeySet to default
-        currentKeySet.value = "default"
-        // Change layout type
-        if (Number.isInteger(props.value)) {
-            currentLayout.value = "numeric"
+const stringValue = reactive({
+    value: "",
+    layout: "normal",
+    justCleared: true,
+    add(ch) {
+        if (!stringValue.justCleared) {
+            stringValue.value += ch
         } else {
-            currentLayout.value = "normal"
+            stringValue.justCleared = false
+            stringValue.value = ch
         }
+    },
+    clr() {
+        stringValue.justCleared = true
+        stringValue.value = ""
+    },
+    get() {
+        return stringValue.value
+    }
+})
+
+const floatValue = reactive({
+    value: 0.1,
+    layout: "numeric",
+    justCleared: true,
+
+    update(val) {
+        floatValue.value = val
+    },
+    add(ch) {
+        let val = floatValue.value.toString()
+        if (!floatValue.justCleared) {
+            switch (ch) {
+                case '.':
+                    if (val.includes('.')) {
+                        return
+                    }
+                    break
+                case '-':
+                    if (val.startsWith('-')) {
+                        val = val.slice(-(val.length - 1))
+                    } else {
+                        val = "-" + val
+                    }
+                    floatValue.update(val)
+                    return
+            }
+            val += ch
+        } else {
+            floatValue.justCleared = false
+            val = ch
+        }
+        floatValue.update(val)
+    },
+
+    clr() {
+        floatValue.justCleared = true
+        floatValue.value = 0
+    },
+    get() {
+        return Number(floatValue.value)
+    }
+})
+
+const keyboardValue = ref(stringValue)
+const isShifted = ref(false)
+
+
+
+watch(() => props.show, (trigger) => {
+    // Will get called on each show change
+    if (trigger) {
+        // Check type of input
+        if (typeof props.value === 'number') {
+            if (props.isFloat) {
+                keyboardValue.value = floatValue
+            } else {
+                keyboardValue.value = intValue
+            }
+        } else {
+            // So string
+            keyboardValue.value = stringValue
+        }
+        keyboardValue.value.value = props.value
 
     }
 });
 
-// Check what kind of window we should show 
-const getBaseWindow = computed(() => {
-    let base = currentLayout.value + " keyboard-window"
-    return base
+const getWindowClass = computed(() => {
+    return keyboardValue.value.layout + " keyboard-window"
 })
-
 
 const keySet = computed(() => {
     let layout = getLayout();
@@ -77,7 +181,7 @@ const keySet = computed(() => {
         return;
     }
 
-    let keys = layout[currentKeySet.value];
+    let keys = layout[isShifted.value ? "shifted" : "default"];
     if (!keys) {
         return;
     }
@@ -91,7 +195,6 @@ const keySet = computed(() => {
                 row.push(item);
                 return
             }
-
             if (isSpecial(item)) {
                 row.push(meta[item]);
             } else {
@@ -112,7 +215,7 @@ function isSpecial(name) {
 
 
 function getLayout() {
-    return Layouts[currentLayout.value]
+    return Layouts[keyboardValue.value.layout]
 }
 
 function getCaptionOfKey(key) {
@@ -125,19 +228,6 @@ function getClassesOfKey(key) {
         classes += " size-" + key.size.toString() + " "
     }
     return classes;
-
-}
-
-
-function insertChar(caret, text, ch) {
-    if (caret.start < caret.end) {
-        text = text.substring(0, caret.start) + ch.toString() + text.substring(caret.end);
-    } else {
-        text = text.substr(0, caret.start) + ch.toString() + text.substr(caret.start);
-    }
-    caret.start += ch.length;
-    caret.end = caret.start;
-    return text;
 }
 
 function clickKey(_, key) {
@@ -145,99 +235,48 @@ function clickKey(_, key) {
         switch (key.func) {
             case "enter":
                 enter()
-                return
+                break
             case "shift":
                 shift()
-                return
+                break
             case "esc":
                 esc()
-                return
-        }
-    } else {
-    }
-    return
+                break
+            case "backspace":
+                backspace()
+                break
+            case "clr":
+                keyboardValue.value.clr()
+                break
 
-    let text = "blah"
-    let addChar = null;
-    if (typeof key == "object") {
-        if (key.keySet) {
-            toggleKeySet(key.keySet);
         }
-        else if (key.func) {
-            switch (key.func) {
-                case "backspace": {
-                    text = backspace(caret, text);
-                    break;
-                }
-                case "accept": {
-                    if (props.accept)
-                        props.accept(text);
-                    return;
-                }
-                case "cancel": {
-                    if (props.cancel)
-                        props.cancel();
-                    return;
-                }
-                case "next": {
-                    if (props.next)
-                        props.next();
-                    return;
-                }
-                default: {
-                    props.$emit(key.func);
-                }
-            }
-        } else {
-            addChar = key.key;
-        }
-    } else {
-        addChar = key;
+        return
     }
-
-    if (addChar) {
-        if (props.input.maxLength <= 0 || text.length < props.input.maxLength) {
-            text = insertChar(caret, text, addChar);
-        }
-        if (props.currentKeySet == "shifted")
-            changeKeySet("default");
-    }
-
-    props.input.value = text;
-    setFocusToInput(caret);
-    if (props.change)
-        props.change(text, addChar);
-    if (props.input.maxLength > 0 && text.length >= props.input.maxLength) {
-        // The value reached the maxLength
-        if (props.next)
-            props.next();
-    }
-    // trigger 'input' Event
-    props.input.dispatchEvent(new Event("input", { bubbles: true }));
+    let ch = key.key
+    keyboardValue.value.add(ch)
 }
 
 function shift() {
-    if (currentKeySet.value === "default") {
-        currentKeySet.value = "shifted"
-    } else {
-        currentKeySet.value = "default"
-    }
-}
-
-function enter() {
-    emit('enter', currentValue.value)
+    isShifted.value = !isShifted.value
 }
 
 function backspace() {
-    props.visible = false
-}
-
-function clr() {
-    emit('cancel')
+    let val = keyboardValue.value.get().toString()
+    if (val.length > 1) {
+        val = val.slice(0, val.length - 1)
+        keyboardValue.value.value = val
+    } else {
+        keyboardValue.value.clr()
+    }
 }
 
 function esc() {
     emit('cancel')
+}
+
+function enter() {
+    let value = keyboardValue.value.get()
+    emit('enter', value)
 }
 
 
