@@ -1,25 +1,7 @@
 <script setup>
 import Keyboard from "../components/Keyboard.vue"
-import { ref, reactive } from "vue";
-
-const delay = reactive({
-    show: false,
-    value: 0.1,
-    isFloat: true,
-
-    enter(newValue) {
-        delay.value = newValue
-        delay.cancel()
-    },
-
-    cancel() {
-        delay.show = false
-    },
-
-    toggle() {
-        delay.show = !delay.show
-    }
-})
+import { GetValues } from "../../wailsjs/go/main/App"
+import { reactive } from "vue";
 
 const delayF = reactive({
     show: false,
@@ -36,29 +18,18 @@ const delayF = reactive({
     },
 
     toggle() {
+        GetValues().then((result) => {
+            result.forEach(element => {
+                console.log(element.name)
+                console.log(element.value)
+                // console.log(element.Name)
+            });
+        })
         delayF.show = !delayF.show
-    }
-})
-const delayStr = reactive({
-    show: false,
-    value: "0",
-
-    enter(newValue) {
-        delayStr.value = newValue
-        delayStr.cancel()
-    },
-
-    cancel() {
-        delayStr.show = false
-    },
-
-    toggle() {
-        delayStr.show = !delayStr.show
     }
 })
 
 </script>
-
 <template>
     <main class="ds-page">
         <h1>{{ $t('ds.title') }}</h1>
