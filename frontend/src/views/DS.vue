@@ -32,13 +32,13 @@ const delayF = reactive({
 </script>
 <template>
     <main class="ds-page">
-        <h1>{{ $t('ds.title') }}</h1>
+        <vm-page-header>{{ $t('ds.title') }}</vm-page-header>
 
         <input v-model="delayF.value" @click="delayF.toggle">
         <Keyboard v-bind="delayF" @enter="delayF.enter" @cancel="delayF.cancel" />
     </main>
 </template>
-<style lang="scss">
+<style lang="scss" scoped>
 input {
     display: block;
     width: 100px;

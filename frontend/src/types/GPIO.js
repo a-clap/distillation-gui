@@ -1,19 +1,19 @@
-import { GetValues } from "../../wailsjs/go/main/App"
+export class GPIO {
+  name = "";
 
-class Rectangle {
-  constructor(height, width) {
-    this.height = height;
-    this.width = width;
+  constructor(name, activeLow) {
+    this.name = name;
+    this.activeLow = activeLow;
   }
 
-  callGo() {
-    GetValues().then((result) => {
-        result.forEach((elem) => {
-          console.log(elem.name)
-        })
-    })
+  setActiveLevel() {
+    console.log("setting active level " + this.activeLow)
+  }
+
+  setState(newState) {
+    console.log("setting new state" + newState)
   }
 
 }
 
-export {Rectangle}
+// export {GPIO}

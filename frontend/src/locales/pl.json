@@ -29,6 +29,9 @@
     "title": "Konfiguracja grzałek"
   },
   "outputs": {
-    "title": "Konfiguracja wyjść"
+    "title": "Konfiguracja wyjść",
+    "active_level": "Aktywny stan",
+    "active_level_low": "Niski",
+    "active_level_high": "Wysoki"
   }
 }

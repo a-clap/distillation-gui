@@ -1,19 +1,22 @@
 {
-    "compilerOptions": {
-      "module": "system",
-      "noImplicitAny": true,
-      "removeComments": true,
-      "preserveConstEnums": true,
-      "sourceMap": true,
-      "outFile": "../../built/local/tsc.js",
-      "allowJs": true
-    },
-    "exclude": [
-      "node_modules",
-      "**/*.spec.ts"
-    ],
-    "include": [
-      "src/**/*",
-      "wailsjs/**/*.ts"
+  "compilerOptions": {
+    "module": "system",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "outFile": "../../built/local/tsc.js",
+    "allowJs": true,
+    "types": [
+      "element-plus/global"
     ]
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ],
+  "include": [
+    "src/**/*",
+    "wailsjs/**/*.ts"
+  ]
+}

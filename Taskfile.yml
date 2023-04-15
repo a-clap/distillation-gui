@@ -1,0 +1,19 @@
+# https://taskfile.dev
+
+version: '3'
+
+tasks:
+  build:
+    cmds:
+      - wails build -clean
+    silent: false
+  clean:
+    cmds:
+      - rm -rf frontend/node_modules
+      - rm -rf frontend/wailsjs
+  dev:
+    cmds:
+      - wails dev
+  npm-dev:
+    cmds:
+      - npm run dev --prefix frontend  
