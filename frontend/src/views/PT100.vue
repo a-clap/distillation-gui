@@ -2,13 +2,33 @@
     <main>
         <h1>{{ $t('pt100.title') }}</h1>
         <div v-for="(pt, index) in getPT100s" :key="index">
+            <Keyboard v-bind="pt.correction" :write="(e) => pt.correction.write(e)"
+                :cancel="() => pt.correction.cancel()" />
+            <Keyboard v-bind="pt.samples" :write="(e) => pt.samples.write(e)" :cancel="() => pt.samples.cancel()" />
             <section class="pt-box">
                 <el-row :gutter="20" align="middle">
                     <el-col :span="3">
                         <el-checkbox v-model="pt.enable" :label="pt.name" size="large" border />
                     </el-col>
-                    <el-col :span="3">
-                        <input />
+                    <el-col :span="4" :offset="1" v-if="pt.enable">
+                        <label>{{ $t('pt100.correction') }}</label>
+                    </el-col>
+                    <el-col :span="4" v-if="pt.enable">
+                        <input v-model="pt.correction.value" @click="() => pt.correction.showKeyboard()">
+                    </el-col>
+                    <el-col :span="5" :offset="1" v-if="pt.enable">
+                        <label>{{ $t('pt100.temperature') }}</label>
+                    </el-col>
+                    <el-col :span="6" v-if="pt.enable">
+                        <input v-model="pt.temperature">
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20" align="middle">
+                    <el-col :span="4" :offset="4" v-if="pt.enable">
+                        <label>{{ $t('pt100.samples') }}</label>
+                    </el-col>
+                    <el-col :span="4" v-if="pt.enable">
+                        <input v-model="pt.samples.value" @click="() => pt.samples.showKeyboard()">
                     </el-col>
                 </el-row>
             </section>
@@ -44,21 +64,13 @@ h1 {
     margin-bottom: 1.5rem;
 }
 
-input {
-    display: block;
-    width: 100px;
-    height: 34px;
-    padding: 6px 12px;
-    line-height: 1rem;
-    text-align: center;
-    color: #555;
-    cursor: default;
-    caret-color: transparent;
-    background-color: #fff;
-    background-image: none;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+label {
+    text-align: right;
+    margin-left: 0;
+}
+
+.el-row {
+    margin-bottom: 0.5rem;
 }
 </style>
 

@@ -1,7 +1,6 @@
 export class Parameter {
 
-    constructor(name, value, isFloat, writeCallback) {
-        this.name_ = name
+    constructor(value, isFloat, writeCallback) {
         this.value = value
         this.isFloat = isFloat
         this.show = false

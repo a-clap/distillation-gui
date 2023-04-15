@@ -37,5 +37,21 @@ import Sidebar from "./components/Sidebar.vue";
     padding-left: 0.5rem;
     padding-top: 0.5rem;
   }
+
+  input {
+    width: 100px;
+    height: 34px;
+    padding: 6px 12px;
+    line-height: 1rem;
+    text-align: center;
+    color: #555;
+    cursor: default;
+    caret-color: transparent;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+  }
 }
 </style>

@@ -20,7 +20,10 @@
     "title": "Konfiguracja WIFI"
   },
   "pt100": {
-    "title": "Konfiguracja czujników PT100"
+    "title": "Konfiguracja czujników PT100",
+    "correction": "Korekta (℃)",
+    "samples": "Próbki",
+    "temperature": "Temperatura (℃)"
   },
   "ds": {
     "title": "Konfiguracja czujników DS18B20"
