@@ -8,7 +8,7 @@
             <section class="pt-box">
                 <el-row :gutter="20" align="middle">
                     <el-col :span="3">
-                        <el-checkbox v-model="pt.enable" :label="pt.name" size="large" border />
+                        <el-switch v-model="pt.enable" :active-text="pt.name" size="large" />
                     </el-col>
                     <el-col :span="4" :offset="1" v-if="pt.enable">
                         <label>{{ $t('pt100.correction') }}</label>

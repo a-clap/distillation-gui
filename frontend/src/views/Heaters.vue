@@ -5,7 +5,7 @@
             <section class="heater-box">
                 <el-row :gutter="20" align="middle">
                     <el-col :span="3">
-                        <el-checkbox v-model="heater.enable" :label="heater.name" size="large" border />
+                        <el-switch v-model="heater.enable" :active-text="heater.name" size="large" />
                     </el-col>
                 </el-row>
             </section>
