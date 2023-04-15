@@ -2,9 +2,6 @@
     <main>
         <h1>{{ $t('pt100.title') }}</h1>
         <div v-for="(pt, index) in getPT100s" :key="index">
-            <Keyboard v-bind="pt.correction" :write="(e) => pt.correction.write(e)"
-                :cancel="() => pt.correction.cancel()" />
-            <Keyboard v-bind="pt.samples" :write="(e) => pt.samples.write(e)" :cancel="() => pt.samples.cancel()" />
             <section class="pt-box">
                 <el-row :gutter="20" align="middle">
                     <el-col :span="3">
@@ -15,6 +12,8 @@
                     </el-col>
                     <el-col :span="4" v-if="pt.enable">
                         <input v-model="pt.correction.value" @click="() => pt.correction.showKeyboard()">
+                        <Keyboard v-bind="pt.correction" :write="(e) => pt.correction.write(e)"
+                            :cancel="() => pt.correction.cancel()" />
                     </el-col>
                     <el-col :span="5" :offset="1" v-if="pt.enable">
                         <label>{{ $t('pt100.temperature') }}</label>
@@ -29,6 +28,8 @@
                     </el-col>
                     <el-col :span="4" v-if="pt.enable">
                         <input v-model="pt.samples.value" @click="() => pt.samples.showKeyboard()">
+                        <Keyboard v-bind="pt.samples" :write="(e) => pt.samples.write(e)"
+                            :cancel="() => pt.samples.cancel()" />
                     </el-col>
                 </el-row>
             </section>

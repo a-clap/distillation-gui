@@ -6,7 +6,7 @@ export class PT100 {
         this.correction = new Parameter(correction, true, this.writeCorrection)
         this.samples = new Parameter(samples, true, this.writeSamples)
         this.temperature = temperature;
-        this.enable = false
+        this.enable_ = false
     }
 
     writeCorrection(value) {
