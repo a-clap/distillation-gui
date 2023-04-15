@@ -21,6 +21,8 @@ const props = defineProps({
     value: [String, Number],
     isFloat: Boolean,
     show: Boolean,
+    write: Function,
+    cancel: Function,
     options: {
         type: Object,
         default() {
@@ -29,19 +31,6 @@ const props = defineProps({
     }
 })
 
-const emit = defineEmits({
-    enter: (s) => {
-        if (s && (typeof s === 'string' || typeof s === 'number')) {
-            return true
-        } else {
-            console.warn(`Invalid submit event payload!`)
-            return false
-        }
-    },
-    cancel: () => {
-        return true
-    }
-})
 
 const intValue = reactive({
     value: 0,
@@ -167,7 +156,6 @@ watch(() => props.show, (trigger) => {
             keyboardValue.value = stringValue
         }
         keyboardValue.value.value = props.value
-
     }
 });
 
@@ -271,12 +259,12 @@ function backspace() {
 }
 
 function esc() {
-    emit('cancel')
+    props.cancel()
 }
 
 function enter() {
     let value = keyboardValue.value.get()
-    emit('enter', value)
+    props.write(value)
 }
 
 
@@ -305,6 +293,11 @@ $radius: 0.35rem;
     box-shadow: 0px 0px 20px rgba(black, 0.3);
 
     border-radius: 10px;
+
+    .text {
+        text-align: center;
+        font-size: 1.5rem;
+    }
 
     input {
         display: block;

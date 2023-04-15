@@ -1,7 +1,7 @@
 <script setup>
 import Keyboard from "../components/Keyboard.vue"
-import { GetValues } from "../../wailsjs/go/main/App"
 import { reactive } from "vue";
+import { PT100 } from "../types/PT100";
 
 const delayF = reactive({
     show: false,
@@ -18,24 +18,32 @@ const delayF = reactive({
     },
 
     toggle() {
-        GetValues().then((result) => {
-            result.forEach(element => {
-                console.log(element.name)
-                console.log(element.value)
-                // console.log(element.Name)
-            });
-        })
+        // GetValues().then((result) => {
+        //     result.forEach(element => {
+        //         console.log(element.name)
+        //         console.log(element.value)
+        //         // console.log(element.Name)
+        //     });
+        // })
         delayF.show = !delayF.show
     }
 })
 
+const param = reactive(new PT100("name", 130.0, 10, 13.0))
+
+function toggle() {
+    console.log("toggle")
+}
+
 </script>
 <template>
     <main class="ds-page">
-        <vm-page-header>{{ $t('ds.title') }}</vm-page-header>
-
-        <input v-model="delayF.value" @click="delayF.toggle">
-        <Keyboard v-bind="delayF" @enter="delayF.enter" @cancel="delayF.cancel" />
+        <input v-model="param.correction.value" @click="param.correction.showKeyboard">
+        <Keyboard v-bind="param.correction" :write="(e) => param.correction.write(e)"
+            :cancel="() => param.correction.cancel()" />
+        <br>
+        <!-- < input v - model=" param.value" @click="delayF.toggle"> -->
+        <!-- <Keyboard v-bind="delayF" @enter="delayF.enter" @cancel="delayF.cancel" /> -->
     </main>
 </template>
 <style lang="scss" scoped>
