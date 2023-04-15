@@ -3,10 +3,13 @@ import Sidebar from "./components/Sidebar.vue";
 </script>
 
 <template>
+  <html class="dark">
   <div class="app">
     <Sidebar />
     <router-view />
   </div>
+
+  </html>
 </template>
 
 <style lang="scss">
