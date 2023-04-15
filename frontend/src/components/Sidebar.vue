@@ -4,7 +4,7 @@
 <template>
   <aside>
     <div class="logo">
-      <img src="../assets/images/logo-universal.png" alt="Vue">
+      <span class="material-icons">science</span>
     </div>
 
     <h3>Menu</h3>
@@ -58,8 +58,8 @@ aside {
     margin-left: auto;
     margin-right: auto;
 
-    img {
-      width: 2rem;
+    .material-icons {
+      font-size: 64px;
     }
   }
 

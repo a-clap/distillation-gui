@@ -26,8 +26,11 @@ import Sidebar from "./components/Sidebar.vue";
   font-family: 'Fira sans', sans-serif;
 }
 
+
 .app {
   display: flex;
+  background-color: rgb(51, 65, 85);
+  ;
 
   main {
     flex: 1 1 0;
