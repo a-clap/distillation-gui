@@ -24,6 +24,8 @@ import Sidebar from "./components/Sidebar.vue";
   padding: 0;
   box-sizing: border-box;
   font-family: 'Fira sans', sans-serif;
+  transition: none !important;
+  transform: none !important;
 }
 
 
@@ -58,5 +60,6 @@ import Sidebar from "./components/Sidebar.vue";
     outline: none !important;
     border: 1px solid var(--el-color-primary);
   }
+
 }
 </style>

@@ -285,9 +285,9 @@ $radius: 0.35rem;
 .keyboard-window {
     z-index: 1000;
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    margin: auto auto auto auto;
+    top: 25%;
+    left: 25%;
 
     padding: 1rem;
     background-color: #EEE;
