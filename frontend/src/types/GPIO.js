@@ -1,19 +1,32 @@
 export class GPIO {
-  name = "";
-
   constructor(name, activeLow) {
-    this.name = name;
-    this.activeLow = activeLow;
+    this.name_ = name;
+    this.activeLevel_ = activeLow;
+    this.state_ = false
   }
 
-  setActiveLevel() {
-    console.log("setting active level " + this.activeLow)
+  get name() {
+    return this.name_
   }
 
-  setState(newState) {
-    console.log("setting new state" + newState)
+
+  get activeLevel() {
+    return this.activeLevel_
+  }
+
+  set activeLevel(value) {
+    this.activeLevel_ = value
+    console.log("setting active level " + this.activeLevel_)
+
+  }
+
+  set state(value) {
+    this.state_ = value
+    console.log("setting state level " + this.state_)
+  }
+
+  get state() {
+    return this.state_
   }
 
 }
-
-// export {GPIO}

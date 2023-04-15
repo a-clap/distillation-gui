@@ -32,6 +32,8 @@
     "title": "Konfiguracja wyjść",
     "active_level": "Aktywny stan",
     "active_level_low": "Niski",
-    "active_level_high": "Wysoki"
+    "active_level_high": "Wysoki",
+    "manual_control": "Sterowanie ręczne",
+    "manual_control_force": "STAN"
   }
 }
