@@ -13,12 +13,12 @@
     </main>
 </template>
 
-<script setup>
+<script setup lang="ts">
 
 import { reactive, onMounted, computed } from "vue"
-import { Heater } from '../types/Heater.js';
+import { Heater } from '../types/Heater';
 
-const heaters = reactive([])
+const heaters: Heater[] = reactive([])
 
 onMounted(() => {
     heaters.push(new Heater("heater_1", false))

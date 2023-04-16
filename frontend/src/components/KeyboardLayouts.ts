@@ -36,4 +36,4 @@ var Layouts = {
 	}
 };
 
-export var Layouts
+export default Layouts

@@ -11,10 +11,10 @@
     </main>
 </template>
 
-<script setup>
+<script setup lang="ts">
 
 import { computed, watch, ref, reactive } from "vue";
-import { Layouts } from "./KeyboardLayouts.js";
+import Layouts from "./KeyboardLayouts";
 import isObject from "lodash/isObject";
 
 const props = defineProps({
@@ -31,16 +31,23 @@ const props = defineProps({
     }
 })
 
+interface valueType {
+    value: any;
+    layout: string;
+    add: (ch: string) => void;
+    clr: () => void;
+    get: () => any;
+}
 
 const intValue = reactive({
     value: 0,
     layout: "numeric",
     justCleared: true,
 
-    update(val) {
+    update(val: number) {
         intValue.value = val
     },
-    add(ch) {
+    add(ch: string) {
         let val = intValue.value.toString()
 
         if (!intValue.justCleared && val !== "0") {
@@ -53,7 +60,7 @@ const intValue = reactive({
                     } else {
                         val = "-" + val
                     }
-                    intValue.update(val)
+                    intValue.update(Number(val))
                     return
             }
             val += ch
@@ -61,7 +68,7 @@ const intValue = reactive({
             intValue.justCleared = false
             val = ch
         }
-        intValue.update(val)
+        intValue.update(Number(val))
     },
     clr() {
         intValue.justCleared = true
@@ -76,7 +83,7 @@ const stringValue = reactive({
     value: "",
     layout: "normal",
     justCleared: true,
-    add(ch) {
+    add(ch: string) {
         if (!stringValue.justCleared) {
             stringValue.value += ch
         } else {
@@ -98,10 +105,10 @@ const floatValue = reactive({
     layout: "numeric",
     justCleared: true,
 
-    update(val) {
+    update(val: number) {
         floatValue.value = val
     },
-    add(ch) {
+    add(ch: string) {
         let val = floatValue.value.toString()
         if (!floatValue.justCleared) {
             switch (ch) {
@@ -116,7 +123,7 @@ const floatValue = reactive({
                     } else {
                         val = "-" + val
                     }
-                    floatValue.update(val)
+                    floatValue.update(Number(val))
                     return
             }
             val += ch
@@ -124,7 +131,7 @@ const floatValue = reactive({
             floatValue.justCleared = false
             val = ch
         }
-        floatValue.update(val)
+        floatValue.update(Number(val))
     },
 
     clr() {
@@ -136,10 +143,8 @@ const floatValue = reactive({
     }
 })
 
-const keyboardValue = ref(stringValue)
+const keyboardValue: valueType = ref(stringValue)
 const isShifted = ref(false)
-
-
 
 watch(() => props.show, (trigger) => {
     // Will get called on each show change
@@ -174,7 +179,7 @@ const keySet = computed(() => {
         return;
     }
 
-    let res = [];
+    let res: string[] = [];
     let meta = Layouts["_meta"] || {};
     keys.forEach((line) => {
         let row = [];
@@ -197,16 +202,16 @@ const keySet = computed(() => {
     return res;
 })
 
-function isSpecial(name) {
+function isSpecial(name: string) {
     return Layouts["_meta"][name]
 }
 
 
-function getLayout() {
+function getLayout(): string[] {
     return Layouts[keyboardValue.value.layout]
 }
 
-function getCaptionOfKey(key) {
+function getCaptionOfKey(key: any) {
     return key.text || key.key || "";
 }
 
@@ -218,7 +223,7 @@ function getClassesOfKey(key) {
     return classes;
 }
 
-function clickKey(_, key) {
+function clickKey(_: any, key: any) {
     if (key.func) {
         switch (key.func) {
             case "enter":

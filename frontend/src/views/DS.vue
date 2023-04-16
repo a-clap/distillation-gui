@@ -12,7 +12,7 @@
                     </el-col>
                     <el-col :span="4" v-if="ds.enable">
                         <input v-model="ds.correction.value" @click="() => ds.correction.showKeyboard()">
-                        <Keyboard v-bind="ds.correction" :write="(e) => ds.correction.write(e)"
+                        <Keyboard v-bind="ds.correction" :write="(e: number) => ds.correction.write(e)"
                             :cancel="() => ds.correction.cancel()" />
                     </el-col>
                     <el-col :span="5" :offset="1" v-if="ds.enable">
@@ -28,7 +28,7 @@
                     </el-col>
                     <el-col :span="4" v-if="ds.enable">
                         <input v-model="ds.samples.value" @click="() => ds.samples.showKeyboard()">
-                        <Keyboard v-bind="ds.samples" :write="(e) => ds.samples.write(e)"
+                        <Keyboard v-bind="ds.samples" :write="(e: number) => ds.samples.write(e)"
                             :cancel="() => ds.samples.cancel()" />
                     </el-col>
                     <el-col :span="2" :offset=1 v-if="ds.enable">
@@ -47,13 +47,13 @@
         </div>
     </main>
 </template>
-<script setup>
+<script setup lang="ts">
 
 import Keyboard from "../components/Keyboard.vue"
 import { reactive, onMounted, computed } from "vue"
-import { DS } from '../types/DS.js';
+import { DS } from '../types/DS';
 
-const dses = reactive([])
+const dses: DS[] = reactive([])
 
 onMounted(() => {
     dses.push(new DS("ds_1", 1, 2, 9, 3.0))
@@ -64,28 +64,6 @@ onMounted(() => {
 const getDses = computed(() => {
     return dses;
 })
-const options = [
-    {
-        value: 'Option1',
-        label: 'Option1',
-    },
-    {
-        value: 'Option2',
-        label: 'Option2',
-    },
-    {
-        value: 'Option3',
-        label: 'Option3',
-    },
-    {
-        value: 'Option4',
-        label: 'Option4',
-    },
-    {
-        value: 'Option5',
-        label: 'Option5',
-    },
-]
 </script>
 
 <style lang="scss" scoped>

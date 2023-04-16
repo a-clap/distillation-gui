@@ -12,7 +12,7 @@
                     </el-col>
                     <el-col :span="4" v-if="pt.enable">
                         <input v-model="pt.correction.value" @click="() => pt.correction.showKeyboard()">
-                        <Keyboard v-bind="pt.correction" :write="(e) => pt.correction.write(e)"
+                        <Keyboard v-bind="pt.correction" :write="(e: number) => pt.correction.write(e)"
                             :cancel="() => pt.correction.cancel()" />
                     </el-col>
                     <el-col :span="5" :offset="1" v-if="pt.enable">
@@ -28,7 +28,7 @@
                     </el-col>
                     <el-col :span="4" v-if="pt.enable">
                         <input v-model="pt.samples.value" @click="() => pt.samples.showKeyboard()">
-                        <Keyboard v-bind="pt.samples" :write="(e) => pt.samples.write(e)"
+                        <Keyboard v-bind="pt.samples" :write="(e: number) => pt.samples.write(e)"
                             :cancel="() => pt.samples.cancel()" />
                     </el-col>
                 </el-row>
@@ -37,12 +37,12 @@
     </main>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import Keyboard from "../components/Keyboard.vue"
 import { reactive, onMounted, computed } from "vue"
-import { PT100 } from '../types/PT100.js';
+import { PT100 } from '../types/PT100';
 
-const pt100s = reactive([])
+const pt100s: PT100[] = reactive([])
 
 onMounted(() => {
     pt100s.push(new PT100("pt100_1", 1, 2, 3.0))

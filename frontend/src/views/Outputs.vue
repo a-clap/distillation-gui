@@ -28,12 +28,12 @@
     </main>
 </template>
 
-<script setup>
+<script setup lang="ts">
 
 import { reactive, onMounted, computed } from "vue"
-import { GPIO } from '../types/GPIO.js';
+import { GPIO } from '../types/GPIO';
 
-const gpios = reactive([])
+const gpios: GPIO[] = reactive([])
 
 onMounted(() => {
     gpios.push(new GPIO("gpio_1", false))
