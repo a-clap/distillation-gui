@@ -1,0 +1,12 @@
+= Distillation GUI
+:toc: preamble
+:toclevels: 7
+:distro-link: https://github.com/a-clap/distillation-distro
+:distro-apps: https://github.com/a-clap/distillation
+:imagesdir: docs/images/
+
+This repo is part of personal distillation project based on https://wiki.banana-pi.org/Banana_Pi_BPI-M2_ZERO[BananaPi Zero], with {distro-link}[distillation distro] and {distro-apps}[apps].
+
+== What is this?
+
+GUI based on Wails and Vue3.
