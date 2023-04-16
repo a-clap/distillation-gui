@@ -2,7 +2,11 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"time"
+
+	"github.com/a-clap/distillation-gui/backend/heater"
+	"github.com/a-clap/distillation-gui/backend/parameters"
+	"github.com/a-clap/iot/pkg/distillation"
 )
 
 // App struct
@@ -10,15 +14,14 @@ type App struct {
 	ctx context.Context
 }
 
-type Value struct {
-	Name string  `json:"name"`
-	V    int     `json:"value"`
-	F    float64 `json:"floatV"`
-}
-
 // NewApp creates a new App application struct
 func NewApp() *App {
-	return &App{}
+	const DistilAddr = "http://localhost:8081"
+	heater.Init(distillation.NewHeaterClient(DistilAddr, 1*time.Second))
+	a := &App{
+		ctx: context.Background(),
+	}
+	return a
 }
 
 // startup is called when the app starts. The context is saved
@@ -27,16 +30,14 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 }
 
-// Greet returns a greeting for the given name
-func (a *App) Greet(name string) string {
-	return fmt.Sprintf("Hello %s, It's show time!", name)
+func (a *App) GetHeaters() []parameters.Heater {
+	return heater.Get()
 }
 
-func (a *App) GetValues() []Value {
-	vs := make([]Value, 3)
-	for i := range vs {
-		vs[i].Name = fmt.Sprint("name ", i)
-		vs[i].V = i
+func (a *App) EnableGlobal(id string, enable bool) string {
+	if err := heater.EnableGlobal(id, enable); err != nil {
+		return err.Error()
 	}
-	return vs
+	return ""
+
 }

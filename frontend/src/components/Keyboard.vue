@@ -32,11 +32,12 @@ const props = defineProps({
 })
 
 interface valueType {
-    value: any;
+    value: string | number;
     layout: string;
     add: (ch: string) => void;
     clr: () => void;
-    get: () => any;
+    get: () => string | number;
+    justCleared: boolean;
 }
 
 const intValue = reactive({

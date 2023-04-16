@@ -17,16 +17,32 @@
 
 import { reactive, onMounted, computed } from "vue"
 import { Heater } from '../types/Heater';
+import { GetHeaters } from '../../wailsjs/go/main/App'
+import { parameters } from "../../wailsjs/go/models";
 
 const heaters: Heater[] = reactive([])
 
 onMounted(() => {
-    heaters.push(new Heater("heater_1", false))
-    heaters.push(new Heater("heater_2", true))
+    GetHeaters().then((value: parameters.Heater[]) => {
+        value.forEach((heater: parameters.Heater) => {
+            console.log(heater.enabled)
+            heaters.push(new Heater(heater.ID, heater.enabled))
+        })
+    })
 })
 
 const getHeaters = computed(() => {
-    return heaters;
+    return heaters.sort((n1, n2) => {
+        if (n1.name > n2.name) {
+            return 1;
+        }
+
+        if (n1.name < n2.name) {
+            return -1;
+        }
+
+        return 0;
+    });
 })
 
 </script>

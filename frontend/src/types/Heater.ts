@@ -1,24 +1,26 @@
+import { EnableGlobal } from '../../wailsjs/go/main/App'
+import { parameters } from '../../wailsjs/go/models'
+
 export class Heater {
-    name_: string;
-    enabled_: boolean;
-    state_: false;
+    heater: parameters.Heater;
     constructor(name: string, enabled: boolean) {
-        this.name_ = name;
-        this.enabled_ = enabled;
-        this.state_ = false
+        this.heater = new parameters.Heater()
+        this.heater.ID = name
+        this.heater.enabled = enabled
     }
 
     get name() {
-        return this.name_
+        return this.heater.ID
     }
 
     set enable(value: boolean) {
-        this.enabled_ = value
-        console.log("enable heater " + this.enabled_)
+        this.heater.enabled = value
+        EnableGlobal(this.heater.ID, this.heater.enabled)
+
     }
 
     get enable(): boolean {
-        return this.enabled_
+        return this.heater.enabled
     }
 
 }
