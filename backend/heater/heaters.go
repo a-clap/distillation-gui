@@ -8,7 +8,6 @@ package heater
 import (
 	"github.com/a-clap/distillation-gui/backend/parameters"
 	"github.com/a-clap/iot/pkg/distillation"
-	"golang.org/x/exp/slices"
 )
 
 type Client interface {
@@ -62,7 +61,7 @@ func Apply(config []parameters.Heater) []error {
 	var errs []error
 	for _, c := range config {
 		// SetCorrection
-		if err := EnableGlobal(c.ID, c.Enabled); err != nil {
+		if err := Enable(c.ID, c.Enabled); err != nil {
 			errs = append(errs, err)
 		}
 	}
@@ -86,14 +85,10 @@ func Get() []parameters.Heater {
 		heaters = append(heaters, *v)
 	}
 
-	slices.SortFunc(heaters, func(i, j parameters.Heater) bool {
-		return i.ID < j.ID
-	})
-
 	return heaters
 }
 
-func EnableGlobal(id string, enable bool) error {
+func Enable(id string, enable bool) error {
 	cfg, ok := handler.heaters[id]
 	if !ok {
 		err := &Error{ID: id, Op: "EnableGlobal", Err: ErrIDNotFound.Error()}

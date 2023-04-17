@@ -5,7 +5,6 @@ go 1.20
 require (
 	github.com/a-clap/iot v0.0.0-20230415182601-ffd250170e6e
 	github.com/wailsapp/wails/v2 v2.4.1
-	golang.org/x/exp v0.0.0-20230118134722-a68e582fa157
 )
 
 require (
@@ -44,6 +43,7 @@ require (
 	go.uber.org/multierr v1.8.0 // indirect
 	go.uber.org/zap v1.22.0 // indirect
 	golang.org/x/crypto v0.2.0 // indirect
+	golang.org/x/exp v0.0.0-20230118134722-a68e582fa157 // indirect
 	golang.org/x/net v0.7.0 // indirect
 	golang.org/x/sys v0.5.0 // indirect
 	golang.org/x/text v0.7.0 // indirect

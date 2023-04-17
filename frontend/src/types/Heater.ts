@@ -1,4 +1,4 @@
-import { EnableGlobal } from '../../wailsjs/go/main/App'
+import { HeaterEnable } from '../../wailsjs/go/backend/Backend'
 import { parameters } from '../../wailsjs/go/models'
 
 export class Heater {
@@ -15,7 +15,7 @@ export class Heater {
 
     set enable(value: boolean) {
         this.heater.enabled = value
-        EnableGlobal(this.heater.ID, this.heater.enabled)
+        HeaterEnable(this.heater.ID, this.heater.enabled)
 
     }
 

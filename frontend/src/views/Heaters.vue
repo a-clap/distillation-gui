@@ -15,35 +15,28 @@
 
 <script setup lang="ts">
 
-import { reactive, onMounted, computed } from "vue"
+import { ref, computed, onMounted, onUnmounted, } from "vue"
 import { Heater } from '../types/Heater';
-import { GetHeaters } from '../../wailsjs/go/main/App'
-import { parameters } from "../../wailsjs/go/models";
-
-const heaters: Heater[] = reactive([])
+import { HeaterListener } from '../types/HeaterListener';
 
 onMounted(() => {
-    GetHeaters().then((value: parameters.Heater[]) => {
-        value.forEach((heater: parameters.Heater) => {
-            console.log(heater.enabled)
-            heaters.push(new Heater(heater.ID, heater.enabled))
-        })
-    })
+    heaterCallback()
+    HeaterListener.subscribe(heaterCallback)
+})
+onUnmounted(() => {
+    HeaterListener.unsubscribe(heaterCallback)
 })
 
-const getHeaters = computed(() => {
-    return heaters.sort((n1, n2) => {
-        if (n1.name > n2.name) {
-            return 1;
-        }
+function heaterCallback() {
+    let newHeaters: Heater[] = []
+    newHeaters.push(new Heater("heater_1", true))
+    newHeaters.push(new Heater("heater_2", false))
+    newHeaters.push(new Heater("heater_3", true))
+    heaters.value = newHeaters
+}
 
-        if (n1.name < n2.name) {
-            return -1;
-        }
-
-        return 0;
-    });
-})
+const heaters = ref<Heater[]>([]);
+const getHeaters = computed(() => { return heaters.value })
 
 </script>
 
@@ -55,7 +48,6 @@ h1 {
 .heater-box {
     font-size: 1.2rem;
     margin-bottom: 1.5rem;
-
 }
 </style>
 
