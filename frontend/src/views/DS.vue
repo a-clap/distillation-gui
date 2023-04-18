@@ -50,20 +50,41 @@
 <script setup lang="ts">
 
 import Keyboard from "../components/Keyboard.vue"
-import { reactive, onMounted, computed } from "vue"
+import { ref, onMounted, onUnmounted, computed } from "vue"
 import { DS } from '../types/DS';
 
-const dses: DS[] = reactive([])
-
 onMounted(() => {
-    dses.push(new DS("ds_1", 1, 2, 9, 3.0))
-    dses.push(new DS("ds_2", 3, 4, 10, 5.0))
-    dses.push(new DS("ds_3", 6, 7, 11, 8.0))
+    heaterCallback()
+    HeaterListener.subscribe(heaterCallback)
+})
+onUnmounted(() => {
+    HeaterListener.unsubscribe(heaterCallback)
 })
 
-const getDses = computed(() => {
-    return dses;
-})
+function dsCallback() {
+    HeatersGet().then((got) => {
+        let newHeaters: Heater[] = []
+        got.forEach((heater) => {
+            let newHeater = new Heater(heater.ID, heater.enabled)
+            newHeaters.push(newHeater)
+        })
+
+        heaters.value = newHeaters.sort((a: Heater, b:Heater) => {
+        console.log(a.name + " " + b.name)
+        if (a.name > b.name) {
+            return 1
+        }
+        if (a.name < b.name) {
+            return -1
+        }
+        return 0
+    })
+    })
+}
+
+const heaters = ref<DS[]>([]);
+const getHeaters = computed(() => { return heaters.value })
+
 </script>
 
 <style lang="scss" scoped>

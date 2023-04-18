@@ -5,6 +5,27 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, onUnmounted } from 'vue';
+import { Listener } from '../types/Listener';
+
+
+let v = new Listener("args")
+
+onMounted(() => {
+    v.subscribe(testing)
+})
+
+onUnmounted(() => {
+    v.unsubscribe(testing)
+})
+
+
+function testing(...args: any) {
+    console.log("from func type: " + typeof args)
+    console.log("from func: " + args)
+}
+
+
 </script>
 <style lang="scss" scoped></style>
 

@@ -5,9 +5,19 @@ package backend
 type Events struct{}
 
 const (
-	NotifyHeaters = "rcv:heaters"
+	NotifyHeaters       = "rcv:heaters"
+	NotifyDSConfig      = "rcv:dscfg"
+	NotifyDSTemperature = "rcv:dstmp"
 )
 
 func (Events) NotifyHeaters() string {
 	return NotifyHeaters
+}
+
+func (Events) NotifyDSConfig() string {
+	return NotifyDSConfig
+}
+
+func (Events) NotifyDSTemperature() string {
+	return NotifyDSTemperature
 }

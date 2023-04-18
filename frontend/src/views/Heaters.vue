@@ -18,6 +18,7 @@
 import { ref, computed, onMounted, onUnmounted, } from "vue"
 import { Heater } from '../types/Heater';
 import { HeaterListener } from '../types/HeaterListener';
+import { HeatersGet } from "../../wailsjs/go/backend/Backend";
 
 onMounted(() => {
     heaterCallback()
@@ -28,11 +29,24 @@ onUnmounted(() => {
 })
 
 function heaterCallback() {
-    let newHeaters: Heater[] = []
-    newHeaters.push(new Heater("heater_1", true))
-    newHeaters.push(new Heater("heater_2", false))
-    newHeaters.push(new Heater("heater_3", true))
-    heaters.value = newHeaters
+    HeatersGet().then((got) => {
+        let newHeaters: Heater[] = []
+        got.forEach((heater) => {
+            let newHeater = new Heater(heater.ID, heater.enabled)
+            newHeaters.push(newHeater)
+        })
+
+        heaters.value = newHeaters.sort((a: Heater, b:Heater) => {
+        console.log(a.name + " " + b.name)
+        if (a.name > b.name) {
+            return 1
+        }
+        if (a.name < b.name) {
+            return -1
+        }
+        return 0
+    })
+    })
 }
 
 const heaters = ref<Heater[]>([]);

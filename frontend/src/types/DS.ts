@@ -1,50 +1,48 @@
 import Parameter from './Parameter'
+import { DSEnable, DSGet, DSSetCorrection, DSSetResolution, DSSetSamples, } from '../../wailsjs/go/backend/Backend'
 
 export class DS {
 
     name: string;
+    id: string;
     correction: Parameter;
     samples: Parameter;
-    resolution_: number;
+    resolution: number;
     temperature: number;
-    enable_: boolean;
+    enabled: boolean;
 
-    constructor(name: string, correction: number, samples: number, resolution: number, temperature: number) {
+    constructor(name: string, id: string, enabled: boolean, correction: number, samples: number, resolution: number, temperature: number) {
         this.name = name
+        this.id = id
         this.correction = new Parameter(correction, true, this.writeCorrection)
         this.samples = new Parameter(samples, false, this.writeSamples)
-        this.resolution_ = resolution
+        this.resolution = resolution
         this.temperature = temperature;
-        this.enable_ = false
+        this.enabled = enabled
     }
 
     writeCorrection(value: number) {
-        console.log("write correction " + value)
+        this.correction.value = value
+        DSSetCorrection(this.id, value)
     }
 
     writeResolution(value: number) {
-        console.log("writeResolution " + value)
+        this.resolution = value
+        DSSetResolution(this.id, value)
     }
 
     writeSamples(value: number) {
-        console.log("write samples " + value)
+        this.samples.value = value
+        DSSetSamples(this.id, value)
     }
 
     set enable(value: boolean) {
-        this.enable_ = value
-        console.log("enable " + this.enable_)
+        this.enabled = value
+        DSEnable(this.id, value)
     }
 
     get enable(): boolean {
-        return this.enable_
-    }
-
-    set resolution(value: number) {
-        this.resolution_ = value
-        this.writeResolution(value)
-    }
-    get resolution(): number {
-        return this.resolution_
+        return this.enabled
     }
 }
 
