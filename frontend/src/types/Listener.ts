@@ -2,17 +2,14 @@ declare type Callback = (...args: any) => void;
 
 export class Listener {
   callbacks: Callback[];
-  
-  constructor(eventName: string) {
+
+  constructor() {
     this.callbacks = [];
-    runtime.EventsOn(eventName, (...args) => {
-        this.#notify(args)
-    })  
   }
 
-  #notify(...args: any) {
+  notify(...args: any) {
     this.callbacks.forEach((h) => {
-      h(args)
+      h(...args)
     })
   }
 
@@ -23,7 +20,7 @@ export class Listener {
 
     if (!found) {
       this.callbacks.push(cb)
-    } 
+    }
 
   }
   unsubscribe(cb: Callback) {

@@ -1,53 +1,75 @@
-import {NotifyDSConfig, NotifyDSTemperature} from '../../wailsjs/go/backend/Events'
+import { NotifyDSConfig, NotifyDSTemperature } from '../../wailsjs/go/backend/Events'
+import { parameters } from '../../wailsjs/go/models';
+import { Listener } from './Listener';
 
-declare type DSCallbackConfig = () => void;
-declare type DSCallbackTemperature = () => void;
+declare type DSCallbackConfig = (ds: parameters.DS) => void;
+declare type DSCallbackTemperature = (t: parameters.Temperature) => void;
 
 class dsListener {
   private static _instance: dsListener;
-  configHandlers: DSCallbackConfig[];
-  temperatureHandlers: DSCallbackTemperature[];
-  
-  public static get Instance()
-  {
-      // Do you need arguments? Make it a regular static method instead.
-      return this._instance || (this._instance = new this());
+  config: Listener;
+  temperature: Listener
+
+  public static get Instance() {
+    return this._instance || (this._instance = new this());
   }
+
   private constructor() {
-    this.configHandlers = [];
-    this.temperatureHandlers = [];
-    NotifyDSConfig().then((e) => runtime.EventsOn(e, () => this.#notifyConfig()))  
-    NotifyDSTemperature().then((e) => runtime.EventsOn(e, () => this.#notifyTemperature()))  
-  }
+    this.config = new Listener()
+    this.temperature = new Listener()
 
-  #notifyConfig() {
-    this.configHandlers.forEach((h) => {
-      h()
+    NotifyDSConfig().then((ev) => {
+      return runtime.EventsOn(ev, (...args: any) => {
+        this.handleConfig(...args);
+      });
+    })
+
+    NotifyDSTemperature().then((ev) => {
+      return runtime.EventsOn(ev, (...args: any) => {
+        this.handleTemperature(...args);
+      });
     })
   }
-  
-  #notifyTemperature() {
-    this.temperatureHandlers.forEach((h) => {
-      h()
-    })
+
+  private handleTemperature(...args: any) {
+    if (args.length != 1) {
+      console.log("Expected single element")
+      return
+    }
+    try {
+      let t = new parameters.Temperature(args[0])
+      this.temperature.notify(t)
+    } catch (e) {
+      console.log(e)
+    }
   }
 
-  subscribe(cb: DSCallback) {
-    let found = this.handlers.some((c) => {
-      return c.toString() == cb.toString();
-    });
-
-    if (!found) {
-      console.log("subscribe");
-      this.handlers.push(cb)
-    } else {
-      console.log("already exists");
+  private handleConfig(...args: any) {
+    try {
+      let t = new parameters.DS(args[0])
+      this.config.notify(t)
+    } catch (e) {
+      console.log(e)
     }
 
   }
-  unsubscribe(cb: DSCallback) {
-    this.handlers = this.handlers.filter((c) => c != cb);
+
+  subscribeConfig(cb: DSCallbackConfig) {
+    this.config.subscribe(cb)
   }
+
+  unsubscribeConfig(cb: DSCallbackConfig) {
+    this.config.unsubscribe(cb)
+  }
+
+  subscribeTemperature(cb: DSCallbackTemperature) {
+    this.temperature.subscribe(cb)
+  }
+
+  unsubscribeTemperature(cb: DSCallbackTemperature) {
+    this.temperature.unsubscribe(cb)
+  }
+
 }
 
 export var DSListener = dsListener.Instance

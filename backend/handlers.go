@@ -24,16 +24,16 @@ func (e *eventEmitter) init(ctx context.Context) {
 }
 
 // OnHeaterChange implements heater.Listener
-func (e *eventEmitter) OnHeaterChange(parameters.Heater) {
-	runtime.EventsEmit(e.ctx, NotifyHeaters)
+func (e *eventEmitter) OnHeaterChange(h parameters.Heater) {
+	runtime.EventsEmit(e.ctx, NotifyHeaters, h)
 }
 
 // OnDSConfigChange implements ds.Listener
-func (e *eventEmitter) OnDSConfigChange(parameters.DS) {
-	runtime.EventsEmit(e.ctx, NotifyDSConfig)
+func (e *eventEmitter) OnDSConfigChange(c parameters.DS) {
+	runtime.EventsEmit(e.ctx, NotifyDSConfig, c)
 }
 
 // OnDSTemperatureChange implements ds.Listener
-func (e *eventEmitter) OnDSTemperatureChange(parameters.Temperature) {
-	runtime.EventsEmit(e.ctx, NotifyDSTemperature)
+func (e *eventEmitter) OnDSTemperatureChange(t parameters.Temperature) {
+	runtime.EventsEmit(e.ctx, NotifyDSTemperature, t)
 }

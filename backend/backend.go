@@ -2,7 +2,6 @@ package backend
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/a-clap/distillation-gui/backend/ds"
@@ -11,7 +10,6 @@ import (
 	"github.com/a-clap/iot/pkg/ds18b20"
 	"github.com/a-clap/logging"
 	"github.com/labstack/gommon/log"
-	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 type Backend struct {
@@ -42,13 +40,7 @@ func (b *Backend) Startup(ctx context.Context) {
 	b.ctx = ctx
 	b.eventEmitter.init(ctx)
 
-	go func() {
-		for {
-			<-time.After(1 * time.Second)
-			fmt.Println("emitting...")
-			runtime.EventsEmit(b.ctx, "args", "blah", "adam", ds18b20.SensorConfig{})
-		}
-	}()
+	ds.Run()
 }
 
 // Events returns Event structure - wails need to generate binding for Events methods

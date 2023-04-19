@@ -36,6 +36,7 @@ func (d *DSClient) GetSensors() ([]distillation.DSConfig, error) {
 
 // Temperatures implements ds.Client
 func (d *DSClient) Temperatures() ([]distillation.DSTemperature, error) {
+	logger.Debug("Temperatures")
 	var temps []distillation.DSTemperature
 	for _, elem := range d.DS {
 		if elem.Enabled {

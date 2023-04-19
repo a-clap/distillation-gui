@@ -7,9 +7,10 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue';
 import { Listener } from '../types/Listener';
+import { NotifyHeaters } from '../../wailsjs/go/backend/Events';
 
 
-let v = new Listener("args")
+let v = new Listener(NotifyHeaters)
 
 onMounted(() => {
     v.subscribe(testing)

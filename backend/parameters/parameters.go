@@ -20,8 +20,8 @@ type DS struct {
 }
 
 type Temperature struct {
-	ID          string
-	Temperature float64
+	ID          string  `json:"ID"`
+	Temperature float64 `json:"temperature"`
 }
 
 type PT struct {

@@ -1,7 +1,7 @@
 <template>
     <main>
         <h1>{{ $t('heaters.title') }}</h1>
-        <div v-for="(heater, index) in getHeaters" :key="index">
+        <div v-for="(heater, index) in heaters" :key="index">
             <section class="heater-box">
                 <el-row :gutter="20" align="middle">
                     <el-col :span="3">
@@ -19,38 +19,49 @@ import { ref, computed, onMounted, onUnmounted, } from "vue"
 import { Heater } from '../types/Heater';
 import { HeaterListener } from '../types/HeaterListener';
 import { HeatersGet } from "../../wailsjs/go/backend/Backend";
+import { parameters } from "../../wailsjs/go/models";
+
+const heaters = ref<Heater[]>([]);
 
 onMounted(() => {
-    heaterCallback()
-    HeaterListener.subscribe(heaterCallback)
+    reload()
+    HeaterListener.subscribe(updateHeater)
 })
 onUnmounted(() => {
-    HeaterListener.unsubscribe(heaterCallback)
+    HeaterListener.unsubscribe(updateHeater)
 })
 
-function heaterCallback() {
+function reload() {
     HeatersGet().then((got) => {
         let newHeaters: Heater[] = []
-        got.forEach((heater) => {
+        got.forEach((heater: parameters.Heater) => {
             let newHeater = new Heater(heater.ID, heater.enabled)
             newHeaters.push(newHeater)
         })
 
-        heaters.value = newHeaters.sort((a: Heater, b:Heater) => {
-        console.log(a.name + " " + b.name)
-        if (a.name > b.name) {
-            return 1
-        }
-        if (a.name < b.name) {
-            return -1
-        }
-        return 0
-    })
+        heaters.value = newHeaters.sort((a: Heater, b: Heater) => {
+            if (a.name > b.name) {
+                return 1
+            }
+            if (a.name < b.name) {
+                return -1
+            }
+            return 0
+        })
     })
 }
 
-const heaters = ref<Heater[]>([]);
-const getHeaters = computed(() => { return heaters.value })
+function updateHeater(h: parameters.Heater) {
+    heaters.value.some(function (item: Heater, i: number) {
+        if (item.name == h.ID) {
+            console.log("got")
+            let heater = new Heater(h.ID, h.enabled)
+            heaters.value[i] = heater
+        }
+    });
+}
+
+
 
 </script>
 

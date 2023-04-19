@@ -1,5 +1,5 @@
 import Parameter from './Parameter'
-import { DSEnable, DSGet, DSSetCorrection, DSSetResolution, DSSetSamples, } from '../../wailsjs/go/backend/Backend'
+import { DSEnable, DSSetCorrection, DSSetResolution, DSSetSamples, } from '../../wailsjs/go/backend/Backend'
 
 export class DS {
 
@@ -11,7 +11,7 @@ export class DS {
     temperature: number;
     enabled: boolean;
 
-    constructor(name: string, id: string, enabled: boolean, correction: number, samples: number, resolution: number, temperature: number) {
+    constructor(name: string, id: string, enabled: boolean, correction: number, samples: number, resolution: number, temperature: number = 0) {
         this.name = name
         this.id = id
         this.correction = new Parameter(correction, true, this.writeCorrection)

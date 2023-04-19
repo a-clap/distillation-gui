@@ -1,42 +1,45 @@
-import {NotifyHeaters} from '../../wailsjs/go/backend/Events'
+import { NotifyHeaters } from '../../wailsjs/go/backend/Events'
+import { parameters } from '../../wailsjs/go/models';
+import { Listener } from './Listener';
 
-declare type HeaterCallback = () => void;
+declare type HeaterCallback = (h: parameters.Heater) => void;
 
 class heaterListener {
   private static _instance: heaterListener;
-  handlers: HeaterCallback[];
-  
-  public static get Instance()
-  {
-      // Do you need arguments? Make it a regular static method instead.
-      return this._instance || (this._instance = new this());
-  }
-  private constructor() {
-    this.handlers = [];
-    NotifyHeaters().then((e) => runtime.EventsOn(e, () => this.#notify()))  
+  heaters: Listener;
+
+  public static get Instance() {
+    return this._instance || (this._instance = new this());
   }
 
-  #notify() {
-    this.handlers.forEach((h) => {
-      h()
+  private constructor() {
+    this.heaters = new Listener()
+
+    NotifyHeaters().then((ev) => {
+      return runtime.EventsOn(ev, (...args: any) => {
+        this.handle(...args);
+      });
     })
   }
 
-  subscribe(cb: HeaterCallback) {
-    let found = this.handlers.some((c) => {
-      return c.toString() == cb.toString();
-    });
-
-    if (!found) {
-      console.log("subscribe");
-      this.handlers.push(cb)
-    } else {
-      console.log("already exists");
+  private handle(...args: any) {
+    if (args.length != 1) {
+      console.log("Expected single element")
+      return
     }
+    try {
+      let t = new parameters.Heater(args[0])
+      this.heaters.notify(t)
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
+  subscribe(cb: HeaterCallback) {
+    this.heaters.subscribe(cb)
   }
   unsubscribe(cb: HeaterCallback) {
-    this.handlers = this.handlers.filter((c) => c != cb);
+    this.heaters.unsubscribe(cb)
   }
 }
 

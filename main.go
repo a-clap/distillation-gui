@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/a-clap/distillation-gui/backend"
+	"github.com/a-clap/distillation-gui/backend/parameters"
 	"github.com/a-clap/distillation-gui/backendmock"
 	"github.com/a-clap/iot/pkg/distillation"
 	"github.com/a-clap/iot/pkg/ds18b20"
@@ -93,6 +94,8 @@ func main() {
 		Bind: []interface{}{
 			b,
 			&backend.Events{},
+			&backend.Models{},
+			&parameters.GUI{},
 		},
 	})
 

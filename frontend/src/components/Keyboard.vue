@@ -270,6 +270,7 @@ function esc() {
 
 function enter() {
     let value = keyboardValue.value.get()
+    props.cancel()
     props.write(value)
 }
 

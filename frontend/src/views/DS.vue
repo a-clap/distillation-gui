@@ -1,7 +1,7 @@
 <template>
     <main>
         <h1>{{ $t('ds.title') }}</h1>
-        <div v-for="(ds, index) in getDses" :key="index">
+        <div v-for="(ds, index) in dses" :key="index">
             <section class="ds-box">
                 <el-row :gutter="20" align="middle">
                     <el-col :span="3">
@@ -12,7 +12,7 @@
                     </el-col>
                     <el-col :span="4" v-if="ds.enable">
                         <input v-model="ds.correction.value" @click="() => ds.correction.showKeyboard()">
-                        <Keyboard v-bind="ds.correction" :write="(e: number) => ds.correction.write(e)"
+                        <Keyboard v-bind="ds.correction" :write="(e: number) => ds.writeCorrection(e)"
                             :cancel="() => ds.correction.cancel()" />
                     </el-col>
                     <el-col :span="5" :offset="1" v-if="ds.enable">
@@ -28,7 +28,7 @@
                     </el-col>
                     <el-col :span="4" v-if="ds.enable">
                         <input v-model="ds.samples.value" @click="() => ds.samples.showKeyboard()">
-                        <Keyboard v-bind="ds.samples" :write="(e: number) => ds.samples.write(e)"
+                        <Keyboard v-bind="ds.samples" :write="(e: number) => ds.writeSamples(e)"
                             :cancel="() => ds.samples.cancel()" />
                     </el-col>
                     <el-col :span="2" :offset=1 v-if="ds.enable">
@@ -50,40 +50,65 @@
 <script setup lang="ts">
 
 import Keyboard from "../components/Keyboard.vue"
-import { ref, onMounted, onUnmounted, computed } from "vue"
+import { ref, onMounted, onUnmounted } from "vue"
 import { DS } from '../types/DS';
+import { DSListener } from "../types/DSListener";
+import { DSGet } from "../../wailsjs/go/backend/Backend";
+import { parameters } from "../../wailsjs/go/models";
+
+const dses = ref<DS[]>([]);
 
 onMounted(() => {
-    heaterCallback()
-    HeaterListener.subscribe(heaterCallback)
-})
-onUnmounted(() => {
-    HeaterListener.unsubscribe(heaterCallback)
+    reload()
+    DSListener.subscribeConfig(updateConfig)
+    DSListener.subscribeTemperature(updateTemperature)
 })
 
-function dsCallback() {
-    HeatersGet().then((got) => {
-        let newHeaters: Heater[] = []
-        got.forEach((heater) => {
-            let newHeater = new Heater(heater.ID, heater.enabled)
-            newHeaters.push(newHeater)
+onUnmounted(() => {
+    DSListener.unsubscribeConfig(updateConfig)
+    DSListener.unsubscribeTemperature(updateTemperature)
+})
+
+function reload() {
+    DSGet().then((got) => {
+        let newDses: DS[] = []
+        got.forEach((d: parameters.DS) => {
+            let ds = new DS(d.name, d.id, d.enabled, d.correction, d.samples, d.resolution)
+            newDses.push(ds)
         })
 
-        heaters.value = newHeaters.sort((a: Heater, b:Heater) => {
-        console.log(a.name + " " + b.name)
-        if (a.name > b.name) {
-            return 1
-        }
-        if (a.name < b.name) {
-            return -1
-        }
-        return 0
-    })
+        dses.value = newDses.sort((a: DS, b: DS) => {
+            if (a.name > b.name) {
+                return 1
+            }
+            if (a.name < b.name) {
+                return -1
+            }
+            return 0
+        })
     })
 }
 
-const heaters = ref<DS[]>([]);
-const getHeaters = computed(() => { return heaters.value })
+function updateConfig(d: parameters.DS) {
+    dses.value.some(function (item: DS, i: number) {
+        if (item.id == d.id) {
+            let ds = new DS(d.name, d.id, d.enabled, d.correction, d.samples, d.resolution)
+            ds.temperature = dses.value[i].temperature
+            dses.value[i] = ds
+        }
+    });
+}
+
+function updateTemperature(t: parameters.Temperature) {
+    dses.value.some(function (item: DS, i: number) {
+        if (item.id == t.ID) {
+            dses.value[i].temperature = t.temperature
+        }
+    });
+
+}
+
+
 
 </script>
 
