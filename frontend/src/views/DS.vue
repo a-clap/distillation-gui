@@ -35,8 +35,8 @@
                         <label>{{ $t('ds.resolution') }}</label>
                     </el-col>
                     <el-col :span="6" :offset=2 v-if="ds.enable">
-                        <el-select v-model="ds.resolution" size="large">
-                            <el-option :label="$t('ds.resolution_9')" value="9" />
+                        <el-select v-model="ds.resolution" size="large" class="m-2">
+                            <el-option :label="$t('ds.resolution_9')" value="9"/>
                             <el-option :label="$t('ds.resolution_10')" value="10" />
                             <el-option :label="$t('ds.resolution_11')" value="11" />
                             <el-option :label="$t('ds.resolution_12')" value="12" />
@@ -102,19 +102,22 @@ function updateConfig(d: parameters.DS) {
 function updateTemperature(t: parameters.Temperature) {
     dses.value.some(function (item: DS, i: number) {
         if (item.id == t.ID) {
-            dses.value[i].temperature = t.temperature
+            dses.value[i].temperature = t.temperature.toFixed(2)
         }
     });
 
 }
-
-
 
 </script>
 
 <style lang="scss" scoped>
 h1 {
     margin-bottom: 2rem;
+}
+
+.el-select {
+      display: block;
+      padding: 0;
 }
 
 .ds-box {

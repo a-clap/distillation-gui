@@ -9,7 +9,10 @@ import (
 	"github.com/a-clap/distillation-gui/backend/parameters"
 	"github.com/a-clap/iot/pkg/ds18b20"
 	"github.com/a-clap/logging"
-	"github.com/labstack/gommon/log"
+)
+
+var (
+	logger = logging.GetLogger()
 )
 
 type Backend struct {
@@ -62,24 +65,25 @@ func (b *Backend) DSGet() []parameters.DS {
 
 func (b *Backend) DSSetCorrection(id string, correction float64) {
 	if err := ds.SetCorrection(id, correction); err != nil {
-		log.Error("SetCorrection error ", logging.String("ID", id), logging.Float64("correction", correction))
+		logger.Error("SetCorrection error ", logging.String("ID", id), logging.Float64("correction", correction))
 	}
 }
 
 func (b *Backend) DSEnable(id string, ena bool) {
 	if err := ds.Enable(id, ena); err != nil {
-		log.Error("DSEnable error ", logging.String("ID", id), logging.Bool("enable", ena))
+		logger.Error("DSEnable error ", logging.String("ID", id), logging.Bool("enable", ena))
 	}
 }
 
 func (b *Backend) DSSetSamples(id string, samples uint) {
 	if err := ds.SetSamples(id, samples); err != nil {
-		log.Error("SetSamples error ", logging.String("ID", id), logging.Uint("correction", samples))
+		logger.Error("SetSamples error ", logging.String("ID", id), logging.Uint("correction", samples))
 	}
 
 }
 func (b *Backend) DSSetResolution(id string, res uint) {
+	logger.Info("SetResolution", logging.String("ID", id), logging.Uint("resolution", res))
 	if err := ds.SetResolution(id, ds18b20.Resolution(res)); err != nil {
-		log.Error("SetResolution error ", logging.String("ID", id), logging.Uint("resolution", res))
+		logger.Error("SetResolution error ", logging.String("error", err.Error()))
 	}
 }

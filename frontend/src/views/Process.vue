@@ -5,28 +5,12 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue';
-import { Listener } from '../types/Listener';
-import { NotifyHeaters } from '../../wailsjs/go/backend/Events';
-
-
-let v = new Listener(NotifyHeaters)
-
-onMounted(() => {
-    v.subscribe(testing)
-})
-
-onUnmounted(() => {
-    v.unsubscribe(testing)
-})
-
-
-function testing(...args: any) {
-    console.log("from func type: " + typeof args)
-    console.log("from func: " + args)
-}
-
+import { ref } from 'vue';
 
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.example-showcase .el-select-v2 {
+  margin-right: 20px;
+}
+</style>
 

@@ -13,139 +13,21 @@
 
 <script setup lang="ts">
 
-import { computed, watch, ref, reactive } from "vue";
+import { computed, watch, ref } from "vue";
+import { KeyboardValue, FloatValue, IntValue, StringValue} from "./KeyboardValues"
 import Layouts from "./KeyboardLayouts";
 import isObject from "lodash/isObject";
 
-const props = defineProps({
-    value: [String, Number],
-    isFloat: Boolean,
-    show: Boolean,
-    write: Function,
-    cancel: Function,
-    options: {
-        type: Object,
-        default() {
-            return {};
-        }
-    }
-})
+const props = defineProps<{
+    value: string | number
+    isFloat: boolean
+    show: boolean
+    cancel: () => void
+    write: (v: any) => void
+}>()
 
-interface valueType {
-    value: string | number;
-    layout: string;
-    add: (ch: string) => void;
-    clr: () => void;
-    get: () => string | number;
-    justCleared: boolean;
-}
-
-const intValue = reactive({
-    value: 0,
-    layout: "numeric",
-    justCleared: true,
-
-    update(val: number) {
-        intValue.value = val
-    },
-    add(ch: string) {
-        let val = intValue.value.toString()
-
-        if (!intValue.justCleared && val !== "0") {
-            switch (ch) {
-                case '.':
-                    return
-                case '-':
-                    if (val.startsWith('-')) {
-                        val = val.slice(-(val.length - 1))
-                    } else {
-                        val = "-" + val
-                    }
-                    intValue.update(Number(val))
-                    return
-            }
-            val += ch
-        } else {
-            intValue.justCleared = false
-            val = ch
-        }
-        intValue.update(Number(val))
-    },
-    clr() {
-        intValue.justCleared = true
-        intValue.value = 0
-    },
-    get() {
-        return Number(intValue.value)
-    }
-})
-
-const stringValue = reactive({
-    value: "",
-    layout: "normal",
-    justCleared: true,
-    add(ch: string) {
-        if (!stringValue.justCleared) {
-            stringValue.value += ch
-        } else {
-            stringValue.justCleared = false
-            stringValue.value = ch
-        }
-    },
-    clr() {
-        stringValue.justCleared = true
-        stringValue.value = ""
-    },
-    get() {
-        return stringValue.value
-    }
-})
-
-const floatValue = reactive({
-    value: 0.1,
-    layout: "numeric",
-    justCleared: true,
-
-    update(val: number) {
-        floatValue.value = val
-    },
-    add(ch: string) {
-        let val = floatValue.value.toString()
-        if (!floatValue.justCleared) {
-            switch (ch) {
-                case '.':
-                    if (val.includes('.')) {
-                        return
-                    }
-                    break
-                case '-':
-                    if (val.startsWith('-')) {
-                        val = val.slice(-(val.length - 1))
-                    } else {
-                        val = "-" + val
-                    }
-                    floatValue.update(Number(val))
-                    return
-            }
-            val += ch
-        } else {
-            floatValue.justCleared = false
-            val = ch
-        }
-        floatValue.update(Number(val))
-    },
-
-    clr() {
-        floatValue.justCleared = true
-        floatValue.value = 0
-    },
-    get() {
-        return Number(floatValue.value)
-    }
-})
-
-const keyboardValue: valueType = ref(stringValue)
-const isShifted = ref(false)
+const keyboardValue = ref<KeyboardValue>(new FloatValue(0));
+const shifted = ref(false)
 
 watch(() => props.show, (trigger) => {
     // Will get called on each show change
@@ -153,15 +35,15 @@ watch(() => props.show, (trigger) => {
         // Check type of input
         if (typeof props.value === 'number') {
             if (props.isFloat) {
-                keyboardValue.value = floatValue
+                console.log("float")
+                keyboardValue.value = new FloatValue(props.value)
             } else {
-                keyboardValue.value = intValue
+                console.log("int")
+                keyboardValue.value = new IntValue(props.value)
             }
         } else {
-            // So string
-            keyboardValue.value = stringValue
+            keyboardValue.value = new StringValue(props.value)
         }
-        keyboardValue.value.value = props.value
     }
 });
 
@@ -175,7 +57,7 @@ const keySet = computed(() => {
         return;
     }
 
-    let keys = layout[isShifted.value ? "shifted" : "default"];
+    let keys = layout[shifted.value ? "shifted" : "default"];
     if (!keys) {
         return;
     }
@@ -251,11 +133,11 @@ function clickKey(_: any, key: any) {
 }
 
 function shift() {
-    isShifted.value = !isShifted.value
+    shifted.value = !shifted.value
 }
 
 function backspace() {
-    let val = keyboardValue.value.get().toString()
+    let val = keyboardValue.value.value
     if (val.length > 1) {
         val = val.slice(0, val.length - 1)
         keyboardValue.value.value = val
