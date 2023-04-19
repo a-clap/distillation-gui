@@ -36,13 +36,12 @@ func (d *DSClient) GetSensors() ([]distillation.DSConfig, error) {
 
 // Temperatures implements ds.Client
 func (d *DSClient) Temperatures() ([]distillation.DSTemperature, error) {
-	logger.Debug("Temperatures")
 	var temps []distillation.DSTemperature
 	for _, elem := range d.DS {
 		if elem.Enabled {
 			temps = append(temps, distillation.DSTemperature{
 				ID:          elem.ID,
-				Temperature: randomTemperature(0, 75),
+				Temperature: randomTemperature(70, 75) + elem.Correction,
 			})
 		}
 	}

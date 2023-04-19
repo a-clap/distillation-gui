@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/a-clap/iot v0.0.0-20230415182601-ffd250170e6e
 	github.com/a-clap/logging v0.0.0-20230406162054-e25047d44282
+	github.com/labstack/gommon v0.3.1
 	github.com/wailsapp/wails/v2 v2.4.1
 	golang.org/x/exp v0.0.0-20230118134722-a68e582fa157
 )
@@ -22,7 +23,6 @@ require (
 	github.com/jchv/go-winloader v0.0.0-20210711035445-715c2860da7e // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/labstack/echo/v4 v4.9.0 // indirect
-	github.com/labstack/gommon v0.3.1 // indirect
 	github.com/leaanthony/go-ansi-parser v1.0.1 // indirect
 	github.com/leaanthony/gosod v1.0.3 // indirect
 	github.com/leaanthony/slicer v1.5.0 // indirect

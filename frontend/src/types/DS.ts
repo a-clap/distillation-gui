@@ -26,14 +26,12 @@ export class DS {
         DSSetCorrection(this.id, value)
     }
 
-
     writeSamples(value: number) {
         this.samples.value = value
         DSSetSamples(this.id, value)
     }
 
     set resolution(value: string) {
-
         this.resolution_ = Number(value)
         DSSetResolution(this.id, this.resolution_)
     }

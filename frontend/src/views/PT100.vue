@@ -1,7 +1,7 @@
 <template>
     <main>
         <h1>{{ $t('pt100.title') }}</h1>
-        <div v-for="(pt, index) in getPT100s" :key="index">
+        <div v-for="(pt, index) in pt100s" :key="index">
             <section class="pt-box">
                 <el-row :gutter="20" align="middle">
                     <el-col :span="3">
@@ -12,7 +12,7 @@
                     </el-col>
                     <el-col :span="4" v-if="pt.enable">
                         <input v-model="pt.correction.value" @click="() => pt.correction.showKeyboard()">
-                        <Keyboard v-bind="pt.correction" :write="(e: number) => pt.correction.write(e)"
+                        <Keyboard v-bind="pt.correction" :write="(e: number) => pt.writeCorrection(e)"
                             :cancel="() => pt.correction.cancel()" />
                     </el-col>
                     <el-col :span="5" :offset="1" v-if="pt.enable">
@@ -28,7 +28,7 @@
                     </el-col>
                     <el-col :span="4" v-if="pt.enable">
                         <input v-model="pt.samples.value" @click="() => pt.samples.showKeyboard()">
-                        <Keyboard v-bind="pt.samples" :write="(e: number) => pt.samples.write(e)"
+                        <Keyboard v-bind="pt.samples" :write="(e: number) => pt.writeSamples(e)"
                             :cancel="() => pt.samples.cancel()" />
                     </el-col>
                 </el-row>
@@ -39,20 +39,64 @@
 
 <script setup lang="ts">
 import Keyboard from "../components/Keyboard.vue"
-import { reactive, onMounted, computed } from "vue"
+import { ref, onMounted, onUnmounted } from "vue"
 import { PT100 } from '../types/PT100';
+import { PTListener } from "../types/PTListener";
+import { PTGet } from "../../wailsjs/go/backend/Backend";
+import { parameters } from "../../wailsjs/go/models";
 
-const pt100s: PT100[] = reactive([])
+const pt100s = ref<PT100[]>([]);
 
 onMounted(() => {
-    pt100s.push(new PT100("pt100_1", 1, 2, 3.0))
-    pt100s.push(new PT100("pt100_2", 3, 4, 5.0))
-    pt100s.push(new PT100("pt100_3", 6, 7, 8.0))
+    reload()
+    PTListener.subscribeConfig(updateConfig)
+    PTListener.subscribeTemperature(updateTemperature)
 })
 
-const getPT100s = computed(() => {
-    return pt100s;
+onUnmounted(() => {
+    PTListener.unsubscribeConfig(updateConfig)
+    PTListener.unsubscribeTemperature(updateTemperature)
 })
+
+function reload() {
+    PTGet().then((got : parameters.PT[]) => {
+        let newPT: PT100[] = []
+        got.forEach((p: parameters.PT) => {
+            let ds = new PT100(p.name, p.id, p.enabled, p.correction, p.samples)
+            newPT.push(ds)
+        })
+
+        pt100s.value = newPT.sort((a: PT100, b: PT100) => {
+            if (a.name > b.name) {
+                return 1
+            }
+            if (a.name < b.name) {
+                return -1
+            }
+            return 0
+        })
+    })
+}
+
+function updateConfig(p: parameters.PT) {
+    pt100s.value.some(function (item: PT100, i: number) {
+        if (item.id == p.id) {
+            let pt = new PT100(p.name, p.id, p.enabled, p.correction, p.samples)
+            pt.temperature = pt100s.value[i].temperature
+            pt100s.value[i] = pt
+        }
+    });
+}
+
+function updateTemperature(t: parameters.Temperature) {
+    pt100s.value.some(function (item: PT100, i: number) {
+        if (item.id == t.ID) {
+            pt100s.value[i].temperature = t.temperature.toFixed(2)
+        }
+    });
+
+}
+
 
 </script>
 

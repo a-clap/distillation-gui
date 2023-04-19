@@ -35,10 +35,8 @@ watch(() => props.show, (trigger) => {
         // Check type of input
         if (typeof props.value === 'number') {
             if (props.isFloat) {
-                console.log("float")
                 keyboardValue.value = new FloatValue(props.value)
             } else {
-                console.log("int")
                 keyboardValue.value = new IntValue(props.value)
             }
         } else {
