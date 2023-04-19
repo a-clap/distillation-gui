@@ -5,7 +5,6 @@ import (
 
 	"github.com/a-clap/distillation-gui/backend/pt"
 	"github.com/a-clap/iot/pkg/distillation"
-	"github.com/labstack/gommon/log"
 	"golang.org/x/exp/slices"
 )
 
@@ -19,7 +18,7 @@ type PTClient struct {
 
 // Configure implements ds.Client
 func (p *PTClient) Configure(sensor distillation.PTConfig) (distillation.PTConfig, error) {
-	log.Debug("Configure")
+	logger.Debug("Configure")
 	idx := slices.IndexFunc(p.PT, func(ds distillation.PTConfig) bool {
 		return ds.ID == sensor.ID
 	})
@@ -33,7 +32,7 @@ func (p *PTClient) Configure(sensor distillation.PTConfig) (distillation.PTConfi
 
 // GetSensors implements ds.Client
 func (p *PTClient) GetSensors() ([]distillation.PTConfig, error) {
-	log.Debug("GetSensors")
+	logger.Debug("GetSensors")
 	return p.PT, nil
 }
 

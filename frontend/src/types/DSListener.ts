@@ -18,13 +18,13 @@ class dsListener {
     this.config = new Listener()
     this.temperature = new Listener()
 
-    NotifyDSConfig().then((ev) => {
+    NotifyDSConfig().then((ev: string) => {
       return runtime.EventsOn(ev, (...args: any) => {
         this.handleConfig(...args);
       });
     })
 
-    NotifyDSTemperature().then((ev) => {
+    NotifyDSTemperature().then((ev: string) => {
       return runtime.EventsOn(ev, (...args: any) => {
         this.handleTemperature(...args);
       });

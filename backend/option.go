@@ -4,6 +4,7 @@ import (
 	"github.com/a-clap/distillation-gui/backend/ds"
 	"github.com/a-clap/distillation-gui/backend/heater"
 	"github.com/a-clap/distillation-gui/backend/pt"
+	"github.com/a-clap/distillation-gui/backend/wifi"
 )
 
 type Option func(b *Backend) error
@@ -30,6 +31,13 @@ func WithPTClient(c pt.Client) Option {
 			return err
 		}
 		pt.Run()
+		return nil
+	}
+}
+
+func WithWifi(c wifi.Client) Option {
+	return func(b *Backend) error {
+		wifi.Init(c)
 		return nil
 	}
 }

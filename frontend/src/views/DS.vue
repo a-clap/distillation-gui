@@ -36,7 +36,7 @@
                     </el-col>
                     <el-col :span="6" :offset=2 v-if="ds.enable">
                         <el-select v-model="ds.resolution" size="large" class="m-2">
-                            <el-option :label="$t('ds.resolution_9')" value="9"/>
+                            <el-option :label="$t('ds.resolution_9')" value="9" />
                             <el-option :label="$t('ds.resolution_10')" value="10" />
                             <el-option :label="$t('ds.resolution_11')" value="11" />
                             <el-option :label="$t('ds.resolution_12')" value="12" />
@@ -116,8 +116,8 @@ h1 {
 }
 
 .el-select {
-      display: block;
-      padding: 0;
+    display: block;
+    padding: 0;
 }
 
 .ds-box {

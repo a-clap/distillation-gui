@@ -7,7 +7,7 @@ export class PT100 {
     correction: Parameter;
     samples: Parameter;
     temperature: string;
-    enable_: boolean;
+    private enable_: boolean;
 
     constructor(name: string, id: string, enabled:boolean, correction: number, samples: number, temperature: string = "") {
         this.name = name

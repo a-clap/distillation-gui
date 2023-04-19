@@ -163,18 +163,19 @@ $radius: 0.35rem;
 
 .numeric {
     width: 500px;
+    left: calc( (var(--window-width) - 500px) / 2);
+    top: 25%;
 }
 
 .normal {
     width: 900px;
+    left: calc( (1024px - 900px) / 2);
+    top: 25%;
 }
 
 .keyboard-window {
     z-index: 1000;
     position: fixed;
-    margin: auto auto auto auto;
-    top: 25%;
-    left: 25%;
 
     padding: 1rem;
     background-color: #EEE;

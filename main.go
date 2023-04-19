@@ -11,6 +11,7 @@ import (
 	"github.com/a-clap/iot/pkg/ds18b20"
 	"github.com/a-clap/iot/pkg/embedded"
 	"github.com/a-clap/iot/pkg/max31865"
+	"github.com/a-clap/iot/pkg/wifi"
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
@@ -98,12 +99,17 @@ func main() {
 				Samples:      13,
 			}}},
 	)
+	w, err := wifi.New()
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 	// Create backend
 	b, err := backend.New(
 		backend.WithHeaterClient(&heaterClient),
 		backend.WithDSClient(&dsClient),
 		backend.WithPTClient(&ptClient),
+		backend.WithWifi(w),
 	)
 	if err != nil {
 		log.Fatalln(err)

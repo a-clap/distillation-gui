@@ -1,13 +1,13 @@
-export interface writeCallbackType { (value: number): void }
+export interface writeCallbackType { (value: any): void }
 
 export default class Parameter {
-    value: number;
+    value: number | string;
     isFloat: boolean;
     show: boolean;
     writeCallback: writeCallbackType;
 
 
-    constructor(value: number, isFloat: boolean, writeCallback: writeCallbackType) {
+    constructor(value: number | string, isFloat: boolean, writeCallback: writeCallbackType) {
         this.value = value
         this.isFloat = isFloat
         this.show = false
@@ -22,7 +22,7 @@ export default class Parameter {
         this.show = false
     }
 
-    write(value: number) {
+    write(value: number | string) {
         this.value = value
         this.writeCallback(value)
         this.cancel()

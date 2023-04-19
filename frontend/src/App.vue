@@ -17,6 +17,8 @@ import Sidebar from "./components/Sidebar.vue";
   --sidebar-dark: #1e293b;
   --sidebar-dark-alt: #334155;
   --sidebar-width: 200px;
+  --window-width: 1024px;
+  --window-height: 768px;
 }
 
 * {

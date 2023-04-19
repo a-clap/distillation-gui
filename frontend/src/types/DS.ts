@@ -9,7 +9,7 @@ export class DS {
     samples: Parameter;
     resolution_: number;
     temperature: string;
-    enabled: boolean;
+    private enabled: boolean;
 
     constructor(name: string, id: string, enabled: boolean, correction: number, samples: number, resolution: number, temperature: string = "") {
         this.name = name

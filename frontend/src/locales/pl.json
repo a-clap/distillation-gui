@@ -17,7 +17,9 @@
     "title": "Ustawienia procesu"
   },
   "wifi": {
-    "title": "Konfiguracja WIFI"
+    "title": "Konfiguracja WIFI",
+    "enable": "WIFI",
+    "reload_ap": "Pobierz sieci"
   },
   "pt100": {
     "title": "Konfiguracja czujników PT100",
