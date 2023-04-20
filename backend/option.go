@@ -18,6 +18,7 @@ func WithHeaterClient(c heater.Client) Option {
 
 func WithDSClient(c ds.Client) Option {
 	return func(b *Backend) error {
+		b.dsChan = make(chan error, 10)
 		if err := ds.Init(c, b.dsChan, b.interval); err != nil {
 			return err
 		}
@@ -28,6 +29,7 @@ func WithDSClient(c ds.Client) Option {
 
 func WithPTClient(c pt.Client) Option {
 	return func(b *Backend) error {
+		b.ptChan = make(chan error, 10)
 		if err := pt.Init(c, b.ptChan, b.interval); err != nil {
 			return err
 		}

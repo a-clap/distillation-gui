@@ -56,3 +56,7 @@ func (e *eventEmitter) OnPTTemperatureChange(t parameters.Temperature) {
 func (e *eventEmitter) OnGPIOChange(config parameters.GPIO) {
 	runtime.EventsEmit(e.ctx, NotifyGPIO, config)
 }
+
+func (e *eventEmitter) OnError(errID int) {
+	runtime.EventsEmit(e.ctx, NotifyError, errID)
+}

@@ -48,5 +48,21 @@
     "active_level_high": "Wysoki",
     "manual_control": "Sterowanie ręczne",
     "manual_control_force": "STAN"
+  },
+  "errors": {
+    "title": "BŁĄD URZĄDZENIA",
+    "unknown": "Nieznany kod błędu: ",
+    "0": "All good",
+    "10": "Nieudane ustawienie korekty DS",
+    "11": "Nieudane włączenie DS",
+    "12": "Nieudane ustawienie próbek DS",
+    "13": "Nieudane ustawienie rozdzielczości DS",
+    "20": "Nieudane ustawienie korekty PT",
+    "21": "Nieudane włączenie PT",
+    "22": "Nieudane ustawienie próbek PT",
+    "30": "Nieudane ustawienie aktywnego poziomu GPIO",
+    "31": "Nieudane ustawienie stanu GPIO",
+    "40": "Nieudane pobranie listy sieci"
   }
+  
 }

@@ -48,7 +48,6 @@ onUnmounted(() => {
 })
 
 function reload() {
-    console.log("reload")
     GPIOGet().then((got : parameters.GPIO[]) => {
         let newGPIO: GPIO[] = []
         got.forEach((p: parameters.GPIO) => {

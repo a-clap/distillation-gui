@@ -10,6 +10,7 @@ const (
 	NotifyPTConfig      = "rcv:ptcfg"
 	NotifyPTTemperature = "rcv:pttmp"
 	NotifyGPIO          = "rcv:gpio"
+	NotifyError         = "rcv:error"
 )
 
 func (Events) NotifyHeaters() string {
@@ -34,4 +35,8 @@ func (Events) NotifyPTTemperature() string {
 
 func (Events) NotifyGPIO() string {
 	return NotifyGPIO
+}
+
+func (Events) NotifyError() string {
+	return NotifyError
 }
