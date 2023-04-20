@@ -10,6 +10,7 @@ import (
 	"github.com/a-clap/iot/pkg/distillation"
 	"github.com/a-clap/iot/pkg/ds18b20"
 	"github.com/a-clap/iot/pkg/embedded"
+	"github.com/a-clap/iot/pkg/embedded/gpio"
 	"github.com/a-clap/iot/pkg/max31865"
 	"github.com/a-clap/iot/pkg/wifi"
 	"github.com/wailsapp/wails/v2"
@@ -99,6 +100,29 @@ func main() {
 				Samples:      13,
 			}}},
 	)
+
+	gpioClient := backendmock.GPIOClient{}
+	gpioClient.GPIO = append(gpioClient.GPIO,
+		distillation.GPIOConfig{GPIOConfig: embedded.GPIOConfig{Config: gpio.Config{
+			ID:          "gpio_1",
+			Direction:   gpio.DirOutput,
+			ActiveLevel: gpio.Low,
+			Value:       false,
+		}}},
+		distillation.GPIOConfig{GPIOConfig: embedded.GPIOConfig{Config: gpio.Config{
+			ID:          "gpio_2",
+			Direction:   gpio.DirOutput,
+			ActiveLevel: gpio.High,
+			Value:       true,
+		}}},
+		distillation.GPIOConfig{GPIOConfig: embedded.GPIOConfig{Config: gpio.Config{
+			ID:          "gpio_3",
+			Direction:   gpio.DirOutput,
+			ActiveLevel: gpio.Low,
+			Value:       true,
+		}}},
+	)
+
 	w, err := wifi.New()
 	if err != nil {
 		log.Fatalln(err)
@@ -109,6 +133,7 @@ func main() {
 		backend.WithHeaterClient(&heaterClient),
 		backend.WithDSClient(&dsClient),
 		backend.WithPTClient(&ptClient),
+		backend.WithGPIOClient(&gpioClient),
 		backend.WithWifi(w),
 	)
 	if err != nil {

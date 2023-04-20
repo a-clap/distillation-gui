@@ -5,11 +5,13 @@ import (
 	"time"
 
 	"github.com/a-clap/distillation-gui/backend/ds"
+	"github.com/a-clap/distillation-gui/backend/gpio"
 	"github.com/a-clap/distillation-gui/backend/heater"
 	"github.com/a-clap/distillation-gui/backend/parameters"
 	"github.com/a-clap/distillation-gui/backend/pt"
 	"github.com/a-clap/distillation-gui/backend/wifi"
 	"github.com/a-clap/iot/pkg/ds18b20"
+	embeddedgpio "github.com/a-clap/iot/pkg/embedded/gpio"
 	"github.com/a-clap/logging"
 )
 
@@ -124,4 +126,19 @@ func (b *Backend) WifiAPList() []string {
 		return nil
 	}
 	return aps
+}
+
+func (b *Backend) GPIOGet() []parameters.GPIO {
+	logger.Debug("GPIOGet")
+	return gpio.Get()
+}
+
+func (b *Backend) GPIOSetActiveLevel(id string, active embeddedgpio.ActiveLevel) {
+	logger.Debug("GPIOSetActiveLevel", logging.String("id", id), logging.Int("active", int(active)))
+	gpio.SetActiveLevel(id, active)
+}
+
+func (b *Backend) GPIOSetState(id string, value bool) {
+	logger.Debug("GPIOSetState", logging.String("id", id), logging.Bool("value", value))
+	gpio.SetState(id, value)
 }

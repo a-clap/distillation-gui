@@ -1,7 +1,7 @@
 <template>
     <main>
         <h1>{{ $t('outputs.title') }}</h1>
-        <div v-for="(gpio, index) in getGpios" :key="index">
+        <div v-for="(gpio, index) in gpios" :key="index">
             <section class="gpio-box">
                 <el-row :gutter="20" align="middle">
                     <el-col :span="3">
@@ -30,19 +30,52 @@
 
 <script setup lang="ts">
 
-import { reactive, onMounted, computed } from "vue"
+import { ref, onMounted, onUnmounted, computed } from "vue"
 import { GPIO } from '../types/GPIO';
+import { GPIOListener } from "../types/GPIOListener";
+import { parameters } from "../../wailsjs/go/models";
+import { GPIOGet } from "../../wailsjs/go/backend/Backend";
 
-const gpios: GPIO[] = reactive([])
+const gpios = ref<GPIO[]>([]);
 
 onMounted(() => {
-    gpios.push(new GPIO("gpio_1", false))
-    gpios.push(new GPIO("gpio_2", true))
+    reload()
+    GPIOListener.subscribe(update)
 })
 
-const getGpios = computed(() => {
-    return gpios;
+onUnmounted(() => {
+    GPIOListener.unsubscribe(update)
 })
+
+function reload() {
+    console.log("reload")
+    GPIOGet().then((got : parameters.GPIO[]) => {
+        let newGPIO: GPIO[] = []
+        got.forEach((p: parameters.GPIO) => {
+            let gp = new GPIO(p.id, p.active_level, p.value)
+            newGPIO.push(gp)
+        })
+
+        gpios.value = newGPIO.sort((a: GPIO, b: GPIO) => {
+            if (a.name > b.name) {
+                return 1
+            }
+            if (a.name < b.name) {
+                return -1
+            }
+            return 0
+        })
+    })
+}
+
+function update(p: parameters.GPIO) {
+    gpios.value.some(function (item: GPIO, i: number) {
+        if (item.name == p.id) {
+            let gp = new GPIO(p.id, p.active_level, p.value)
+            gpios.value[i] = gp
+        }
+    });
+}
 
 </script>
 <style lang="scss" scoped>

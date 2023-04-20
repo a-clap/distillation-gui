@@ -2,6 +2,7 @@ package backend
 
 import (
 	"github.com/a-clap/distillation-gui/backend/ds"
+	"github.com/a-clap/distillation-gui/backend/gpio"
 	"github.com/a-clap/distillation-gui/backend/heater"
 	"github.com/a-clap/distillation-gui/backend/pt"
 	"github.com/a-clap/distillation-gui/backend/wifi"
@@ -32,6 +33,12 @@ func WithPTClient(c pt.Client) Option {
 		}
 		pt.Run()
 		return nil
+	}
+}
+
+func WithGPIOClient(c gpio.Client) Option {
+	return func(b *Backend) error {
+		return gpio.Init(c)
 	}
 }
 

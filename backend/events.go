@@ -9,6 +9,7 @@ const (
 	NotifyDSTemperature = "rcv:dstmp"
 	NotifyPTConfig      = "rcv:ptcfg"
 	NotifyPTTemperature = "rcv:pttmp"
+	NotifyGPIO          = "rcv:gpio"
 )
 
 func (Events) NotifyHeaters() string {
@@ -29,4 +30,8 @@ func (Events) NotifyPTConfig() string {
 
 func (Events) NotifyPTTemperature() string {
 	return NotifyPTTemperature
+}
+
+func (Events) NotifyGPIO() string {
+	return NotifyGPIO
 }

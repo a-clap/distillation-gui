@@ -1,17 +1,15 @@
+import { GPIOSetState } from "../../wailsjs/go/backend/Backend";
+import { GPIOSetActiveLevel } from "../../wailsjs/go/backend/Backend";
+
 export class GPIO {
-  name_: string;
-  activeLevel_: boolean;
-  state_: boolean;
-  constructor(name: string, activeLow: boolean) {
-    this.name_ = name;
-    this.activeLevel_ = activeLow;
-    this.state_ = false
+  name: string;
+  private activeLevel_: boolean;
+  private state_: boolean;
+  constructor(name: string, activeLevel: number, state: boolean = false) {
+    this.name = name;
+    this.activeLevel_ = activeLevel > 0;
+    this.state_ = state
   }
-
-  get name() {
-    return this.name_
-  }
-
 
   get activeLevel(): boolean {
     return this.activeLevel_
@@ -19,13 +17,13 @@ export class GPIO {
 
   set activeLevel(value: boolean) {
     this.activeLevel_ = value
-    console.log("setting active level " + this.activeLevel_)
+    GPIOSetActiveLevel(this.name, this.activeLevel_ ? 1 : 0)
 
   }
 
   set state(value: boolean) {
     this.state_ = value
-    console.log("setting state level " + this.state_)
+    GPIOSetState(this.name, this.state_)
   }
 
   get state(): boolean {
