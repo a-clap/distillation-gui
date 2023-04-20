@@ -4,13 +4,18 @@ package backend
 type Events struct{}
 
 const (
-	NotifyHeaters       = "rcv:heaters"
-	NotifyDSConfig      = "rcv:dscfg"
-	NotifyDSTemperature = "rcv:dstmp"
-	NotifyPTConfig      = "rcv:ptcfg"
-	NotifyPTTemperature = "rcv:pttmp"
-	NotifyGPIO          = "rcv:gpio"
-	NotifyError         = "rcv:error"
+	NotifyHeaters           = "rcv:heaters"
+	NotifyDSConfig          = "rcv:dscfg"
+	NotifyDSTemperature     = "rcv:dstmp"
+	NotifyPTConfig          = "rcv:ptcfg"
+	NotifyPTTemperature     = "rcv:pttmp"
+	NotifyGPIO              = "rcv:gpio"
+	NotifyError             = "rcv:error"
+	NotifyPhasesConfig      = "rcv:phase_config"
+	NotifyPhasesValidate    = "rcv:phase_validate"
+	NotifyPhasesPhaseConfig = "rcv:phase_phase_config"
+	NotifyPhasesPhaseCount  = "rcv:phase_count"
+	NotifyPhasesStatus      = "rcv:phase_status"
 )
 
 func (Events) NotifyHeaters() string {
@@ -39,4 +44,20 @@ func (Events) NotifyGPIO() string {
 
 func (Events) NotifyError() string {
 	return NotifyError
+}
+
+func (Events) NotifyPhasesConfig() string {
+	return NotifyPhasesConfig
+}
+func (Events) NotifyPhasesValidate() string {
+	return NotifyPhasesValidate
+}
+func (Events) NotifyPhasesPhaseConfig() string {
+	return NotifyPhasesPhaseConfig
+}
+func (Events) NotifyPhasesPhaseCount() string {
+	return NotifyPhasesPhaseCount
+}
+func (Events) NotifyPhasesStatus() string {
+	return NotifyPhasesStatus
 }

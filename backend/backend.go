@@ -24,6 +24,7 @@ type Backend struct {
 	eventEmitter *eventEmitter
 	dsChan       chan error
 	ptChan       chan error
+	phaseChan    chan error
 	interval     time.Duration
 }
 
@@ -64,6 +65,15 @@ func (b *Backend) handleErrors() {
 		go func() {
 			for err := range b.ptChan {
 				logger.Warn("Error from PT", logging.String("error", err.Error()))
+				// TODO: How to get ID based on error?
+				b.eventEmitter.OnError(0)
+			}
+		}()
+	}
+	if b.phaseChan != nil {
+		go func() {
+			for err := range b.phaseChan {
+				logger.Warn("Error from Phases", logging.String("error", err.Error()))
 				// TODO: How to get ID based on error?
 				b.eventEmitter.OnError(0)
 			}

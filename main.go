@@ -8,6 +8,7 @@ import (
 	"github.com/a-clap/distillation-gui/backend"
 	"github.com/a-clap/distillation-gui/backendmock"
 	"github.com/a-clap/iot/pkg/distillation"
+	"github.com/a-clap/iot/pkg/distillation/process"
 	"github.com/a-clap/iot/pkg/ds18b20"
 	"github.com/a-clap/iot/pkg/embedded"
 	"github.com/a-clap/iot/pkg/embedded/gpio"
@@ -123,6 +124,9 @@ func main() {
 		}}},
 	)
 
+	phaseClient := backendmock.PhasesClient{}
+	phaseClient.Config = process.Config{PhaseNumber: 3, Phases: make([]process.PhaseConfig, 3)}
+
 	w, err := wifi.New()
 	if err != nil {
 		log.Fatalln(err)
@@ -134,6 +138,7 @@ func main() {
 		backend.WithDSClient(&dsClient),
 		backend.WithPTClient(&ptClient),
 		backend.WithGPIOClient(&gpioClient),
+		backend.WithPhaseClient(&phaseClient),
 		backend.WithWifi(w),
 	)
 	if err != nil {

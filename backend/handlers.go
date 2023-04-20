@@ -7,7 +7,9 @@ import (
 	"github.com/a-clap/distillation-gui/backend/gpio"
 	"github.com/a-clap/distillation-gui/backend/heater"
 	"github.com/a-clap/distillation-gui/backend/parameters"
+	"github.com/a-clap/distillation-gui/backend/phases"
 	"github.com/a-clap/distillation-gui/backend/pt"
+	"github.com/a-clap/iot/pkg/distillation"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
@@ -25,6 +27,7 @@ func (e *eventEmitter) init(ctx context.Context) {
 	ds.AddListener(e)
 	pt.AddListener(e)
 	gpio.AddListener(e)
+	phases.AddListener(e)
 }
 
 // OnHeaterChange implements heater.Listener
@@ -59,4 +62,34 @@ func (e *eventEmitter) OnGPIOChange(config parameters.GPIO) {
 
 func (e *eventEmitter) OnError(errID int) {
 	runtime.EventsEmit(e.ctx, NotifyError, errID)
+}
+
+// OnConfigChange implements phases.Listener
+func (e *eventEmitter) OnConfigChange(c distillation.ProcessConfig) {
+	logger.Debug("OnConfigChange")
+	runtime.EventsEmit(e.ctx, NotifyPhasesConfig, c)
+}
+
+// OnConfigValidate implements phases.Listener
+func (e *eventEmitter) OnConfigValidate(validation distillation.ProcessConfigValidation) {
+	logger.Debug("OnConfigValidate")
+	runtime.EventsEmit(e.ctx, NotifyPhasesValidate, validation)
+}
+
+// OnPhaseConfigChange implements phases.Listener
+func (e *eventEmitter) OnPhaseConfigChange(phaseNumber int, cfg distillation.ProcessPhaseConfig) {
+	logger.Debug("OnPhaseConfigChange")
+	runtime.EventsEmit(e.ctx, NotifyPhasesPhaseConfig, phaseNumber, cfg)
+}
+
+// OnPhasesCountChange implements phases.Listener
+func (e *eventEmitter) OnPhasesCountChange(count distillation.ProcessPhaseCount) {
+	logger.Debug("OnPhasesCountChange")
+	runtime.EventsEmit(e.ctx, NotifyPhasesPhaseCount, count)
+}
+
+// OnStatusChange implements phases.Listener
+func (e *eventEmitter) OnStatusChange(status distillation.ProcessStatus) {
+	logger.Debug("OnStatusChange")
+	runtime.EventsEmit(e.ctx, NotifyPhasesStatus, status)
 }
