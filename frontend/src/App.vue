@@ -21,7 +21,7 @@ ErrorListener.subscribe(errorCallback)
 function errorCallback(id: number) {
   let err = `errors.${id}`;
   if (te(err)) {
-      err = t(err)
+    err = t(err)
   } else {
     err = t('errors.unknown')
     err += id.toString()
@@ -30,7 +30,7 @@ function errorCallback(id: number) {
   open(t('errors.title'), err)
 }
 
-const open = (title:string, msg: string) => {
+const open = (title: string, msg: string) => {
   ElMessageBox.alert(
     msg,
     title,
@@ -94,6 +94,6 @@ const open = (title:string, msg: string) => {
   input:focus {
     outline: none !important;
     border: 1px solid var(--el-color-primary);
-  } 
+  }
 }
 </style>

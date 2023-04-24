@@ -11,10 +11,8 @@ import (
 )
 
 type Client interface {
-	GetEnabled() ([]distillation.HeaterConfig, error)
 	GetAll() ([]distillation.HeaterConfigGlobal, error)
 	Enable(setConfig distillation.HeaterConfigGlobal) (distillation.HeaterConfigGlobal, error)
-	Configure(setConfig distillation.HeaterConfig) (distillation.HeaterConfig, error)
 }
 
 type Listener interface {
