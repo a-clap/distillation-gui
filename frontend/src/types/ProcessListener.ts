@@ -53,6 +53,7 @@ class processListener {
 
         NotifyPhasesPhaseCount().then((ev: string) => {
             return runtime.EventsOn(ev, (...args: any) => {
+                console.log("NotifyPhasesPhaseCount")
                 this.NotifyPhasesPhaseCount(...args);
             });
         })
@@ -116,7 +117,7 @@ class processListener {
     private NotifyPhasesValidate(...args: any) {
         try {
             let t = new distillation.ProcessConfigValidation(args[0])
-            this.config.notify(t)
+            this.validate.notify(t)
         } catch (e) {
             console.log(e)
         }
@@ -124,8 +125,8 @@ class processListener {
     private NotifyPhasesPhaseConfig(...args: any) {
         try {
             let n = Number(args[0])
-            let t = new distillation.ProcessConfigValidation(args[1])
-            this.config.notify(n, t)
+            let t = new distillation.ProcessPhaseConfig(args[1])
+            this.phaseConfig.notify(n, t)
         } catch (e) {
             console.log(e)
         }
@@ -134,7 +135,7 @@ class processListener {
     private NotifyPhasesPhaseCount(...args: any) {
         try {
             let t = new distillation.ProcessPhaseConfig(args[0])
-            this.config.notify(t)
+            this.phaseCount.notify(t)
         } catch (e) {
             console.log(e)
         }
@@ -143,7 +144,7 @@ class processListener {
     private NotifyPhasesStatus(...args: any) {
         try {
             let t = new distillation.ProcessStatus(args[0])
-            this.config.notify(t)
+            this.status.notify(t)
         } catch (e) {
             console.log(e)
         }

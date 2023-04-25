@@ -2,6 +2,7 @@ package main
 
 import (
 	"embed"
+	"fmt"
 	"log"
 	"time"
 
@@ -126,6 +127,30 @@ func main() {
 
 	phaseClient := backendmock.PhasesClient{}
 	phaseClient.Config = process.Config{PhaseNumber: 3, Phases: make([]process.PhaseConfig, 3)}
+	for i := range phaseClient.Config.Phases {
+		gpio := make([]process.GPIOPhaseConfig, 3)
+		for j := range gpio {
+			gpio[j] = process.GPIOPhaseConfig{
+				ID:         fmt.Sprint("gpio", j),
+				SensorID:   fmt.Sprint("sensor ", j),
+				TLow:       0,
+				THigh:      0,
+				Hysteresis: 0,
+				Inverted:   false,
+			}
+		}
+
+		phaseClient.Config.Phases[i].GPIO = gpio
+
+		heaters := make([]process.HeaterPhaseConfig, 3)
+		for j := range heaters {
+			heaters[j] = process.HeaterPhaseConfig{
+				ID:    fmt.Sprint("heater", j),
+				Power: 0,
+			}
+		}
+		phaseClient.Config.Phases[i].Heaters = heaters
+	}
 
 	w, err := wifi.New()
 	if err != nil {

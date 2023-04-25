@@ -41,3 +41,7 @@ func (*Models) TemperaturePhaseStatus() process.TemperaturePhaseStatus {
 func (*Models) GPIOPhaseStatus() process.GPIOPhaseStatus {
 	return process.GPIOPhaseStatus{}
 }
+
+func (*Models) MoveToNextConfig() process.MoveToNextConfig {
+	return process.MoveToNextConfig{}
+}

@@ -14,7 +14,26 @@
     "hello": "hello message"
   },
   "phases": {
-    "title": "Ustawienia procesu"
+    "title": "Ustawienia procesu",
+    "main": "Główne",
+    "phase": "Faza",
+    "count": "Liczba faz",
+    "next_type": "Warunek końca",
+    "next_type_time": "Czas",
+    "next_type_temp": "Temperatura",
+    "timeleft": "Czas do końca (s)",
+    "timeleft_temp": "Czas trwania temperatury (s)",
+    "next_sensor": "Czujnik",
+    "sensor_threshold": "Temperatura (°C)",
+    "heaters": "KONFIGURACJA GRZAŁEK",
+    "no_heaters": "BRAK GRZAŁEK DO KONFIGURACJI",
+    "heater_power": "moc (%)",
+    "gpio": "KONFIGURACJA WYJŚĆ",
+    "no_gpio": "BRAK WYJŚĆ DO KONFIGURACJI",
+    "gpio_inverted": "Odwrócone sterowanie",
+    "gpio_hysteresis": "Histereza (°C)",
+    "gpio_temp_max": "Temperatura maks. (°C)",
+    "gpio_temp_min": "Temperatura min. (°C)"
   },
   "wifi": {
     "title": "Konfiguracja WIFI",
@@ -64,5 +83,4 @@
     "31": "Nieudane ustawienie stanu GPIO",
     "40": "Nieudane pobranie listy sieci"
   }
-  
 }

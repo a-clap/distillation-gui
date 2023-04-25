@@ -1,6 +1,6 @@
 module github.com/a-clap/distillation-gui
 
-go 1.20
+go 1.19
 
 require (
 	github.com/a-clap/iot v0.0.0-20230415182601-ffd250170e6e
