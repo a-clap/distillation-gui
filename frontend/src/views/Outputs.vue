@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-
+import { ElRow, ElCol, ElRadioGroup, ElRadioButton, ElCheckbox } from "element-plus";
 import { ref, onMounted, onUnmounted, computed } from "vue"
 import { GPIO } from '../types/GPIO';
 import { GPIOListener } from "../types/GPIOListener";
@@ -48,7 +48,7 @@ onUnmounted(() => {
 })
 
 function reload() {
-    GPIOGet().then((got : parameters.GPIO[]) => {
+    GPIOGet().then((got: parameters.GPIO[]) => {
         let newGPIO: GPIO[] = []
         got.forEach((p: parameters.GPIO) => {
             let gp = new GPIO(p.id, p.active_level, p.value)

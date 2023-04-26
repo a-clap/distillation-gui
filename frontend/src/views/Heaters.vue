@@ -14,8 +14,8 @@
 </template>
 
 <script setup lang="ts">
-
-import { ref, computed, onMounted, onUnmounted, } from "vue"
+import { ElRow, ElCol, ElSwitch } from "element-plus";
+import { ref, onMounted, onUnmounted, } from "vue"
 import { Heater } from '../types/Heater';
 import { HeaterListener } from '../types/HeaterListener';
 import { HeatersGet } from "../../wailsjs/go/backend/Backend";

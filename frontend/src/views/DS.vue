@@ -48,7 +48,7 @@
     </main>
 </template>
 <script setup lang="ts">
-
+import { ElRow, ElCol, ElSelect, ElOption, ElSwitch } from "element-plus";
 import Keyboard from "../components/Keyboard.vue"
 import { ref, onMounted, onUnmounted } from "vue"
 import { DS } from '../types/DS';
