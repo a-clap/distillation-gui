@@ -130,8 +130,6 @@ import { ProcessListener } from "../types/ProcessListener";
 import { ProcessPhaseConfig } from "../types/Phases";
 import { distillation, process } from "../../wailsjs/go/models";
 import { PhasesGetPhaseConfigs } from "../../wailsjs/go/backend/Backend"
-
-import { ElTabPane, ElRow, ElCol, ElTabs, ElSelect, ElSwitch } from "element-plus";
 const activated = ref('main')
 const phases = ref<Phases>(new Phases());
 

@@ -26,8 +26,8 @@
 </template>
 
 <script setup lang="ts">
-import { ElContainer, ElHeader, ElTable, ElMain, ElSwitch, ElFooter, ElScrollbar, ElButton, ElTableColumn, ElProgress } from 'element-plus';
 import { ref } from 'vue';
+
 import Keyboard from '../components/Keyboard.vue';
 import { WifiAPList } from '../../wailsjs/go/backend/Backend';
 import { onMounted, onUnmounted } from 'vue';

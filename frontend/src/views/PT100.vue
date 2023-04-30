@@ -38,7 +38,6 @@
 </template>
 
 <script setup lang="ts">
-import { ElRow, ElCol, ElSwitch } from "element-plus";
 import Keyboard from "../components/Keyboard.vue"
 import { ref, onMounted, onUnmounted } from "vue"
 import { PT100 } from '../types/PT100';
@@ -60,7 +59,7 @@ onUnmounted(() => {
 })
 
 function reload() {
-    PTGet().then((got: parameters.PT[]) => {
+    PTGet().then((got : parameters.PT[]) => {
         let newPT: PT100[] = []
         got.forEach((p: parameters.PT) => {
             let ds = new PT100(p.name, p.id, p.enabled, p.correction, p.samples)
