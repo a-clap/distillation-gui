@@ -1,7 +1,7 @@
 <template>
     <main>
         <h1>{{ $t('ds.title') }}</h1>
-        <div v-for="(ds, index) in dses" :key="index">
+        <div v-for="(ds, index) in dsStore.ds" :key="index">
             <section class="ds-box">
                 <el-row :gutter="20" align="middle">
                     <el-col :span="3">
@@ -50,63 +50,9 @@
 <script setup lang="ts">
 
 import Keyboard from "../components/Keyboard.vue"
-import { ref, onMounted, onUnmounted } from "vue"
-import { DS } from '../types/DS';
-import { DSListener } from "../types/DSListener";
-import { DSGet } from "../../wailsjs/go/backend/Backend";
-import { parameters } from "../../wailsjs/go/models";
+import { useDSStore } from "../stores/ds";
 
-const dses = ref<DS[]>([]);
-
-onMounted(() => {
-    reload()
-    DSListener.subscribeConfig(updateConfig)
-    DSListener.subscribeTemperature(updateTemperature)
-})
-
-onUnmounted(() => {
-    DSListener.unsubscribeConfig(updateConfig)
-    DSListener.unsubscribeTemperature(updateTemperature)
-})
-
-function reload() {
-    DSGet().then((got) => {
-        let newDses: DS[] = []
-        got.forEach((d: parameters.DS) => {
-            let ds = new DS(d.name, d.id, d.enabled, d.correction, d.samples, d.resolution)
-            newDses.push(ds)
-        })
-
-        dses.value = newDses.sort((a: DS, b: DS) => {
-            if (a.name > b.name) {
-                return 1
-            }
-            if (a.name < b.name) {
-                return -1
-            }
-            return 0
-        })
-    })
-}
-
-function updateConfig(d: parameters.DS) {
-    dses.value.some(function (item: DS, i: number) {
-        if (item.id == d.id) {
-            let ds = new DS(d.name, d.id, d.enabled, d.correction, d.samples, d.resolution)
-            ds.temperature = dses.value[i].temperature
-            dses.value[i] = ds
-        }
-    });
-}
-
-function updateTemperature(t: parameters.Temperature) {
-    dses.value.some(function (item: DS, i: number) {
-        if (item.id == t.ID) {
-            dses.value[i].temperature = t.temperature.toFixed(2)
-        }
-    });
-
-}
+const dsStore = useDSStore()
 
 </script>
 

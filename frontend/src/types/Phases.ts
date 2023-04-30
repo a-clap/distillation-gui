@@ -74,7 +74,6 @@ export class HeaterPhaseConfig {
         this.id = heater.ID
         this.power = new Parameter(heater.power, false, callback)
     }
-
 }
 
 
@@ -83,16 +82,14 @@ export class ProcessPhaseConfig {
     private next: MoveToNextConfig;
     private heaters_: HeaterPhaseConfig[];
     private gpios_: GPIOPhaseConfig[];
-    private avail_sensors: string[];
     private component: process.Components;
 
-    constructor(id: number, next: process.MoveToNextConfig, heaters: process.HeaterPhaseConfig[], gpios: process.GPIOPhaseConfig[], component: process.Components) {
+    constructor(id: number, next: process.MoveToNextConfig, heaters: process.HeaterPhaseConfig[], gpios: process.GPIOPhaseConfig[], comp: process.Components) {
         this.id = id
         this.next = new MoveToNextConfig(next, this.update, this)
         this.heaters_ = []
         this.gpios_ = []
-        this.component = component
-        this.avail_sensors = []
+        this.component = comp
 
         if (heaters != null) {
             heaters.forEach((v: process.HeaterPhaseConfig) => {
@@ -105,11 +102,11 @@ export class ProcessPhaseConfig {
             })
         }
 
-        // Build list of sensors
-        this.component.sensors.forEach(element => {
-            this.avail_sensors.push(element)
-        });
+        this.updateComponents(comp)
+    }
 
+    updateComponents(c: process.Components) {
+        this.component = c
         // Add needed Configs for Heater
         this.component.heaters.forEach(elem => {
             let item = this.heaters_.findIndex(i => i.id == elem)
@@ -136,6 +133,7 @@ export class ProcessPhaseConfig {
 
         })
     }
+
 
     update(p: ProcessPhaseConfig) {
         let cfg = new distillation.ProcessPhaseConfig()
@@ -197,7 +195,7 @@ export class ProcessPhaseConfig {
     }
 
     get next_avail_sensors(): string[] {
-        return this.avail_sensors
+        return this.component.sensors
     }
 
     get next_sensor(): string {

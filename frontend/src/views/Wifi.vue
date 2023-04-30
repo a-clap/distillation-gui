@@ -3,14 +3,13 @@
         <h1>{{ $t('wifi.title') }}</h1>
         <el-container class="wifi-box" style="height: 80%">
             <el-header>
-                <el-switch v-model="wifi.enabled" :active-text="$t('wifi.enable')" size="large" @change="getAP" />
-                <el-button v-if="wifi.enabled" @click="getAP(true)" type="primary" round>{{ $t('wifi.reload_ap')
+                <el-switch v-model="wifi.enabled" :active-text="$t('wifi.enable')" size="large" @change="wifi.enable()" />
+                <el-button v-if="wifi.enabled" @click="() => { wifi.getAP() }" type="primary" round>{{ $t('wifi.reload_ap')
                 }}</el-button>
             </el-header>
             <el-main v-if="wifi.enabled">
                 <el-scrollbar>
-                    <el-table :data="wifi.accessPoints" highlight-current-row style="width: 100%"
-                        @current-change="onChange">
+                    <el-table :data="wifi.apList" highlight-current-row style="width: 100%" @current-change="onChange">
                         <el-table-column type="index" width="50" />
                         <el-table-column property="ssid" label="SSID" />
                     </el-table>
@@ -26,74 +25,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
 
 import Keyboard from '../components/Keyboard.vue';
-import { WifiAPList } from '../../wailsjs/go/backend/Backend';
-import { onMounted, onUnmounted } from 'vue';
-import Parameter from '../types/Parameter';
+import { useWIFIStore, AP } from '../stores/wifi';
 
-interface AP {
-    ssid: string
-}
 
-type Wifi = {
-    enabled: boolean;
-    busy: boolean;
-    currentSSID: string;
-    connected: boolean;
-    accessPoints: AP[];
-    password: Parameter;
-}
-
-const wifi = ref<Wifi>({
-    enabled: false,
-    busy: false,
-    currentSSID: "",
-    connected: false,
-    accessPoints: [],
-    password: new Parameter("", false, connect)
-})
-
-onMounted(() => {
-    let w = localStorage.getItem('wifi')
-    if (w) {
-        wifi.value = JSON.parse(w)
-        getAP(wifi.value.enabled)
-    }
-
-})
-onUnmounted(() => {
-    localStorage.setItem('wifi', JSON.stringify(wifi.value))
-})
-
+const wifi = useWIFIStore()
 
 const onChange = (row: AP) => {
-    wifi.value.password.showKeyboard()
-    wifi.value.currentSSID = row.ssid
-}
-function connect(psk: string) {
-    console.log("connecting to " + wifi.value.currentSSID + " with password " + psk)
-}
-
-function getAP(enabled: boolean) {
-    if (enabled == true) {
-        wifi.value.accessPoints = []
-        let newAps: AP[] = []
-        wifi.value.busy = true
-        WifiAPList().then(aps => {
-            try {
-                aps.forEach(element => {
-                    newAps.push({ ssid: element })
-                });
-                wifi.value.accessPoints = newAps
-            } catch (e) {
-                console.log("something went wrong " + e)
-            } finally {
-                wifi.value.busy = false
-            }
-        })
-    }
+    wifi.password.showKeyboard()
+    wifi.ssid = row.ssid
 }
 
 </script>

@@ -26,7 +26,6 @@ class ptListener {
 
     NotifyPTTemperature().then((ev) => {
       return runtime.EventsOn(ev, (...args: any) => {
-        console.log("pt temp")
         this.handleTemperature(...args);
       });
     })

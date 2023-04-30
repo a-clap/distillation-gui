@@ -4,11 +4,12 @@
     <el-tabs v-model="activated" type="card" tabPosition="left" class="demo-tabs">
       <el-tab-pane :label="$t('phases.main')" name="main" class="main-tab">
         <label>{{ $t('phases.count') }}</label>
-        <input v-model="phases.phaseCount.value" @click="() => phases.phaseCount.showKeyboard()">
-        <Keyboard v-bind="phases.phaseCount" :write="(e: number) => phases.phaseCount.write(e)"
-          :cancel="() => phases.phaseCount.cancel()" />
+        <input v-model="phaseStore.phases.phaseCount.value" @click="() => phaseStore.phases.phaseCount.showKeyboard()">
+        <Keyboard v-bind="phaseStore.phases.phaseCount" :write="(e: number) => phaseStore.phases.phaseCount.write(e)"
+          :cancel="() => phaseStore.phases.phaseCount.cancel()" />
       </el-tab-pane>
-      <el-tab-pane v-for="(phase, index) in  phases.phases " :key="index" :label="$t('phases.phase') + ' ' + (index + 1)">
+      <el-tab-pane v-for="(phase, index) in  phaseStore.phases.phases " :key="index"
+        :label="$t('phases.phase') + ' ' + (index + 1)">
         <el-row :gutter="20" align="middle">
           <el-col :span="5">
             {{ $t('phases.next_type') }}
@@ -124,75 +125,16 @@
 <script setup lang="ts">
 
 import Keyboard from "../components/Keyboard.vue"
-import { Phases } from '../types/Phases';
-import { onMounted, onUnmounted, ref } from 'vue'
-import { ProcessListener } from "../types/ProcessListener";
-import { ProcessPhaseConfig } from "../types/Phases";
-import { distillation, process } from "../../wailsjs/go/models";
-import { PhasesGetPhaseConfigs, Components } from "../../wailsjs/go/backend/Backend"
+import { onMounted, ref } from "vue";
+import { usePhasesStore } from "../stores/phases";
+
 const activated = ref('main')
-const phases = ref<Phases>(new Phases());
+const phaseStore = usePhasesStore()
+
 
 onMounted(() => {
-  reload()
-  ProcessListener.subscribePhaseCount(phaseCountUpdate)
-  ProcessListener.subscribePhaseConfig(phaseConfigUpdate)
+  phaseStore.updateComponents()
 })
-
-onUnmounted(() => {
-  ProcessListener.unsubscribePhaseCount(phaseCountUpdate)
-  ProcessListener.unsubscribePhaseConfig(phaseConfigUpdate)
-})
-
-function reload() {
-  let reloaded = false
-
-  while (!reloaded) {
-    try {
-      Components().then((components: process.Components) => {
-        PhasesGetPhaseConfigs().then((value: distillation.ProcessPhaseConfig[]) => {
-          let size = value.length
-          let configs: ProcessPhaseConfig[] = []
-
-          value.forEach((v: distillation.ProcessPhaseConfig, i: number) => {
-            let next = new process.MoveToNextConfig()
-
-            next.seconds_to_move = 1
-            next.sensor_id = "sensor_1"
-            next.sensor_threshold = 13
-            next.temperature_hold_seconds = 10
-            next.type = 0
-
-            configs.push(new ProcessPhaseConfig(i, next, v.heaters, v.gpio, components))
-          })
-          phases.value = new Phases(configs, size)
-          reloaded = true
-        }).catch((err) => {
-          console.log(err)
-        })
-      }
-      ).catch((err) => {
-        console.log("on get phase configs", err)
-      })
-    } catch (err) {
-      console.log("on comps", err)
-    }
-  }
-}
-
-
-function phaseCountUpdate(v: distillation.ProcessPhaseCount) {
-  reload()
-}
-
-function phaseConfigUpdate(n: number, v: distillation.ProcessPhaseConfig) {
-  Components().then((components: process.Components) => {
-    phases.value.phases[n] = new ProcessPhaseConfig(n, v.next, v.heaters, v.gpio, components)
-  }).catch((err) => {
-    console.log("on update", err)
-  })
-}
-
 
 </script>
 

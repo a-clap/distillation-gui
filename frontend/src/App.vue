@@ -8,12 +8,19 @@
   </html>
 </template>
 <script setup lang="ts">
+
 import Sidebar from "./components/Sidebar.vue";
 import { markRaw } from "vue";
 import { ErrorListener } from "./types/ErrorListener";
 import { ElMessageBox } from 'element-plus'
 import { CloseBold } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n';
+import { useGpioStore } from "./stores/gpios";
+import { useDSStore } from "./stores/ds";
+import { useHeatersStore } from "./stores/heaters";
+import { usePTStore } from "./stores/pt";
+import { useWIFIStore } from "./stores/wifi";
+import { usePhasesStore } from "./stores/phases";
 const { t, te } = useI18n();
 
 ErrorListener.subscribe(errorCallback)
@@ -45,6 +52,20 @@ const open = (title: string, msg: string) => {
       confirmButtonText: 'OK'
     })
 }
+
+let initFuncs: any[] = [
+  useGpioStore(),
+  useDSStore(),
+  useHeatersStore(),
+  usePTStore(),
+  useWIFIStore(),
+  usePhasesStore()
+]
+
+initFuncs.forEach((store) => {
+  setTimeout(() => { store.init() }, 10);
+})
+
 
 </script>
 <style lang="scss">
