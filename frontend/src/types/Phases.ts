@@ -1,3 +1,4 @@
+import { configProviderContextKey } from "element-plus";
 import { PhasesSetConfig, PhasesSetPhaseCount } from "../../wailsjs/go/backend/Backend";
 import { distillation, process } from "../../wailsjs/go/models";
 import Parameter, { writeCallbackType } from "./Parameter";
@@ -82,12 +83,16 @@ export class ProcessPhaseConfig {
     private next: MoveToNextConfig;
     private heaters_: HeaterPhaseConfig[];
     private gpios_: GPIOPhaseConfig[];
+    private avail_sensors: string[];
+    private component: process.Components;
 
-    constructor(id: number, next: process.MoveToNextConfig, heaters: process.HeaterPhaseConfig[], gpios: process.GPIOPhaseConfig[]) {
+    constructor(id: number, next: process.MoveToNextConfig, heaters: process.HeaterPhaseConfig[], gpios: process.GPIOPhaseConfig[], component: process.Components) {
         this.id = id
         this.next = new MoveToNextConfig(next, this.update, this)
         this.heaters_ = []
         this.gpios_ = []
+        this.component = component
+        this.avail_sensors = []
 
         if (heaters != null) {
             heaters.forEach((v: process.HeaterPhaseConfig) => {
@@ -99,6 +104,37 @@ export class ProcessPhaseConfig {
                 this.gpios_.push(new GPIOPhaseConfig(v, this.update, this))
             })
         }
+
+        // Build list of sensors
+        this.component.sensors.forEach(element => {
+            this.avail_sensors.push(element)
+        });
+
+        // Add needed Configs for Heater
+        this.component.heaters.forEach(elem => {
+            let item = this.heaters_.findIndex(i => i.id == elem)
+            if (item == -1) {
+                let conf = new process.HeaterPhaseConfig()
+                conf.ID = elem
+                conf.power = 0
+                this.heaters_.push(new HeaterPhaseConfig(conf, this.update, this))
+            }
+        })
+
+        // Add needed Configs for Heater
+        this.component.outputs.forEach(elem => {
+            let item = this.gpios_.findIndex(i => i.id == elem)
+            if (item == -1) {
+                let conf = new process.GPIOPhaseConfig()
+                conf.id = elem
+                conf.t_high = 0
+                conf.t_low = 0
+                conf.hysteresis = 0
+                conf.inverted = false
+                this.gpios_.push(new GPIOPhaseConfig(conf, this.update, this))
+            }
+
+        })
     }
 
     update(p: ProcessPhaseConfig) {
@@ -161,7 +197,7 @@ export class ProcessPhaseConfig {
     }
 
     get next_avail_sensors(): string[] {
-        return ["sensor_1", "sensor_2", "sensor_3"]
+        return this.avail_sensors
     }
 
     get next_sensor(): string {

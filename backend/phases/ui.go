@@ -23,6 +23,7 @@ type Client interface {
 	ValidateConfig() (distillation.ProcessConfigValidation, error)
 	ConfigureProcess(cfg distillation.ProcessConfig) (distillation.ProcessConfig, error)
 	Status() (distillation.ProcessStatus, error)
+	Components() (process.Components, error)
 }
 
 // Listener allows to be notified about changes in listed configs
@@ -154,11 +155,9 @@ func GetPhaseConfigs() ([]distillation.ProcessPhaseConfig, error) {
 
 // SetPhaseCount sets distillation.ProcessPhaseCount and notify listeners about change
 func SetPhaseCount(count int) error {
-	log.Println("setphasecount")
 	c := distillation.ProcessPhaseCount{PhaseNumber: count}
 	c, err := handler.client.ConfigurePhaseCount(c)
 	if err != nil {
-		log.Println("err")
 		return err
 	}
 	notifyProcessCount(c)
@@ -168,6 +167,7 @@ func SetPhaseCount(count int) error {
 func SetConfig(number int, cfg distillation.ProcessPhaseConfig) error {
 	c, err := handler.client.ConfigurePhase(number, cfg)
 	if err != nil {
+		log.Println("err")
 		err := &Error{Op: "SetConfig.ConfigurePhase", Err: err.Error()}
 		if c, ok := handler.phases[number]; ok {
 			notifyConfigChange(number, *c)
@@ -223,6 +223,10 @@ func Disable() error {
 	}
 	notifyConfig(config)
 	return nil
+}
+
+func Components() (process.Components, error) {
+	return handler.client.Components()
 }
 
 func MoveToNext() error {

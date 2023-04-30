@@ -215,6 +215,22 @@ export namespace parameters {
 
 export namespace process {
 	
+	export class Components {
+	    sensors: string[];
+	    heaters: string[];
+	    outputs: string[];
+	
+	    static createFrom(source: any = {}) {
+	        return new Components(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.sensors = source["sensors"];
+	        this.heaters = source["heaters"];
+	        this.outputs = source["outputs"];
+	    }
+	}
 	export class GPIOPhaseConfig {
 	    id: string;
 	    sensor_id: string;

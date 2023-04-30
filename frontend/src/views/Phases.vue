@@ -129,40 +129,55 @@ import { onMounted, onUnmounted, ref } from 'vue'
 import { ProcessListener } from "../types/ProcessListener";
 import { ProcessPhaseConfig } from "../types/Phases";
 import { distillation, process } from "../../wailsjs/go/models";
-import { PhasesGetPhaseConfigs } from "../../wailsjs/go/backend/Backend"
+import { PhasesGetPhaseConfigs, Components } from "../../wailsjs/go/backend/Backend"
 const activated = ref('main')
 const phases = ref<Phases>(new Phases());
 
 onMounted(() => {
   reload()
   ProcessListener.subscribePhaseCount(phaseCountUpdate)
-  ProcessListener.subscribePhaseConfig(phaseConifgUpdate)
+  ProcessListener.subscribePhaseConfig(phaseConfigUpdate)
 })
 
 onUnmounted(() => {
   ProcessListener.unsubscribePhaseCount(phaseCountUpdate)
-  ProcessListener.unsubscribePhaseConfig(phaseConifgUpdate)
+  ProcessListener.unsubscribePhaseConfig(phaseConfigUpdate)
 })
 
 function reload() {
-  PhasesGetPhaseConfigs().then((value: distillation.ProcessPhaseConfig[]) => {
-    let size = value.length
-    let configs: ProcessPhaseConfig[] = []
+  let reloaded = false
 
-    value.forEach((v: distillation.ProcessPhaseConfig, i: number) => {
-      let next = new process.MoveToNextConfig()
+  while (!reloaded) {
+    try {
+      Components().then((components: process.Components) => {
+        PhasesGetPhaseConfigs().then((value: distillation.ProcessPhaseConfig[]) => {
+          let size = value.length
+          let configs: ProcessPhaseConfig[] = []
 
-      next.seconds_to_move = 1
-      next.sensor_id = "sensor_1"
-      next.sensor_threshold = 13
-      next.temperature_hold_seconds = 10
-      next.type = 0
+          value.forEach((v: distillation.ProcessPhaseConfig, i: number) => {
+            let next = new process.MoveToNextConfig()
 
-      configs.push(new ProcessPhaseConfig(i, next, v.heaters, v.gpio))
-    })
+            next.seconds_to_move = 1
+            next.sensor_id = "sensor_1"
+            next.sensor_threshold = 13
+            next.temperature_hold_seconds = 10
+            next.type = 0
 
-    phases.value = new Phases(configs, size)
-  })
+            configs.push(new ProcessPhaseConfig(i, next, v.heaters, v.gpio, components))
+          })
+          phases.value = new Phases(configs, size)
+          reloaded = true
+        }).catch((err) => {
+          console.log(err)
+        })
+      }
+      ).catch((err) => {
+        console.log("on get phase configs", err)
+      })
+    } catch (err) {
+      console.log("on comps", err)
+    }
+  }
 }
 
 
@@ -170,8 +185,12 @@ function phaseCountUpdate(v: distillation.ProcessPhaseCount) {
   reload()
 }
 
-function phaseConifgUpdate(n: number, v: distillation.ProcessPhaseConfig) {
-  phases.value.phases[n] = new ProcessPhaseConfig(n, v.next, v.heaters, v.gpio)
+function phaseConfigUpdate(n: number, v: distillation.ProcessPhaseConfig) {
+  Components().then((components: process.Components) => {
+    phases.value.phases[n] = new ProcessPhaseConfig(n, v.next, v.heaters, v.gpio, components)
+  }).catch((err) => {
+    console.log("on update", err)
+  })
 }
 
 
