@@ -2,7 +2,7 @@ package backend
 
 import (
 	"github.com/a-clap/distillation-gui/backend/phases"
-	"github.com/a-clap/iot/pkg/distillation"
+	"github.com/a-clap/distillation/pkg/distillation"
 )
 
 func (b *Backend) PhasesGetPhaseCount() (distillation.ProcessPhaseCount, error) {

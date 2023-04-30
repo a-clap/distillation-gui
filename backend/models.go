@@ -2,8 +2,8 @@ package backend
 
 import (
 	"github.com/a-clap/distillation-gui/backend/parameters"
-	"github.com/a-clap/iot/pkg/distillation"
-	"github.com/a-clap/iot/pkg/distillation/process"
+	"github.com/a-clap/distillation/pkg/distillation"
+	"github.com/a-clap/distillation/pkg/distillation/process"
 )
 
 // Models allows us to create models.ts in frontend with needed structures

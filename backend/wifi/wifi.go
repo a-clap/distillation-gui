@@ -8,7 +8,7 @@ package wifi
 import (
 	"errors"
 
-	"github.com/a-clap/iot/pkg/wifi"
+	"github.com/a-clap/distillation/pkg/wifi"
 )
 
 var (

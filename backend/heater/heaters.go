@@ -7,12 +7,12 @@ package heater
 
 import (
 	"github.com/a-clap/distillation-gui/backend/parameters"
-	"github.com/a-clap/iot/pkg/distillation"
+	"github.com/a-clap/distillation/pkg/distillation"
 )
 
 type Client interface {
-	GetAll() ([]distillation.HeaterConfigGlobal, error)
-	Enable(setConfig distillation.HeaterConfigGlobal) (distillation.HeaterConfigGlobal, error)
+	Get() ([]distillation.HeaterConfigGlobal, error)
+	Configure(setConfig distillation.HeaterConfigGlobal) (distillation.HeaterConfigGlobal, error)
 }
 
 type Listener interface {
@@ -40,7 +40,7 @@ func Init(c Client) error {
 }
 
 func initHandler() error {
-	globals, err := handler.client.GetAll()
+	globals, err := handler.client.Get()
 	if err != nil {
 		return err
 	}
@@ -103,7 +103,7 @@ func Enable(id string, enable bool) error {
 		Enabled: enable,
 	}
 
-	newCfg, err := handler.client.Enable(setCfg)
+	newCfg, err := handler.client.Configure(setCfg)
 	if err != nil {
 		err = &Error{ID: id, Op: "EnableGlobal.Enable", Err: err.Error()}
 	} else {

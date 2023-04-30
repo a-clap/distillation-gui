@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/a-clap/distillation-gui/backend/ds"
-	"github.com/a-clap/iot/pkg/distillation"
+	"github.com/a-clap/distillation/pkg/distillation"
 	"golang.org/x/exp/slices"
 )
 
@@ -30,7 +30,7 @@ func (d *DSClient) Configure(sensor distillation.DSConfig) (distillation.DSConfi
 }
 
 // GetSensors implements ds.Client
-func (d *DSClient) GetSensors() ([]distillation.DSConfig, error) {
+func (d *DSClient) Get() ([]distillation.DSConfig, error) {
 	return d.DS, nil
 }
 

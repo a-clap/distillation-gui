@@ -10,12 +10,12 @@ import (
 	"time"
 
 	"github.com/a-clap/distillation-gui/backend/parameters"
-	"github.com/a-clap/iot/pkg/distillation"
+	"github.com/a-clap/distillation/pkg/distillation"
 	"golang.org/x/exp/slices"
 )
 
 type Client interface {
-	GetSensors() ([]distillation.PTConfig, error)
+	Get() ([]distillation.PTConfig, error)
 	Configure(sensor distillation.PTConfig) (distillation.PTConfig, error)
 	Temperatures() ([]distillation.PTTemperature, error)
 }
@@ -55,7 +55,7 @@ func Init(c Client, err chan<- error, interval time.Duration) error {
 }
 
 func initHandler() error {
-	sensors, err := handler.client.GetSensors()
+	sensors, err := handler.client.Get()
 	if err != nil {
 		return err
 	}

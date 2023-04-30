@@ -8,7 +8,7 @@ import router from "./router/index.js"
 
 
 const app = createApp(App)
-
+app.config.performance = true;
 app.use(router)
 app.use(i18n)
 app.mount('#app')

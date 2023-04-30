@@ -8,8 +8,8 @@ package phases
 import (
 	"log"
 
-	"github.com/a-clap/iot/pkg/distillation"
-	"github.com/a-clap/iot/pkg/distillation/process"
+	"github.com/a-clap/distillation/pkg/distillation"
+	"github.com/a-clap/distillation/pkg/distillation/process"
 	"golang.org/x/exp/slices"
 )
 

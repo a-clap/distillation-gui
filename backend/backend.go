@@ -10,8 +10,8 @@ import (
 	"github.com/a-clap/distillation-gui/backend/parameters"
 	"github.com/a-clap/distillation-gui/backend/pt"
 	"github.com/a-clap/distillation-gui/backend/wifi"
-	"github.com/a-clap/iot/pkg/ds18b20"
-	embeddedgpio "github.com/a-clap/iot/pkg/embedded/gpio"
+	"github.com/a-clap/embedded/pkg/ds18b20"
+	embeddedgpio "github.com/a-clap/embedded/pkg/gpio"
 	"github.com/a-clap/logging"
 )
 

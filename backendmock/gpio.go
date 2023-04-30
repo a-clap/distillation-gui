@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/a-clap/distillation-gui/backend/gpio"
-	"github.com/a-clap/iot/pkg/distillation"
+	"github.com/a-clap/distillation/pkg/distillation"
 	"github.com/a-clap/logging"
 	"golang.org/x/exp/slices"
 )

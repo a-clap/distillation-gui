@@ -7,8 +7,8 @@ package gpio
 
 import (
 	"github.com/a-clap/distillation-gui/backend/parameters"
-	"github.com/a-clap/iot/pkg/distillation"
-	"github.com/a-clap/iot/pkg/embedded/gpio"
+	"github.com/a-clap/distillation/pkg/distillation"
+	"github.com/a-clap/embedded/pkg/gpio"
 	"golang.org/x/exp/slices"
 )
 
