@@ -4,6 +4,7 @@ import (
 	"github.com/a-clap/distillation-gui/backend/parameters"
 	"github.com/a-clap/distillation/pkg/distillation"
 	"github.com/a-clap/distillation/pkg/distillation/process"
+	"github.com/a-clap/embedded/pkg/gpio"
 )
 
 // Models allows us to create models.ts in frontend with needed structures
@@ -44,4 +45,8 @@ func (*Models) GPIOPhaseStatus() process.GPIOPhaseStatus {
 
 func (*Models) MoveToNextConfig() process.MoveToNextConfig {
 	return process.MoveToNextConfig{}
+}
+
+func (*Models) GPIOActiveLevel() gpio.ActiveLevel {
+	return gpio.High
 }

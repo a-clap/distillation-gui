@@ -172,9 +172,10 @@ func (b *Backend) GPIOGet() []parameters.GPIO {
 	return gpio.Get()
 }
 
-func (b *Backend) GPIOSetActiveLevel(id string, active embeddedgpio.ActiveLevel) {
-	logger.Debug("GPIOSetActiveLevel", logging.String("id", id), logging.Int("active", int(active)))
-	if err := gpio.SetActiveLevel(id, active); err != nil {
+func (b *Backend) GPIOSetActiveLevel(id string, active int) {
+	logger.Debug("GPIOSetActiveLevel", logging.String("id", id), logging.Int("active", active))
+
+	if err := gpio.SetActiveLevel(id, embeddedgpio.ActiveLevel(active)); err != nil {
 		logger.Error("GPIOSetActiveLevel", logging.String("error", err.Error()))
 		b.eventEmitter.OnError(ErrGPIOSetActiveLevel)
 	}

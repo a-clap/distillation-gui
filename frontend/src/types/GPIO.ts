@@ -1,6 +1,5 @@
 import { GPIOSetState } from "../../wailsjs/go/backend/Backend";
 import { GPIOSetActiveLevel } from "../../wailsjs/go/backend/Backend";
-
 export class GPIO {
   name: string;
   private activeLevel_: boolean;
@@ -15,9 +14,18 @@ export class GPIO {
     return this.activeLevel_
   }
 
-  set activeLevel(value: boolean) {
-    this.activeLevel_ = value
-    GPIOSetActiveLevel(this.name, this.activeLevel_ ? 1 : 0)
+  set activeLevel(value: any) {
+    let v: number = 0
+    if (typeof value === 'string') {
+      v = value == "true" ? 1 : 0
+    } else if(typeof value === 'boolean') {
+      v = value ? 1 : 0
+    } else {
+      v = value
+    }
+
+    this.activeLevel_ = v > 0
+    GPIOSetActiveLevel(this.name, v)
 
   }
 
