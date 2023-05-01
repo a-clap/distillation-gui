@@ -20,7 +20,6 @@ export const usePhasesStore = defineStore('phases', {
         reload() {
             Components().then(
                 components => {
-                    console.log(components)
                     PhasesGetPhaseConfigs().then(
                         result => { this.updatePhases(components, result) },
                         error => {
@@ -64,7 +63,6 @@ export const usePhasesStore = defineStore('phases', {
         updateComponents() {
             Components().then(
                 (comp: process.Components) => {
-                    console.log(comp)
                     this.phases.phases.forEach((elem) => {
                         elem.updateComponents(comp)
                     })

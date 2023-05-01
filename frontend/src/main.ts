@@ -19,3 +19,5 @@ app.use(router)
 app.use(i18n)
 app.use(ElementPlus)
 app.mount('#app')
+
+export { i18n };

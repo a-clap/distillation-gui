@@ -35,6 +35,7 @@ export const useWIFIStore = defineStore('wifi', {
                             newAps.push({ ssid: element })
                         });
                         this.apList = newAps
+                        this.busy = false
                     },
                     error => {
                         console.debug(error)
