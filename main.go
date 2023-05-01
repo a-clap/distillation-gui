@@ -4,7 +4,6 @@ import (
 	"embed"
 	"flag"
 	"log"
-	"strconv"
 
 	"github.com/a-clap/distillation-gui/backend"
 	"github.com/wailsapp/wails/v2"
@@ -16,14 +15,19 @@ import (
 var assets embed.FS
 
 var (
-	port = flag.Int("port", 50002, "the distillation port")
+	mock = flag.Bool("mock", false, "use mocks")
+	addr = flag.String("addr", "localhost:50002", "the distillation port")
 )
 
 func main() {
 	flag.Parse()
 
-	addr := "localhost:" + strconv.FormatInt(int64(*port), 10)
-	opts := getopts(addr)
+	var opts []backend.Option
+	if *mock {
+		opts = mockClients()
+	} else {
+		opts = getopts(*addr)
+	}
 
 	// Create backend
 	b, err := backend.New(

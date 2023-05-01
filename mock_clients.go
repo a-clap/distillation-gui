@@ -16,7 +16,7 @@ import (
 	"github.com/a-clap/embedded/pkg/max31865"
 )
 
-func getopts(addr string) []backend.Option {
+func mockClients() []backend.Option {
 	// HeaterClient - Mock
 	heaterClient := backendmock.HeaterClient{}
 	heaterClient.Globals = append(heaterClient.Globals,

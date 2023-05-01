@@ -19,6 +19,15 @@ type PhasesClient struct {
 	Stats   distillation.ProcessStatus
 }
 
+// Components implements phases.Client
+func (*PhasesClient) Components() (process.Components, error) {
+	return process.Components{
+		Sensors: []string{"sensor0", "sensor1", "sensor2"},
+		Heaters: []string{"heater0", "heater1", "heater2"},
+		Outputs: []string{"gpio0", "gpio1", "gpio2"},
+	}, nil
+}
+
 func (p *PhasesClient) Init(count int) {
 	p.Config.PhaseNumber = count
 	p.Config.Phases = make([]process.PhaseConfig, count)
