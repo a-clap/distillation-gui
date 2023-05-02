@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/a-clap/distillation/pkg/distillation"
-	"github.com/a-clap/distillation/pkg/distillation/process"
+	"github.com/a-clap/distillation/pkg/process"
 )
 
 // Client is an interface to read/set listed configs
@@ -22,8 +22,8 @@ type Client interface {
 	ConfigurePhase(phaseNumber int, setConfig distillation.ProcessPhaseConfig) (distillation.ProcessPhaseConfig, error)
 	ValidateConfig() (distillation.ProcessConfigValidation, error)
 	ConfigureProcess(cfg distillation.ProcessConfig) (distillation.ProcessConfig, error)
+	GlobalConfig() (process.Config, error)
 	Status() (distillation.ProcessStatus, error)
-	Components() (process.Components, error)
 }
 
 // Listener allows to be notified about changes in listed configs
@@ -38,7 +38,7 @@ type Listener interface {
 type processHandler struct {
 	client    Client
 	count     distillation.ProcessPhaseCount
-	phases    map[int]*distillation.ProcessPhaseConfig
+	phases    process.Config
 	listeners []Listener
 	status    distillation.ProcessStatus
 	running   atomic.Bool
@@ -52,7 +52,7 @@ var (
 	handler = &processHandler{
 		client:    nil,
 		count:     distillation.ProcessPhaseCount{},
-		phases:    make(map[int]*distillation.ProcessPhaseConfig, 10),
+		phases:    process.Config{},
 		listeners: make([]Listener, 0),
 		status:    distillation.ProcessStatus{},
 		running:   atomic.Bool{},
@@ -89,7 +89,7 @@ func Apply(config process.Config) []error {
 func Refresh() {
 	configs, err := GetPhaseConfigs()
 	if err == nil {
-		notifyProcessCount(distillation.ProcessPhaseCount{PhaseNumber: len(configs)})
+		notifyProcessCount(distillation.ProcessPhaseCount{PhaseNumber: uint(len(configs))})
 		for i, conf := range configs {
 			notifyConfigChange(i, conf)
 		}
@@ -133,28 +133,31 @@ func GetPhaseCount() (distillation.ProcessPhaseCount, error) {
 	return handler.count, err
 }
 
+func GetGlobalConfig() (process.Config, error) {
+	cfg, err := handler.client.GlobalConfig()
+	if err != nil {
+		return process.Config{}, err
+	}
+	handler.phases = cfg
+	return cfg, nil
+}
+
 // GetPhaseConfigs returns slice of current configs. It doesn't call any notify, as it return value
 func GetPhaseConfigs() ([]distillation.ProcessPhaseConfig, error) {
-	c, err := GetPhaseCount()
-	if err != nil {
+	if _, err := GetGlobalConfig(); err != nil {
 		return nil, err
 	}
 
-	var configs []distillation.ProcessPhaseConfig
-	for i := 0; i < c.PhaseNumber; i++ {
-		cfg, err := handler.client.GetPhaseConfig(i)
-		if err != nil {
-			return nil, err
-		}
-		handler.phases[i] = &cfg
-		configs = append(configs, cfg)
+	configs := make([]distillation.ProcessPhaseConfig, len(handler.phases.Phases))
+	for i, elem := range handler.phases.Phases {
+		configs[i] = distillation.ProcessPhaseConfig{PhaseConfig: elem}
 	}
 
 	return configs, nil
 }
 
 // SetPhaseCount sets distillation.ProcessPhaseCount and notify listeners about change
-func SetPhaseCount(count int) error {
+func SetPhaseCount(count uint) error {
 	c := distillation.ProcessPhaseCount{PhaseNumber: count}
 	c, err := handler.client.ConfigurePhaseCount(c)
 	if err != nil {
@@ -169,8 +172,9 @@ func SetConfig(number int, cfg distillation.ProcessPhaseConfig) error {
 	if err != nil {
 		log.Println("err")
 		err := &Error{Op: "SetConfig.ConfigurePhase", Err: err.Error()}
-		if c, ok := handler.phases[number]; ok {
-			notifyConfigChange(number, *c)
+		if number < len(handler.phases.Phases) {
+			log.Println("notify")
+			notifyConfigChange(number, distillation.ProcessPhaseConfig{PhaseConfig: handler.phases.Phases[number]})
 		}
 		return err
 	}
@@ -223,10 +227,6 @@ func Disable() error {
 	}
 	notifyConfig(config)
 	return nil
-}
-
-func Components() (process.Components, error) {
-	return handler.client.Components()
 }
 
 func MoveToNext() error {

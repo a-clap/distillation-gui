@@ -17,7 +17,7 @@ export namespace distillation {
 	export class ProcessPhaseConfig {
 	    next: process.MoveToNextConfig;
 	    heaters: process.HeaterPhaseConfig[];
-	    gpio: process.GPIOPhaseConfig[];
+	    gpio: process.GPIOConfig[];
 	
 	    static createFrom(source: any = {}) {
 	        return new ProcessPhaseConfig(source);
@@ -27,7 +27,7 @@ export namespace distillation {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.next = this.convertValues(source["next"], process.MoveToNextConfig);
 	        this.heaters = this.convertValues(source["heaters"], process.HeaterPhaseConfig);
-	        this.gpio = this.convertValues(source["gpio"], process.GPIOPhaseConfig);
+	        this.gpio = this.convertValues(source["gpio"], process.GPIOConfig);
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {
@@ -215,23 +215,8 @@ export namespace parameters {
 
 export namespace process {
 	
-	export class Components {
-	    sensors: string[];
-	    heaters: string[];
-	    outputs: string[];
-	
-	    static createFrom(source: any = {}) {
-	        return new Components(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.sensors = source["sensors"];
-	        this.heaters = source["heaters"];
-	        this.outputs = source["outputs"];
-	    }
-	}
-	export class GPIOPhaseConfig {
+	export class GPIOConfig {
+	    enabled: boolean;
 	    id: string;
 	    sensor_id: string;
 	    t_low: number;
@@ -240,31 +225,18 @@ export namespace process {
 	    inverted: boolean;
 	
 	    static createFrom(source: any = {}) {
-	        return new GPIOPhaseConfig(source);
+	        return new GPIOConfig(source);
 	    }
 	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.enabled = source["enabled"];
 	        this.id = source["id"];
 	        this.sensor_id = source["sensor_id"];
 	        this.t_low = source["t_low"];
 	        this.t_high = source["t_high"];
 	        this.hysteresis = source["hysteresis"];
 	        this.inverted = source["inverted"];
-	    }
-	}
-	export class GPIOPhaseStatus {
-	    id: string;
-	    state: boolean;
-	
-	    static createFrom(source: any = {}) {
-	        return new GPIOPhaseStatus(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.id = source["id"];
-	        this.state = source["state"];
 	    }
 	}
 	export class HeaterPhaseConfig {
@@ -281,6 +253,112 @@ export namespace process {
 	        this.power = source["power"];
 	    }
 	}
+	export class MoveToNextConfig {
+	    type: number;
+	    sensors: string[];
+	    sensor_id: string;
+	    sensor_threshold: number;
+	    time_left: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new MoveToNextConfig(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.type = source["type"];
+	        this.sensors = source["sensors"];
+	        this.sensor_id = source["sensor_id"];
+	        this.sensor_threshold = source["sensor_threshold"];
+	        this.time_left = source["time_left"];
+	    }
+	}
+	export class PhaseConfig {
+	    next: MoveToNextConfig;
+	    heaters: HeaterPhaseConfig[];
+	    gpio: GPIOConfig[];
+	
+	    static createFrom(source: any = {}) {
+	        return new PhaseConfig(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.next = this.convertValues(source["next"], MoveToNextConfig);
+	        this.heaters = this.convertValues(source["heaters"], HeaterPhaseConfig);
+	        this.gpio = this.convertValues(source["gpio"], GPIOConfig);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class Config {
+	    phase_number: number;
+	    phases: PhaseConfig[];
+	    global_gpio: GPIOConfig[];
+	    sensors: string[];
+	
+	    static createFrom(source: any = {}) {
+	        return new Config(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.phase_number = source["phase_number"];
+	        this.phases = this.convertValues(source["phases"], PhaseConfig);
+	        this.global_gpio = this.convertValues(source["global_gpio"], GPIOConfig);
+	        this.sensors = source["sensors"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	
+	export class GPIOPhaseStatus {
+	    id: string;
+	    state: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new GPIOPhaseStatus(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.state = source["state"];
+	    }
+	}
+	
 	export class HeaterPhaseStatus {
 	    ID: string;
 	    power: number;
@@ -295,26 +373,8 @@ export namespace process {
 	        this.power = source["power"];
 	    }
 	}
-	export class MoveToNextConfig {
-	    type: number;
-	    sensor_id: string;
-	    sensor_threshold: number;
-	    temperature_hold_seconds: number;
-	    seconds_to_move: number;
 	
-	    static createFrom(source: any = {}) {
-	        return new MoveToNextConfig(source);
-	    }
 	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.type = source["type"];
-	        this.sensor_id = source["sensor_id"];
-	        this.sensor_threshold = source["sensor_threshold"];
-	        this.temperature_hold_seconds = source["temperature_hold_seconds"];
-	        this.seconds_to_move = source["seconds_to_move"];
-	    }
-	}
 	export class TemperaturePhaseStatus {
 	    ID: string;
 	    temperature: number;

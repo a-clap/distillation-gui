@@ -217,6 +217,7 @@ func update() {
 						notifyError(err)
 						continue
 					}
+
 					notifyTemperature(parameters.Temperature{
 						ID:          temp.ID,
 						Temperature: temp.Temperature,

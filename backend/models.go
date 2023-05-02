@@ -3,7 +3,7 @@ package backend
 import (
 	"github.com/a-clap/distillation-gui/backend/parameters"
 	"github.com/a-clap/distillation/pkg/distillation"
-	"github.com/a-clap/distillation/pkg/distillation/process"
+	"github.com/a-clap/distillation/pkg/process"
 	"github.com/a-clap/embedded/pkg/gpio"
 )
 
@@ -19,8 +19,8 @@ func (*Models) HeaterPhaseConfig() process.HeaterPhaseConfig {
 	return process.HeaterPhaseConfig{}
 }
 
-func (*Models) GPIOPhaseConfig() process.GPIOPhaseConfig {
-	return process.GPIOPhaseConfig{}
+func (*Models) GPIOPhaseConfig() process.GPIOConfig {
+	return process.GPIOConfig{}
 }
 
 func (*Models) ProcessConfigValidation() distillation.ProcessConfigValidation {

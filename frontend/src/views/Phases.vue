@@ -131,9 +131,8 @@ import { usePhasesStore } from "../stores/phases";
 const activated = ref('main')
 const phaseStore = usePhasesStore()
 
-
 onMounted(() => {
-  phaseStore.updateComponents()
+  phaseStore.reload()
 })
 
 </script>

@@ -3,6 +3,7 @@ package backend
 import (
 	"github.com/a-clap/distillation-gui/backend/phases"
 	"github.com/a-clap/distillation/pkg/distillation"
+	"github.com/a-clap/distillation/pkg/process"
 )
 
 func (b *Backend) PhasesGetPhaseCount() (distillation.ProcessPhaseCount, error) {
@@ -13,9 +14,14 @@ func (b *Backend) PhasesGetPhaseConfigs() ([]distillation.ProcessPhaseConfig, er
 	logger.Debug("PhasesGetPhaseConfigs")
 	return phases.GetPhaseConfigs()
 }
+func (b *Backend) PhasesGetGlobalConfig() (process.Config, error) {
+	logger.Debug("PhasesGetGlobalConfig")
+	return phases.GetGlobalConfig()
+}
+
 func (b *Backend) PhasesSetPhaseCount(count int) error {
 	logger.Debug("PhasesSetPhaseCount")
-	return phases.SetPhaseCount(count)
+	return phases.SetPhaseCount(uint(count))
 }
 func (b *Backend) PhasesSetConfig(number int, cfg distillation.ProcessPhaseConfig) error {
 	logger.Debug("PhasesSetConfig")

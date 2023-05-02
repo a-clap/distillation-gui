@@ -8,10 +8,8 @@ import (
 	"github.com/a-clap/distillation-gui/backend/gpio"
 	"github.com/a-clap/distillation-gui/backend/heater"
 	"github.com/a-clap/distillation-gui/backend/parameters"
-	"github.com/a-clap/distillation-gui/backend/phases"
 	"github.com/a-clap/distillation-gui/backend/pt"
 	"github.com/a-clap/distillation-gui/backend/wifi"
-	"github.com/a-clap/distillation/pkg/distillation/process"
 	"github.com/a-clap/embedded/pkg/ds18b20"
 	embeddedgpio "github.com/a-clap/embedded/pkg/gpio"
 	"github.com/a-clap/logging"
@@ -189,12 +187,4 @@ func (b *Backend) GPIOSetState(id string, value bool) {
 		logger.Error("GPIOSetState", logging.String("error", err.Error()))
 		b.eventEmitter.OnError(ErrGPIOSetState)
 	}
-}
-
-func (b *Backend) Components() process.Components {
-	comp, err := phases.Components()
-	if err != nil {
-		logger.Error("Components", logging.String("error", err.Error()))
-	}
-	return comp
 }

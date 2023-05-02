@@ -1,5 +1,5 @@
-github.com/a-clap/distillation v0.0.0-20230430095540-f62686edbb15 h1:tfKwm4J08Ku9jBQFDIcQ5I+932TiO1Ww06ym4wDP8yw=
-github.com/a-clap/distillation v0.0.0-20230430095540-f62686edbb15/go.mod h1:oQN7JWpxe5FjilnzeoTIMk+C4DGn1bcM9CGAjnPZMkw=
+github.com/a-clap/distillation v0.0.0-20230502180120-3b8ccd5b5a48 h1:N/ALGmG7/vXtYHs2cKYxgNPoy0Hfp1tiAFcN/JqHwGM=
+github.com/a-clap/distillation v0.0.0-20230502180120-3b8ccd5b5a48/go.mod h1:xK9Pr/1XqJdC2w/gQsM1jyRSPx6v8LWQSJjts74NROQ=
 github.com/a-clap/embedded v0.0.0-20230430090406-3cf798703581 h1:Kc7lmPVwPDk2HVaRTf9hYPosA9mCH/9Ux8FKErGLgvA=
 github.com/a-clap/embedded v0.0.0-20230430090406-3cf798703581/go.mod h1:amIhqPJdXn3cokY9vYeibjgbWsOLkZZsrJTOVOKN/a0=
 github.com/a-clap/logging v0.0.0-20230406162054-e25047d44282 h1:Dst67/bMUZmxews7vhjkkJ8Veav/4vHOcHa3OiUE9Kg=
@@ -31,6 +31,7 @@ github.com/go-playground/validator/v10 v10.13.0 h1:cFRQdfaSMCOSfGCCLB20MHvuoHb/s
 github.com/go-playground/validator/v10 v10.13.0/go.mod h1:dwu7+CG8/CtBiJFZDz4e+5Upb6OLw04gtBYw0mcG/z4=
 github.com/goccy/go-json v0.10.2 h1:CrxCmQqYDkv1z7lO7Wbh2HN93uovUHgrECaO5ZrCXAU=
 github.com/goccy/go-json v0.10.2/go.mod h1:6MelG93GURQebXPDq3khkgXZkazVtN9CRI+MGFi0w8I=
+github.com/golang/mock v1.6.0 h1:ErTB+efbowRARo13NNdxyJji2egdxLGQhRaY+DUumQc=
 github.com/golang/protobuf v1.5.0/go.mod h1:FsONVRAS9T7sI+LIUmWTfcYkHO4aIWwzhcaSAoJOfIk=
 github.com/golang/protobuf v1.5.3 h1:KhyjKVUg7Usr/dYsdSqoFveMYd5ko72D+zANwlG1mmg=
 github.com/golang/protobuf v1.5.3/go.mod h1:XVQd3VNwM+JqD3oG2Ue2ip4fOMUkwXdXDdiuN0vRsmY=

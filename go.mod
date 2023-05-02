@@ -3,7 +3,7 @@ module github.com/a-clap/distillation-gui
 go 1.19
 
 require (
-	github.com/a-clap/distillation v0.0.0-20230430095540-f62686edbb15
+	github.com/a-clap/distillation v0.0.0-20230502180120-3b8ccd5b5a48
 	github.com/a-clap/embedded v0.0.0-20230430090406-3cf798703581
 	github.com/a-clap/logging v0.0.0-20230406162054-e25047d44282
 	github.com/wailsapp/wails/v2 v2.4.1

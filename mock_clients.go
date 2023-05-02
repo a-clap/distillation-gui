@@ -8,7 +8,7 @@ import (
 	"github.com/a-clap/distillation-gui/backend"
 	"github.com/a-clap/distillation-gui/backendmock"
 	"github.com/a-clap/distillation/pkg/distillation"
-	"github.com/a-clap/distillation/pkg/distillation/process"
+	"github.com/a-clap/distillation/pkg/process"
 	"github.com/a-clap/distillation/pkg/wifi"
 	"github.com/a-clap/embedded/pkg/ds18b20"
 	"github.com/a-clap/embedded/pkg/embedded"
@@ -121,9 +121,9 @@ func mockClients() []backend.Option {
 	phaseClient := backendmock.PhasesClient{}
 	phaseClient.Config = process.Config{PhaseNumber: 3, Phases: make([]process.PhaseConfig, 3)}
 	for i := range phaseClient.Config.Phases {
-		gpio := make([]process.GPIOPhaseConfig, 3)
+		gpio := make([]process.GPIOConfig, 3)
 		for j := range gpio {
-			gpio[j] = process.GPIOPhaseConfig{
+			gpio[j] = process.GPIOConfig{
 				ID:         fmt.Sprint("gpio", j),
 				SensorID:   fmt.Sprint("sensor ", j),
 				TLow:       0,

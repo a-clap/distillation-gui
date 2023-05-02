@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { Components, PhasesGetPhaseConfigs } from "../../wailsjs/go/backend/Backend";
+import { PhasesGetGlobalConfig } from "../../wailsjs/go/backend/Backend";
 import { distillation, process } from "../../wailsjs/go/models";
 import { Phases, ProcessPhaseConfig } from "../types/Phases";
 import { ProcessListener } from "../types/ProcessListener";
@@ -8,6 +8,7 @@ export const usePhasesStore = defineStore('phases', {
     state: () => {
         return {
             phases: new Phases() as Phases,
+            sensors: [] as string[],
         }
     },
     actions: {
@@ -18,16 +19,8 @@ export const usePhasesStore = defineStore('phases', {
         },
 
         reload() {
-            Components().then(
-                components => {
-                    PhasesGetPhaseConfigs().then(
-                        result => { this.updatePhases(components, result) },
-                        error => {
-                            console.debug(error)
-                            setTimeout(() => { this.init() }, 200)
-                        },
-                    )
-                },
+            PhasesGetGlobalConfig().then(
+                result => { this.updatePhases(result) },
                 error => {
                     console.debug(error)
                     setTimeout(() => { this.init() }, 200)
@@ -39,39 +32,19 @@ export const usePhasesStore = defineStore('phases', {
             this.reload()
         },
 
-        updatePhases(comp: process.Components, value: distillation.ProcessPhaseConfig[]) {
-            let size = value.length
+        updatePhases(value: process.Config) {
+            console.log(value)
+            this.sensors = value.sensors
             let configs: ProcessPhaseConfig[] = []
 
-            value.forEach((v: distillation.ProcessPhaseConfig, i: number) => {
-                configs.push(new ProcessPhaseConfig(i, v.next, v.heaters, v.gpio, comp))
+            value.phases.forEach((v: distillation.ProcessPhaseConfig, i: number) => {
+                configs.push(new ProcessPhaseConfig(i, v.next, v.heaters, v.gpio, value.sensors))
             })
-            this.phases = new Phases(configs, size)
+            this.phases = new Phases(configs)
         },
 
         phaseConfigUpdate(n: number, v: distillation.ProcessPhaseConfig) {
-            Components().then((components: process.Components) => {
-                this.phases.phases[n] = new ProcessPhaseConfig(n, v.next, v.heaters, v.gpio, components)
-            },
-                error => {
-                    console.debug(error)
-                    setTimeout(() => {
-                        this.phaseConfigUpdate(n, v)
-                    }, 200);
-                })
+            this.phases.phases[n] = new ProcessPhaseConfig(n, v.next, v.heaters, v.gpio, this.sensors)
         },
-        updateComponents() {
-            Components().then(
-                (comp: process.Components) => {
-                    this.phases.phases.forEach((elem) => {
-                        elem.updateComponents(comp)
-                    })
-                },
-                error => {
-                    console.debug(error)
-                    setTimeout(() => { this.updateComponents() }, 200);
-                }
-            )
-        }
     }
 })

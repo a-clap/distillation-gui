@@ -9,7 +9,7 @@ import (
 	"log"
 
 	"github.com/a-clap/distillation/pkg/distillation"
-	"github.com/a-clap/distillation/pkg/distillation/process"
+	"github.com/a-clap/distillation/pkg/process"
 	"golang.org/x/exp/slices"
 )
 

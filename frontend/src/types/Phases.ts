@@ -1,4 +1,3 @@
-import { configProviderContextKey } from "element-plus";
 import { PhasesSetConfig, PhasesSetPhaseCount } from "../../wailsjs/go/backend/Backend";
 import { distillation, process } from "../../wailsjs/go/models";
 import Parameter, { writeCallbackType } from "./Parameter";
@@ -8,8 +7,7 @@ class MoveToNextConfig {
     type: number;
     sensorID: string;
     sensorThreshold: Parameter;
-    temperatureHoldSeconds: Parameter;
-    secondsToMove: Parameter;
+    timeleft: Parameter;
 
     constructor(n: process.MoveToNextConfig, cb: Notify, args: any) {
         let callback = function (_: any) {
@@ -18,12 +16,12 @@ class MoveToNextConfig {
         this.type = n.type
         this.sensorID = n.sensor_id
         this.sensorThreshold = new Parameter(n.sensor_threshold, true, callback)
-        this.temperatureHoldSeconds = new Parameter(n.temperature_hold_seconds, false, callback)
-        this.secondsToMove = new Parameter(n.seconds_to_move, false, callback)
+        this.timeleft = new Parameter(n.time_left, false, callback)
     }
 }
 
-class GPIOPhaseConfig {
+class GPIOConfig {
+    enabled: boolean;
     id: string;
     t_low: Parameter;
     t_high: Parameter;
@@ -32,10 +30,11 @@ class GPIOPhaseConfig {
     private inverted_: boolean;
     private callback: writeCallbackType;
 
-    constructor(gpio: process.GPIOPhaseConfig, callback: Notify, args: any) {
+    constructor(gpio: process.GPIOConfig, callback: Notify, args: any) {
         this.callback = function (_: any = 0) {
             callback(args)
         }
+        this.enabled = gpio.enabled
         this.id = gpio.id
         this.sensorID = gpio.sensor_id
         this.t_low = new Parameter(gpio.t_low, true, this.callback)
@@ -81,15 +80,15 @@ export class ProcessPhaseConfig {
     private id: number;
     private next: MoveToNextConfig;
     private heaters_: HeaterPhaseConfig[];
-    private gpios_: GPIOPhaseConfig[];
-    private component: process.Components;
+    private gpios_: GPIOConfig[];
+    private sensors: string[];
 
-    constructor(id: number, next: process.MoveToNextConfig, heaters: process.HeaterPhaseConfig[], gpios: process.GPIOPhaseConfig[], comp: process.Components) {
+    constructor(id: number, next: process.MoveToNextConfig, heaters: process.HeaterPhaseConfig[], gpios: process.GPIOConfig[], sensors: string[]) {
         this.id = id
         this.next = new MoveToNextConfig(next, this.update, this)
         this.heaters_ = []
         this.gpios_ = []
-        this.component = comp
+        this.sensors = sensors
 
         if (heaters != null) {
             heaters.forEach((v: process.HeaterPhaseConfig) => {
@@ -97,42 +96,13 @@ export class ProcessPhaseConfig {
             })
         }
         if (gpios != null) {
-            gpios.forEach((v: process.GPIOPhaseConfig) => {
-                this.gpios_.push(new GPIOPhaseConfig(v, this.update, this))
+            gpios.forEach((v: process.GPIOConfig) => {
+                this.gpios_.push(new GPIOConfig(v, this.update, this))
             })
         }
 
-        this.updateComponents(comp)
     }
 
-    updateComponents(c: process.Components) {
-        this.component = c
-        // Add needed Configs for Heater
-        this.component.heaters.forEach(elem => {
-            let item = this.heaters_.findIndex(i => i.id == elem)
-            if (item == -1) {
-                let conf = new process.HeaterPhaseConfig()
-                conf.ID = elem
-                conf.power = 0
-                this.heaters_.push(new HeaterPhaseConfig(conf, this.update, this))
-            }
-        })
-
-        // Add needed Configs for Heater
-        this.component.outputs.forEach(elem => {
-            let item = this.gpios_.findIndex(i => i.id == elem)
-            if (item == -1) {
-                let conf = new process.GPIOPhaseConfig()
-                conf.id = elem
-                conf.t_high = 0
-                conf.t_low = 0
-                conf.hysteresis = 0
-                conf.inverted = false
-                this.gpios_.push(new GPIOPhaseConfig(conf, this.update, this))
-            }
-
-        })
-    }
 
 
     update(p: ProcessPhaseConfig) {
@@ -145,8 +115,7 @@ export class ProcessPhaseConfig {
         next.type = p.next.type
         next.sensor_id = p.next.sensorID
         next.sensor_threshold = Number(p.next.sensorThreshold.value)
-        next.temperature_hold_seconds = Number(p.next.temperatureHoldSeconds.value)
-        next.seconds_to_move = Number(p.next.secondsToMove.value)
+        next.time_left = Number(p.next.timeleft.value)
         cfg.next = next
 
         // Heaters
@@ -157,8 +126,9 @@ export class ProcessPhaseConfig {
             cfg.heaters.push(heater)
         })
         // GPIO
-        p.gpios.forEach((value: GPIOPhaseConfig) => {
-            let gpio = new process.GPIOPhaseConfig()
+        p.gpios.forEach((value: GPIOConfig) => {
+            let gpio = new process.GPIOConfig()
+            gpio.enabled = value.enabled
             gpio.id = value.id
             gpio.sensor_id = value.sensor_id
             gpio.t_low = Number(value.t_low.value)
@@ -183,11 +153,7 @@ export class ProcessPhaseConfig {
     }
 
     get next_timeleft(): Parameter {
-        if (this.next.type) {
-            return this.next.secondsToMove
-        } else {
-            return this.next.temperatureHoldSeconds
-        }
+        return this.next.timeleft
     }
 
     get next_sensor_threshold(): Parameter {
@@ -195,7 +161,7 @@ export class ProcessPhaseConfig {
     }
 
     get next_avail_sensors(): string[] {
-        return this.component.sensors
+        return this.sensors
     }
 
     get next_sensor(): string {
@@ -211,18 +177,23 @@ export class ProcessPhaseConfig {
         return this.heaters_
     }
 
-    get gpios(): GPIOPhaseConfig[] {
+    get gpios(): GPIOConfig[] {
         return this.gpios_
     }
 }
 
 export class Phases {
     phases: ProcessPhaseConfig[];
+    gpios: GPIOConfig[];
     phaseCount: Parameter;
 
-    constructor(phases: ProcessPhaseConfig[] = [], phaseCount: number = 0) {
+    constructor(phases: ProcessPhaseConfig[] = [], gpios: process.GPIOConfig[] = []) {
         this.phases = phases
-        this.phaseCount = new Parameter(phaseCount, false, this.setPhaseCount)
+        this.gpios = []
+        gpios.forEach((v: process.GPIOConfig) => {
+            // this.gpios.push(new GPIOConfig())
+        })
+        this.phaseCount = new Parameter(phases.length, false, this.setPhaseCount)
     }
 
     private setPhaseCount(cnt: number) {

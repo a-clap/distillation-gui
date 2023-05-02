@@ -7,7 +7,7 @@ import {parameters} from '../models';
 
 export function GPIOActiveLevel():Promise<gpio.ActiveLevel>;
 
-export function GPIOPhaseConfig():Promise<process.GPIOPhaseConfig>;
+export function GPIOPhaseConfig():Promise<process.GPIOConfig>;
 
 export function GPIOPhaseStatus():Promise<process.GPIOPhaseStatus>;
 

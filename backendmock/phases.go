@@ -6,7 +6,7 @@ import (
 
 	"github.com/a-clap/distillation-gui/backend/phases"
 	"github.com/a-clap/distillation/pkg/distillation"
-	"github.com/a-clap/distillation/pkg/distillation/process"
+	"github.com/a-clap/distillation/pkg/process"
 )
 
 var (
@@ -19,29 +19,19 @@ type PhasesClient struct {
 	Stats   distillation.ProcessStatus
 }
 
-// Components implements phases.Client
-func (*PhasesClient) Components() (process.Components, error) {
-	return process.Components{
-		Sensors: []string{"sensor0", "sensor1", "sensor2"},
-		Heaters: []string{"heater0", "heater1", "heater2"},
-		Outputs: []string{"gpio0", "gpio1", "gpio2"},
-	}, nil
-}
-
-func (p *PhasesClient) Init(count int) {
+func (p *PhasesClient) Init(count uint) {
 	p.Config.PhaseNumber = count
 	p.Config.Phases = make([]process.PhaseConfig, count)
 	for i := range p.Config.Phases {
 		p.Config.Phases[i].Next = process.MoveToNextConfig{
-			Type:                   process.ByTime,
-			SensorID:               "BLAH",
-			SensorThreshold:        1.23,
-			TemperatureHoldSeconds: 13,
-			SecondsToMove:          10,
+			Type:            process.ByTime,
+			SensorID:        "BLAH",
+			SensorThreshold: 1.23,
+			TimeLeft:        10,
 		}
-		p.Config.Phases[i].GPIO = make([]process.GPIOPhaseConfig, 3)
+		p.Config.Phases[i].GPIO = make([]process.GPIOConfig, 3)
 		for j := range p.Config.Phases[i].GPIO {
-			p.Config.Phases[i].GPIO[j] = process.GPIOPhaseConfig{
+			p.Config.Phases[i].GPIO[j] = process.GPIOConfig{
 				ID:         fmt.Sprintf("gpio %v", j),
 				SensorID:   "sensor",
 				TLow:       1.23,
@@ -64,7 +54,7 @@ func (p *PhasesClient) Init(count int) {
 
 // ConfigurePhase implements phases.Client
 func (p *PhasesClient) ConfigurePhase(phaseNumber int, setConfig distillation.ProcessPhaseConfig) (distillation.ProcessPhaseConfig, error) {
-	if p.Config.PhaseNumber < phaseNumber {
+	if p.Config.PhaseNumber < uint(phaseNumber) {
 		return distillation.ProcessPhaseConfig{}, errors.New("no such phase")
 	}
 	p.Config.Phases[phaseNumber] = setConfig.PhaseConfig
@@ -85,7 +75,7 @@ func (p *PhasesClient) ConfigureProcess(cfg distillation.ProcessConfig) (distill
 
 // GetPhaseConfig implements phases.Client
 func (p *PhasesClient) GetPhaseConfig(phaseNumber int) (distillation.ProcessPhaseConfig, error) {
-	if p.Config.PhaseNumber <= phaseNumber {
+	if p.Config.PhaseNumber <= uint(phaseNumber) {
 		return distillation.ProcessPhaseConfig{}, errors.New("overflow")
 	}
 	c := distillation.ProcessPhaseConfig{PhaseConfig: p.Config.Phases[phaseNumber]}
@@ -106,4 +96,9 @@ func (p *PhasesClient) Status() (distillation.ProcessStatus, error) {
 // ValidateConfig implements phases.Client
 func (p *PhasesClient) ValidateConfig() (distillation.ProcessConfigValidation, error) {
 	return distillation.ProcessConfigValidation{Valid: true}, nil
+}
+
+// GlobalConfig implements phases.Client
+func (*PhasesClient) GlobalConfig() (process.Config, error) {
+	return process.Config{}, nil
 }
