@@ -3,15 +3,31 @@ import { parameters } from "../../wailsjs/go/models";
 import { DS } from "../types/DS";
 import { DSListener } from "../types/DSListener";
 import { DSGet } from "../../wailsjs/go/backend/Backend";
+import { TemperatureErrorCodeEmptyBuffer, TemperatureErrorCodeInternal, TemperatureErrorCodeWrongID } from "../../wailsjs/go/backend/Models";
+import { ErrorListener } from "../types/ErrorListener";
+import { AppErrorCodes } from "./error_codes";
 
 export const useDSStore = defineStore('ds', {
     state: () => {
         return {
             ds: [] as DS[],
+            errCodeInternal: 0 as number,
+            errCodeEmptyBuffer: 0 as number,
+            errCodeWrongID: 0 as number,
         }
     },
     actions: {
         init() {
+            TemperatureErrorCodeEmptyBuffer().then(v => {
+                this.errCodeEmptyBuffer = v
+            })
+            TemperatureErrorCodeInternal().then(v => {
+                this.errCodeInternal = v
+            })
+            TemperatureErrorCodeWrongID().then(v => {
+                this.errCodeWrongID = v
+            })
+
             DSListener.subscribeConfig(this.updateConfig)
             DSListener.subscribeTemperature(this.updateTemperature)
             this.reload()
@@ -53,7 +69,21 @@ export const useDSStore = defineStore('ds', {
         updateTemperature(t: parameters.Temperature) {
             let idx = this.ds.findIndex(i => i.id == t.ID)
             if (idx != -1) {
-                this.ds[idx].temperature = t.temperature.toFixed(2)
+                // Discard, if it is not enabled
+                if (!this.ds[idx].enable) {
+                    return
+                }
+                switch (t.error_code) {
+                    case this.errCodeEmptyBuffer:
+                    case this.errCodeWrongID:
+                        // Nothing to do
+                        return
+                    case this.errCodeInternal:
+                        ErrorListener.sendError(AppErrorCodes.DSInternalError)
+                        // Notify about error
+                        return
+                }
+                this.ds[idx].temperature = t.temperature
             }
         },
 

@@ -1,11 +1,12 @@
 import {
+    NotifyGlobalConfig,
     NotifyPhasesConfig,
     NotifyPhasesPhaseConfig,
     NotifyPhasesPhaseCount,
     NotifyPhasesStatus,
     NotifyPhasesValidate,
 } from '../../wailsjs/go/backend/Events'
-import { distillation } from '../../wailsjs/go/models';
+import { distillation, process } from '../../wailsjs/go/models';
 import { Listener } from './Listener';
 
 declare type PhaseCallbackConfig = (c: distillation.ProcessPhaseConfig) => void;
@@ -13,6 +14,7 @@ declare type PhaseCallbackValidate = (v: distillation.ProcessConfigValidation) =
 declare type PhaseCallbackPhaseConfig = (n: number, v: distillation.ProcessPhaseConfig) => void;
 declare type PhaseCallbackPhaseCount = (v: distillation.ProcessPhaseCount) => void;
 declare type PhaseCallbackStatus = (v: distillation.ProcessStatus) => void;
+declare type PhaseCallbackGlobalConfig = (v: process.Config) => void;
 
 class processListener {
     private static _instance: processListener;
@@ -21,6 +23,7 @@ class processListener {
     phaseConfig: Listener;
     phaseCount: Listener;
     status: Listener;
+    globalConfig: Listener;
 
     public static get Instance() {
         return this._instance || (this._instance = new this());
@@ -32,6 +35,7 @@ class processListener {
         this.phaseConfig = new Listener()
         this.phaseCount = new Listener()
         this.status = new Listener()
+        this.globalConfig = new Listener()
 
         NotifyPhasesConfig().then((ev: string) => {
             return runtime.EventsOn(ev, (...args: any) => {
@@ -63,6 +67,20 @@ class processListener {
                 this.NotifyPhasesStatus(...args);
             });
         })
+
+        NotifyGlobalConfig().then((ev: string) => {
+            return runtime.EventsOn(ev, (...args: any) => {
+                this.NotifyGlobalConfig(...args);
+            });
+        })
+    }
+
+    subscribeGlobalConfig(cb: PhaseCallbackGlobalConfig) {
+        this.globalConfig.subscribe(cb)
+    }
+
+    unsubscribeGlobalConfig(cb: PhaseCallbackGlobalConfig) {
+        this.globalConfig.unsubscribe(cb)
     }
 
     subscribeConfig(cb: PhaseCallbackConfig) {
@@ -145,6 +163,15 @@ class processListener {
         try {
             let t = new distillation.ProcessStatus(args[0])
             this.status.notify(t)
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    private NotifyGlobalConfig(...args: any) {
+        try {
+            let t = new process.Config(args[0])
+            this.globalConfig.notify(t)
         } catch (e) {
             console.log(e)
         }

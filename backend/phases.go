@@ -85,3 +85,12 @@ func (b *Backend) PhasesMoveToNext() {
 		b.eventEmitter.OnError(ErrPhasesMoveToNext)
 	}
 }
+
+func (b *Backend) PhasesSetGlobalGPIO(conf []process.GPIOConfig) {
+	logger.Debug("PhasesSetGlobalGPIO")
+
+	if err := phases.SetGlobalGPIO(conf); err != nil {
+		logger.Error("error on PhasesSetGlobalGPIO", logging.String("error", err.Error()))
+		b.eventEmitter.OnError(ErrPhasesSetGlobalGPIO)
+	}
+}

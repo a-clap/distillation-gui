@@ -17,7 +17,7 @@ import (
 type Client interface {
 	Get() ([]distillation.PTConfig, error)
 	Configure(sensor distillation.PTConfig) (distillation.PTConfig, error)
-	Temperatures() ([]distillation.PTTemperature, error)
+	Temperatures() ([]distillation.Temperature, error)
 }
 
 type Listener interface {
@@ -219,8 +219,12 @@ func update() {
 					}
 
 					notifyTemperature(parameters.Temperature{
-						ID:          temp.ID,
-						Temperature: temp.Temperature,
+						Temperature: distillation.Temperature{
+							ID:          temp.ID,
+							Temperature: temp.Temperature,
+							Stamp:       temp.Stamp,
+							Error:       temp.Error,
+						},
 					})
 				}
 			}

@@ -10,6 +10,7 @@ import (
 	"github.com/a-clap/distillation-gui/backend/phases"
 	"github.com/a-clap/distillation-gui/backend/pt"
 	"github.com/a-clap/distillation/pkg/distillation"
+	"github.com/a-clap/distillation/pkg/process"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
@@ -92,4 +93,10 @@ func (e *eventEmitter) OnPhasesCountChange(count distillation.ProcessPhaseCount)
 func (e *eventEmitter) OnStatusChange(status distillation.ProcessStatus) {
 	logger.Debug("OnStatusChange")
 	runtime.EventsEmit(e.ctx, NotifyPhasesStatus, status)
+}
+
+// OnGlobalConfig implements phases.Listener
+func (e *eventEmitter) OnGlobalConfig(c process.Config) {
+	logger.Debug("OnGlobalConfig")
+	runtime.EventsEmit(e.ctx, NotifyGlobalConfig, c)
 }

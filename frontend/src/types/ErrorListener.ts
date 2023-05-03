@@ -1,5 +1,6 @@
 import { NotifyError } from '../../wailsjs/go/backend/Events'
 import { Listener } from './Listener';
+import { AppErrorCodes } from '../stores/error_codes';
 
 declare type ErrorCallback = (id: number) => void;
 
@@ -29,8 +30,12 @@ class errorListener {
     } catch (e) {
       console.log(e)
     }
-
   }
+
+  sendError(nb: AppErrorCodes) {
+    this.handle(nb)
+  }
+
 
   subscribe(cb: ErrorCallback) {
     console.log("subscribing to error callback")

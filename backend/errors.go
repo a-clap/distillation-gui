@@ -30,4 +30,5 @@ const (
 	ErrPhasesEnable
 	ErrPhasesDisable
 	ErrPhasesMoveToNext
+	ErrPhasesSetGlobalGPIO
 )

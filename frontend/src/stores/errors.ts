@@ -26,11 +26,13 @@ export const useErrorStore = defineStore('errors', {
             }
             this.open(i18n.global.t('errors.title'), err)
         },
+
         open(title: string, msg: string) {
             this.msg = msg
             this.title = title
             this.show = true
         },
+
         close() {
             this.show = false
         }

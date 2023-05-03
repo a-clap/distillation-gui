@@ -28,6 +28,7 @@
     "heaters": "KONFIGURACJA GRZAŁEK",
     "no_heaters": "BRAK GRZAŁEK DO KONFIGURACJI",
     "heater_power": "moc (%)",
+    "gpio_global": "GLOBALNA KONFIGURACJA WYJŚĆ",
     "gpio": "KONFIGURACJA WYJŚĆ",
     "no_gpio": "BRAK WYJŚĆ DO KONFIGURACJI",
     "gpio_inverted": "Odwrócone sterowanie",
@@ -86,10 +87,11 @@
     "51": "Nieudane pobranie konfiguracji fazy",
     "52": "Nieudane pobranie konfiguracji",
     "53": "Nieudane ustawienie ilości faz",
-    "54": "Nieudane wysterowanie procesu",
+    "54": "Nieudane konfiguracja procesu",
     "55": "Niepoprawna konfiguracja procesu",
     "56": "Nieudane uruchomienie procesu",
     "57": "Nieudane zatrzymanie procesu",
-    "58": "Nieudane przejście do kolejnej fazy"
+    "58": "Nieudane przejście do kolejnej fazy",
+    "59": "Nieudana konfiguracja wyjść globalnych"
   }
 }

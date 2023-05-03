@@ -2,6 +2,7 @@ package backendmock
 
 import (
 	"errors"
+	"time"
 
 	"github.com/a-clap/distillation-gui/backend/ds"
 	"github.com/a-clap/distillation/pkg/distillation"
@@ -35,13 +36,15 @@ func (d *DSClient) Get() ([]distillation.DSConfig, error) {
 }
 
 // Temperatures implements ds.Client
-func (d *DSClient) Temperatures() ([]distillation.DSTemperature, error) {
-	var temps []distillation.DSTemperature
+func (d *DSClient) Temperatures() ([]distillation.Temperature, error) {
+	var temps []distillation.Temperature
 	for _, elem := range d.DS {
 		if elem.Enabled {
-			temps = append(temps, distillation.DSTemperature{
+			temps = append(temps, distillation.Temperature{
 				ID:          elem.ID,
 				Temperature: randomTemperature(70, 75) + elem.Correction,
+				Stamp:       time.Now().Unix(),
+				Error:       0,
 			})
 		}
 	}

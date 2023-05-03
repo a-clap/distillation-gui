@@ -8,17 +8,31 @@ export class DS {
     correction: Parameter;
     samples: Parameter;
     resolution_: number;
-    temperature: string;
+    private temperature_: string;
     private enabled: boolean;
 
-    constructor(name: string, id: string, enabled: boolean, correction: number, samples: number, resolution: number, temperature: string = "") {
+    constructor(name: string, id: string, enabled: boolean, correction: number, samples: number, resolution: number, temperature: number = 0) {
         this.name = name
         this.id = id
         this.correction = new Parameter(correction, true, this.writeCorrection)
         this.samples = new Parameter(samples, false, this.writeSamples)
         this.resolution_ = resolution
-        this.temperature = temperature;
+        this.temperature_ = ""
         this.enabled = enabled
+
+        this.temperature = temperature
+    }
+
+    set temperature(t: string | number) {
+        if (typeof t === 'number') {
+            this.temperature_ = t.toFixed(2)
+        } else {
+            this.temperature_ = t
+        }
+    }
+
+    get temperature(): string | number {
+        return this.temperature_
     }
 
     writeCorrection(value: number) {

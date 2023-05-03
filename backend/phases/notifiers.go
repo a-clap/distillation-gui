@@ -20,7 +20,11 @@ func notifyProcessCount(count distillation.ProcessPhaseCount) {
 		listener.OnPhasesCountChange(count)
 	}
 }
-
+func notifyGlobalConfig(c process.Config) {
+	for _, listener := range handler.listeners {
+		listener.OnGlobalConfig(c)
+	}
+}
 func notifyConfigChange(phaseNumber int, cfg distillation.ProcessPhaseConfig) {
 	for _, listener := range handler.listeners {
 		listener.OnPhaseConfigChange(phaseNumber, cfg)

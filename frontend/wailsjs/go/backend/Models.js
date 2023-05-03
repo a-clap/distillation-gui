@@ -38,6 +38,18 @@ export function Temperature() {
   return window['go']['backend']['Models']['Temperature']();
 }
 
+export function TemperatureErrorCodeEmptyBuffer() {
+  return window['go']['backend']['Models']['TemperatureErrorCodeEmptyBuffer']();
+}
+
+export function TemperatureErrorCodeInternal() {
+  return window['go']['backend']['Models']['TemperatureErrorCodeInternal']();
+}
+
+export function TemperatureErrorCodeWrongID() {
+  return window['go']['backend']['Models']['TemperatureErrorCodeWrongID']();
+}
+
 export function TemperaturePhaseStatus() {
   return window['go']['backend']['Models']['TemperaturePhaseStatus']();
 }

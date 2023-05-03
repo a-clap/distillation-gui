@@ -90,6 +90,10 @@ export function PhasesSetConfig(arg1, arg2) {
   return window['go']['backend']['Backend']['PhasesSetConfig'](arg1, arg2);
 }
 
+export function PhasesSetGlobalGPIO(arg1) {
+  return window['go']['backend']['Backend']['PhasesSetGlobalGPIO'](arg1);
+}
+
 export function PhasesSetPhaseCount(arg1) {
   return window['go']['backend']['Backend']['PhasesSetPhaseCount'](arg1);
 }

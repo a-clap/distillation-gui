@@ -18,6 +18,10 @@ export function NotifyGPIO() {
   return window['go']['backend']['Events']['NotifyGPIO']();
 }
 
+export function NotifyGlobalConfig() {
+  return window['go']['backend']['Events']['NotifyGlobalConfig']();
+}
+
 export function NotifyHeaters() {
   return window['go']['backend']['Events']['NotifyHeaters']();
 }

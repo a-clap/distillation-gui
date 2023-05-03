@@ -19,14 +19,16 @@ type Client interface {
 	GetPhaseConfig(phaseNumber int) (distillation.ProcessPhaseConfig, error)
 	ConfigurePhaseCount(count distillation.ProcessPhaseCount) (distillation.ProcessPhaseCount, error)
 	ConfigurePhase(phaseNumber int, setConfig distillation.ProcessPhaseConfig) (distillation.ProcessPhaseConfig, error)
-	ValidateConfig() (distillation.ProcessConfigValidation, error)
 	ConfigureProcess(cfg distillation.ProcessConfig) (distillation.ProcessConfig, error)
+	ConfigureGlobalGPIO(configs []process.GPIOConfig) ([]process.GPIOConfig, error)
+	ValidateConfig() (distillation.ProcessConfigValidation, error)
 	GlobalConfig() (process.Config, error)
 	Status() (distillation.ProcessStatus, error)
 }
 
 // Listener allows to be notified about changes in listed configs
 type Listener interface {
+	OnGlobalConfig(process.Config)
 	OnPhasesCountChange(count distillation.ProcessPhaseCount)
 	OnPhaseConfigChange(phaseNumber int, cfg distillation.ProcessPhaseConfig)
 	OnConfigValidate(validation distillation.ProcessConfigValidation)
@@ -176,6 +178,17 @@ func SetConfig(number int, cfg distillation.ProcessPhaseConfig) error {
 		return err
 	}
 	notifyConfigChange(number, c)
+	return nil
+}
+
+func SetGlobalGPIO(conf []process.GPIOConfig) error {
+	c, err := handler.client.ConfigureGlobalGPIO(conf)
+	if err != nil {
+		err := &Error{Op: "SetGlobalGPIO.ConfigureGlobalGPIO", Err: err.Error()}
+		notifyGlobalConfig(handler.phases)
+		return err
+	}
+	handler.phases.GlobalGPIO = c
 	return nil
 }
 

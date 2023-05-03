@@ -2,16 +2,36 @@ import { defineStore } from "pinia";
 import { parameters } from "../../wailsjs/go/models";
 import { PT100 } from "../types/PT100";
 import { PTListener } from "../types/PTListener";
+import { ErrorListener } from "../types/ErrorListener";
 import { PTGet } from "../../wailsjs/go/backend/Backend";
+import { AppErrorCodes } from "./error_codes";
+import {
+    TemperatureErrorCodeEmptyBuffer,
+    TemperatureErrorCodeInternal,
+    TemperatureErrorCodeWrongID
+} from "../../wailsjs/go/backend/Models";
 
 export const usePTStore = defineStore('pt', {
     state: () => {
         return {
             pt: [] as PT100[],
+            errCodeInternal: 0 as number,
+            errCodeEmptyBuffer: 0 as number,
+            errCodeWrongID: 0 as number,
         }
     },
     actions: {
         init() {
+            TemperatureErrorCodeEmptyBuffer().then(v => {
+                this.errCodeEmptyBuffer = v
+            })
+            TemperatureErrorCodeInternal().then(v => {
+                this.errCodeInternal = v
+            })
+            TemperatureErrorCodeWrongID().then(v => {
+                this.errCodeWrongID = v
+            })
+
             PTListener.subscribeConfig(this.updateConfig)
             PTListener.subscribeTemperature(this.updateTemperature)
             this.reload()
@@ -51,6 +71,20 @@ export const usePTStore = defineStore('pt', {
         updateTemperature(t: parameters.Temperature) {
             let idx = this.pt.findIndex(i => i.id == t.ID)
             if (idx != -1) {
+                // Discard, if it is not enabled
+                if (!this.pt[idx].enable) {
+                    return
+                }
+                switch (t.error_code) {
+                    case this.errCodeEmptyBuffer:
+                    case this.errCodeWrongID:
+                        // Nothing to do
+                        return
+                    case this.errCodeInternal:
+                        ErrorListener.sendError(AppErrorCodes.PTInternalError)
+                        // Notify about error
+                        return
+                }
                 this.pt[idx].temperature = t.temperature.toFixed(2)
             }
         },

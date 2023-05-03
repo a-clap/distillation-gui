@@ -9,6 +9,8 @@ export function NotifyError():Promise<string>;
 
 export function NotifyGPIO():Promise<string>;
 
+export function NotifyGlobalConfig():Promise<string>;
+
 export function NotifyHeaters():Promise<string>;
 
 export function NotifyPTConfig():Promise<string>;

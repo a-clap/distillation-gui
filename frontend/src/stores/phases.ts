@@ -13,6 +13,7 @@ export const usePhasesStore = defineStore('phases', {
     },
     actions: {
         init() {
+            ProcessListener.subscribeGlobalConfig(this.updatePhases)
             ProcessListener.subscribePhaseConfig(this.phaseConfigUpdate)
             ProcessListener.subscribePhaseCount(this.phaseCountUpdate)
             this.reload()
@@ -39,7 +40,7 @@ export const usePhasesStore = defineStore('phases', {
             value.phases.forEach((v: distillation.ProcessPhaseConfig, i: number) => {
                 configs.push(new ProcessPhaseConfig(i, v.next, v.heaters, v.gpio, value.sensors))
             })
-            this.phases = new Phases(configs)
+            this.phases = new Phases(configs, value.global_gpio)
         },
 
         phaseConfigUpdate(n: number, v: distillation.ProcessPhaseConfig) {

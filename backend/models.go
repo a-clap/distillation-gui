@@ -50,3 +50,15 @@ func (*Models) MoveToNextConfig() process.MoveToNextConfig {
 func (*Models) GPIOActiveLevel() gpio.ActiveLevel {
 	return gpio.High
 }
+
+func (*Models) TemperatureErrorCodeWrongID() int {
+	return int(distillation.ErrorCodeWrongID)
+}
+
+func (*Models) TemperatureErrorCodeEmptyBuffer() int {
+	return int(distillation.ErrorCodeEmptyBuffer)
+}
+
+func (*Models) TemperatureErrorCodeInternal() int {
+	return int(distillation.ErrorCodeInternal)
+}

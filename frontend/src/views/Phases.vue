@@ -3,10 +3,69 @@
     <h1>{{ $t('phases.title') }}</h1>
     <el-tabs v-model="activated" type="card" tabPosition="left" class="demo-tabs">
       <el-tab-pane :label="$t('phases.main')" name="main" class="main-tab">
-        <label>{{ $t('phases.count') }}</label>
-        <input v-model="phaseStore.phases.phaseCount.value" @click="() => phaseStore.phases.phaseCount.showKeyboard()">
-        <Keyboard v-bind="phaseStore.phases.phaseCount" :write="(e: number) => phaseStore.phases.phaseCount.write(e)"
-          :cancel="() => phaseStore.phases.phaseCount.cancel()" />
+        <el-row :gutter="20" align="middle">
+          <el-col :span="5" :offset="5">
+            <label>{{ $t('phases.count') }}</label>
+          </el-col>
+          <el-col :span="7" :offset="3">
+            <input v-model="phaseStore.phases.phaseCount.value"
+              @click="() => phaseStore.phases.phaseCount.showKeyboard()">
+            <Keyboard v-bind="phaseStore.phases.phaseCount" :write="(e: number) => phaseStore.phases.phaseCount.write(e)"
+              :cancel="() => phaseStore.phases.phaseCount.cancel()" />
+          </el-col>
+        </el-row>
+        <el-row :gutter="20" align="middle">
+          <el-col :span="15" :offset="6" :style="'font-weight: 800'">
+            <label v-if="phaseStore.phases.gpios.length == 0">{{ $t('phases.no_gpio') }}</label>
+            <label v-else>{{ $t('phases.gpio_global') }}</label>
+          </el-col>
+        </el-row>
+        <template v-for="( gpio ) in  phaseStore.phases.gpios ">
+          <el-row :gutter="20">
+            <el-col :span="5">
+              <el-switch v-model="gpio.enable" :active-text="gpio.id" size="large" />
+            </el-col>
+            <el-col :span="4" v-if="gpio.enable">
+              <el-checkbox v-model="gpio.inverted" :label="$t('phases.gpio_inverted')" size="large" border />
+            </el-col>
+          </el-row>
+          <el-row :gutter="20" v-if="gpio.enable">
+            <el-col :span="4">
+              <label>{{ $t('phases.next_sensor') }}</label>
+            </el-col>
+            <el-col :span="6">
+              <el-select v-model="gpio.sensor_id" size="large" class="m-2">
+                <el-option v-for="sensor in phaseStore.sensors" :label="sensor" :value="sensor" />
+              </el-select>
+            </el-col>
+            <el-col :span="5" :offset="2">
+              <label>{{ $t('phases.gpio_hysteresis') }}</label>
+            </el-col>
+            <el-col :span="3" :offset="1">
+              <input v-model="gpio.hysteresis.value" @click="() => gpio.hysteresis.showKeyboard()">
+              <Keyboard v-bind="gpio.hysteresis" :write="(e: number) => gpio.hysteresis.write(e)"
+                :cancel="() => gpio.hysteresis.cancel()" />
+            </el-col>
+          </el-row>
+          <el-row :gutter="20" v-if="gpio.enable">
+            <el-col :span="7">
+              <label>{{ $t('phases.gpio_temp_min') }}</label>
+            </el-col>
+            <el-col :span="3">
+              <input v-model="gpio.t_low.value" @click="() => gpio.t_low.showKeyboard()">
+              <Keyboard v-bind="gpio.t_low" :write="(e: number) => gpio.t_low.write(e)"
+                :cancel="() => gpio.t_low.cancel()" />
+            </el-col>
+            <el-col :span="7" :offset=1>
+              <label>{{ $t('phases.gpio_temp_max') }}</label>
+            </el-col>
+            <el-col :span="3">
+              <input v-model="gpio.t_high.value" @click="() => gpio.t_high.showKeyboard()">
+              <Keyboard v-bind="gpio.t_high" :write="(e: number) => gpio.t_high.write(e)"
+                :cancel="() => gpio.t_high.cancel()" />
+            </el-col>
+          </el-row>
+        </template>
       </el-tab-pane>
       <el-tab-pane v-for="(phase, index) in  phaseStore.phases.phases " :key="index"
         :label="$t('phases.phase') + ' ' + (index + 1)">
@@ -74,13 +133,13 @@
         <template v-for="( gpio ) in  phase.gpios ">
           <el-row :gutter="20">
             <el-col :span="5">
-              <label :style="'font-weight: 800'">{{ gpio.id }}</label>
+              <el-switch v-model="gpio.enable" :active-text="gpio.id" size="large" />
             </el-col>
-            <el-col :span="4">
+            <el-col :span="4" v-if="gpio.enable">
               <el-checkbox v-model="gpio.inverted" :label="$t('phases.gpio_inverted')" size="large" border />
             </el-col>
           </el-row>
-          <el-row :gutter="20">
+          <el-row :gutter="20" v-if="gpio.enable">
             <el-col :span="4">
               <label>{{ $t('phases.next_sensor') }}</label>
             </el-col>
@@ -98,7 +157,7 @@
                 :cancel="() => gpio.hysteresis.cancel()" />
             </el-col>
           </el-row>
-          <el-row :gutter="20">
+          <el-row :gutter="20" v-if="gpio.enable">
             <el-col :span="7">
               <label>{{ $t('phases.gpio_temp_min') }}</label>
             </el-col>
@@ -140,12 +199,6 @@ onMounted(() => {
 <style lang="scss">
 .demo-tabs>.el-tabs__content {
   padding: 32px;
-}
-
-.main-tab {
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
 }
 
 .el-row {

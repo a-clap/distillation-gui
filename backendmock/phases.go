@@ -19,6 +19,11 @@ type PhasesClient struct {
 	Stats   distillation.ProcessStatus
 }
 
+// ConfigureGlobalGPIO implements phases.Client
+func (*PhasesClient) ConfigureGlobalGPIO(configs []process.GPIOConfig) ([]process.GPIOConfig, error) {
+	return configs, nil
+}
+
 func (p *PhasesClient) Init(count uint) {
 	p.Config.PhaseNumber = count
 	p.Config.Phases = make([]process.PhaseConfig, count)

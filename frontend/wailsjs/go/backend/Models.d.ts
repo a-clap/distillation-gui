@@ -23,4 +23,10 @@ export function ProcessStatus():Promise<distillation.ProcessStatus>;
 
 export function Temperature():Promise<parameters.Temperature>;
 
+export function TemperatureErrorCodeEmptyBuffer():Promise<number>;
+
+export function TemperatureErrorCodeInternal():Promise<number>;
+
+export function TemperatureErrorCodeWrongID():Promise<number>;
+
 export function TemperaturePhaseStatus():Promise<process.TemperaturePhaseStatus>;

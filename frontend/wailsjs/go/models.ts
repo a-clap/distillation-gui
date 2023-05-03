@@ -199,6 +199,8 @@ export namespace parameters {
 	export class Temperature {
 	    ID: string;
 	    temperature: number;
+	    unix_seconds: number;
+	    error_code: number;
 	
 	    static createFrom(source: any = {}) {
 	        return new Temperature(source);
@@ -208,6 +210,8 @@ export namespace parameters {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.ID = source["ID"];
 	        this.temperature = source["temperature"];
+	        this.unix_seconds = source["unix_seconds"];
+	        this.error_code = source["error_code"];
 	    }
 	}
 

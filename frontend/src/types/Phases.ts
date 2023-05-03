@@ -1,8 +1,8 @@
-import { PhasesSetConfig, PhasesSetPhaseCount } from "../../wailsjs/go/backend/Backend";
+import { PhasesSetConfig, PhasesSetGlobalGPIO, PhasesSetPhaseCount } from "../../wailsjs/go/backend/Backend";
 import { distillation, process } from "../../wailsjs/go/models";
 import Parameter, { writeCallbackType } from "./Parameter";
 
-declare type Notify = (args: ProcessPhaseConfig) => void;
+declare type Notify = (args: any) => void;
 class MoveToNextConfig {
     type: number;
     sensorID: string;
@@ -21,7 +21,7 @@ class MoveToNextConfig {
 }
 
 class GPIOConfig {
-    enabled: boolean;
+    private enabled: boolean;
     id: string;
     t_low: Parameter;
     t_high: Parameter;
@@ -43,6 +43,14 @@ class GPIOConfig {
         this.inverted_ = gpio.inverted
     }
 
+    set enable(v: boolean) {
+        this.enabled = v
+        this.callback(0)
+    }
+
+    get enable(): boolean {
+        return this.enabled
+    }
 
     get sensor_id(): string {
         return this.sensorID
@@ -103,8 +111,6 @@ export class ProcessPhaseConfig {
 
     }
 
-
-
     update(p: ProcessPhaseConfig) {
         let cfg = new distillation.ProcessPhaseConfig()
         cfg.heaters = []
@@ -128,7 +134,7 @@ export class ProcessPhaseConfig {
         // GPIO
         p.gpios.forEach((value: GPIOConfig) => {
             let gpio = new process.GPIOConfig()
-            gpio.enabled = value.enabled
+            gpio.enabled = value.enable
             gpio.id = value.id
             gpio.sensor_id = value.sensor_id
             gpio.t_low = Number(value.t_low.value)
@@ -188,12 +194,35 @@ export class Phases {
     phaseCount: Parameter;
 
     constructor(phases: ProcessPhaseConfig[] = [], gpios: process.GPIOConfig[] = []) {
+        let self = this
+
         this.phases = phases
         this.gpios = []
-        gpios.forEach((v: process.GPIOConfig) => {
-            // this.gpios.push(new GPIOConfig())
-        })
+
+        if (gpios != null) {
+            gpios.forEach((v: process.GPIOConfig) => {
+                this.gpios.push(new GPIOConfig(v, self.update, self))
+            })
+        }
         this.phaseCount = new Parameter(phases.length, false, this.setPhaseCount)
+    }
+
+    update(p: Phases) {
+        let gpios: process.GPIOConfig[] = []
+        p.gpios.forEach((v) => {
+            let g = new process.GPIOConfig()
+            g.enabled = v.enable
+            g.id = v.id
+            g.sensor_id = v.sensor_id
+            g.t_low = Number(v.t_low.value)
+            g.t_high = Number(v.t_high.value)
+            g.hysteresis = Number(v.hysteresis.value)
+            g.inverted = v.inverted
+
+            gpios.push(g)
+        })
+        console.log(gpios)
+        PhasesSetGlobalGPIO(gpios)
     }
 
     private setPhaseCount(cnt: number) {

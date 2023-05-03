@@ -16,6 +16,7 @@ const (
 	NotifyPhasesPhaseConfig = "rcv:phase_phase_config"
 	NotifyPhasesPhaseCount  = "rcv:phase_count"
 	NotifyPhasesStatus      = "rcv:phase_status"
+	NotifyGlobalConfig      = "rcv:global_config"
 )
 
 func (Events) NotifyHeaters() string {
@@ -60,4 +61,7 @@ func (Events) NotifyPhasesPhaseCount() string {
 }
 func (Events) NotifyPhasesStatus() string {
 	return NotifyPhasesStatus
+}
+func (Events) NotifyGlobalConfig() string {
+	return NotifyGlobalConfig
 }

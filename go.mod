@@ -3,9 +3,9 @@ module github.com/a-clap/distillation-gui
 go 1.19
 
 require (
-	github.com/a-clap/distillation v0.0.0-20230502180120-3b8ccd5b5a48
+	github.com/a-clap/distillation v0.0.0-20230503091344-f02e483cc271
 	github.com/a-clap/embedded v0.0.0-20230430090406-3cf798703581
-	github.com/a-clap/logging v0.0.0-20230406162054-e25047d44282
+	github.com/a-clap/logging v0.0.0-20230503053547-d9ae4a43c7a4
 	github.com/wailsapp/wails/v2 v2.4.1
 	golang.org/x/exp v0.0.0-20230425010034-47ecfdc1ba53
 )
@@ -60,6 +60,7 @@ require (
 	google.golang.org/genproto v0.0.0-20230410155749-daa745c078e1 // indirect
 	google.golang.org/grpc v1.54.0 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
+	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	periph.io/x/conn/v3 v3.7.0 // indirect
 	periph.io/x/host/v3 v3.8.2 // indirect
