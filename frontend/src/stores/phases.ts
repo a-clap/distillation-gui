@@ -33,7 +33,6 @@ export const usePhasesStore = defineStore('phases', {
         },
 
         updatePhases(value: process.Config) {
-            console.log(value)
             this.sensors = value.sensors
             let configs: ProcessPhaseConfig[] = []
 

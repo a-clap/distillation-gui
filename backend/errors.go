@@ -19,3 +19,15 @@ const (
 const (
 	ErrWIFIAPList = iota + 40
 )
+
+const (
+	ErrPhaseGetCount = iota + 50
+	ErrPhaseGetPhaseConfigs
+	ErrPhaseGetGlobalConfig
+	ErrPhasesSetPhaseCount
+	ErrPhasesSetConfig
+	ErrPhasesValidateConfig
+	ErrPhasesEnable
+	ErrPhasesDisable
+	ErrPhasesMoveToNext
+)

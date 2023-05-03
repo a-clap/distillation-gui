@@ -17,7 +17,6 @@ export const useErrorStore = defineStore('errors', {
         },
 
         errorCallback(id: number) {
-            console.log("err")
             let err = `errors.${id}`;
             if (i18n.global.te(err)) {
                 err = i18n.global.t(err)
@@ -28,7 +27,6 @@ export const useErrorStore = defineStore('errors', {
             this.open(i18n.global.t('errors.title'), err)
         },
         open(title: string, msg: string) {
-            console.log("oppen")
             this.msg = msg
             this.title = title
             this.show = true

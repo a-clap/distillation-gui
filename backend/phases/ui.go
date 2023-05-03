@@ -6,7 +6,6 @@
 package phases
 
 import (
-	"log"
 	"sync/atomic"
 	"time"
 
@@ -170,10 +169,8 @@ func SetPhaseCount(count uint) error {
 func SetConfig(number int, cfg distillation.ProcessPhaseConfig) error {
 	c, err := handler.client.ConfigurePhase(number, cfg)
 	if err != nil {
-		log.Println("err")
 		err := &Error{Op: "SetConfig.ConfigurePhase", Err: err.Error()}
 		if number < len(handler.phases.Phases) {
-			log.Println("notify")
 			notifyConfigChange(number, distillation.ProcessPhaseConfig{PhaseConfig: handler.phases.Phases[number]})
 		}
 		return err

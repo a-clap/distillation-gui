@@ -81,6 +81,15 @@
     "22": "Nieudane ustawienie próbek PT",
     "30": "Nieudane ustawienie aktywnego poziomu GPIO",
     "31": "Nieudane ustawienie stanu GPIO",
-    "40": "Nieudane pobranie listy sieci"
+    "40": "Nieudane pobranie listy sieci",
+    "50": "Nieudane pobranie ilości faz",
+    "51": "Nieudane pobranie konfiguracji fazy",
+    "52": "Nieudane pobranie konfiguracji",
+    "53": "Nieudane ustawienie ilości faz",
+    "54": "Nieudane wysterowanie procesu",
+    "55": "Niepoprawna konfiguracja procesu",
+    "56": "Nieudane uruchomienie procesu",
+    "57": "Nieudane zatrzymanie procesu",
+    "58": "Nieudane przejście do kolejnej fazy"
   }
 }
