@@ -1,14 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"time"
 
 	"github.com/a-clap/distillation-gui/backend"
 	"github.com/a-clap/distillation-gui/backendmock"
 	"github.com/a-clap/distillation/pkg/distillation"
-	"github.com/a-clap/distillation/pkg/process"
 	"github.com/a-clap/distillation/pkg/wifi"
 	"github.com/a-clap/embedded/pkg/ds18b20"
 	"github.com/a-clap/embedded/pkg/embedded"
@@ -119,31 +117,7 @@ func mockClients() []backend.Option {
 	)
 
 	phaseClient := backendmock.PhasesClient{}
-	phaseClient.Config = process.Config{PhaseNumber: 3, Phases: make([]process.PhaseConfig, 3)}
-	for i := range phaseClient.Config.Phases {
-		gpio := make([]process.GPIOConfig, 3)
-		for j := range gpio {
-			gpio[j] = process.GPIOConfig{
-				ID:         fmt.Sprint("gpio", j),
-				SensorID:   fmt.Sprint("sensor ", j),
-				TLow:       0,
-				THigh:      0,
-				Hysteresis: 0,
-				Inverted:   false,
-			}
-		}
-
-		phaseClient.Config.Phases[i].GPIO = gpio
-
-		heaters := make([]process.HeaterPhaseConfig, 3)
-		for j := range heaters {
-			heaters[j] = process.HeaterPhaseConfig{
-				ID:    fmt.Sprint("heater", j),
-				Power: 0,
-			}
-		}
-		phaseClient.Config.Phases[i].Heaters = heaters
-	}
+	phaseClient.Init(3)
 
 	w, err := wifi.New()
 	if err != nil {

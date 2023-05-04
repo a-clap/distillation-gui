@@ -6,7 +6,8 @@
     "pt100": "PT100",
     "ds": "DS18B20",
     "heaters": "Grzałki",
-    "outputs": "Wyjścia"
+    "outputs": "Wyjścia",
+    "logs": "Logi"
   },
   "process": {
     "title": "Główne okno procesu",
@@ -69,7 +70,15 @@
     "manual_control": "Sterowanie ręczne",
     "manual_control_force": "STAN"
   },
+  "logs": {
+    "title": "Logi urządzenia",
+    "id": "Kod",
+    "timestamp": "Czas",
+    "message": "Wiadomość"
+  },
   "errors": {
+    "submit": "OK",
+    "skip": "Pomiń",
     "title": "BŁĄD URZĄDZENIA",
     "unknown": "Nieznany kod błędu: ",
     "0": "All good",
@@ -92,6 +101,8 @@
     "56": "Nieudane uruchomienie procesu",
     "57": "Nieudane zatrzymanie procesu",
     "58": "Nieudane przejście do kolejnej fazy",
-    "59": "Nieudana konfiguracja wyjść globalnych"
+    "59": "Nieudana konfiguracja wyjść globalnych",
+    "100": "Wewnętrzny błąd czujnika PT100 - czy jest prawidłowo podłączony?",
+    "101": "Wewnętrzny błąd czujnika DS18B20 - czy jest prawidłowo podłączony?"
   }
 }

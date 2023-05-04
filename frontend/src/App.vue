@@ -4,11 +4,14 @@
     <Sidebar />
     <el-dialog v-model="err.show" :title="err.title" width="70%" :modal=false :center=true :close-on-click-modal=false
       :show-close=false align-center>
-      <span style="margin:auto; display:table; font-size: 22px;">{{ err.msg }}</span>
+      <span style="margin:auto; font-size: 22px;">{{ err.msg }}</span>
       <template #footer>
         <span class="dialog-footer">
-          <el-button type="danger" @click="err.close">
-            OK
+          <el-button type="success" @click="err.close">
+            {{ $t('errors.submit') }}
+          </el-button>
+          <el-button type="danger" @click="err.skip">
+            {{ $t('errors.skip') }}
           </el-button>
         </span>
       </template>
@@ -28,6 +31,7 @@ import { usePTStore } from "./stores/pt";
 import { useWIFIStore } from "./stores/wifi";
 import { usePhasesStore } from "./stores/phases";
 import { useErrorStore } from "./stores/errors";
+import { useLogStore } from "./stores/log";
 
 const err = useErrorStore()
 err.init()
@@ -38,7 +42,8 @@ let initFuncs: any[] = [
   useHeatersStore(),
   usePTStore(),
   useWIFIStore(),
-  usePhasesStore()
+  usePhasesStore(),
+  useLogStore(),
 ]
 
 initFuncs.forEach((store) => {

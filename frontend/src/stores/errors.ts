@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { ErrorListener } from "../types/ErrorListener";
 import { i18n } from "../main";
+import { useLogStore } from "./log";
 
 export const useErrorStore = defineStore('errors', {
     state: () => {
@@ -8,12 +9,16 @@ export const useErrorStore = defineStore('errors', {
             errors: [] as string[],
             show: false,
             title: "",
-            msg: ""
+            msg: "",
+            last_code: 0 as number,
+            skipped: [] as number[],
+            log: useLogStore()
         }
     },
     actions: {
         init() {
             ErrorListener.subscribe(this.errorCallback)
+            this.skipped = []
         },
 
         errorCallback(id: number) {
@@ -24,6 +29,12 @@ export const useErrorStore = defineStore('errors', {
                 err = i18n.global.t('errors.unknown')
                 err += id.toString()
             }
+
+            this.log.add(id, err)
+            if (this.skipped.includes(id)) {
+                return
+            }
+            this.last_code = id
             this.open(i18n.global.t('errors.title'), err)
         },
 
@@ -35,6 +46,13 @@ export const useErrorStore = defineStore('errors', {
 
         close() {
             this.show = false
+        },
+        skip() {
+            this.skipped.push(this.last_code)
+            this.close()
+        },
+        reset_skipped() {
+            this.skipped = []
         }
     }
 })

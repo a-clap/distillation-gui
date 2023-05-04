@@ -1,4 +1,4 @@
-import {createRouter, createWebHistory} from "vue-router"
+import { createRouter, createWebHistory } from "vue-router"
 
 const router = createRouter({
     history: createWebHistory(),
@@ -30,6 +30,10 @@ const router = createRouter({
         {
             path: '/outputs',
             component: () => import('../views/Outputs.vue')
+        },
+        {
+            path: '/logs',
+            component: () => import('../views/Logs.vue')
         }
     ]
 })

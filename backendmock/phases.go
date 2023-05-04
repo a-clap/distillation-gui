@@ -20,12 +20,14 @@ type PhasesClient struct {
 }
 
 // ConfigureGlobalGPIO implements phases.Client
-func (*PhasesClient) ConfigureGlobalGPIO(configs []process.GPIOConfig) ([]process.GPIOConfig, error) {
+func (p *PhasesClient) ConfigureGlobalGPIO(configs []process.GPIOConfig) ([]process.GPIOConfig, error) {
+	p.Config.GlobalGPIO = configs
 	return configs, nil
 }
 
 func (p *PhasesClient) Init(count uint) {
 	p.Config.PhaseNumber = count
+	p.Config.Sensors = []string{"s1", "s2", "s3"}
 	p.Config.Phases = make([]process.PhaseConfig, count)
 	for i := range p.Config.Phases {
 		p.Config.Phases[i].Next = process.MoveToNextConfig{
@@ -54,6 +56,7 @@ func (p *PhasesClient) Init(count uint) {
 			}
 		}
 	}
+	p.Config.GlobalGPIO = p.Config.Phases[0].GPIO
 
 }
 
@@ -104,6 +107,6 @@ func (p *PhasesClient) ValidateConfig() (distillation.ProcessConfigValidation, e
 }
 
 // GlobalConfig implements phases.Client
-func (*PhasesClient) GlobalConfig() (process.Config, error) {
-	return process.Config{}, nil
+func (p *PhasesClient) GlobalConfig() (process.Config, error) {
+	return p.Config, nil
 }
