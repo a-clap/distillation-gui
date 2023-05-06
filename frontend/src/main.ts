@@ -6,10 +6,12 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import 'element-plus/theme-chalk/dark/css-vars.css'
 
+import 'material-icons/iconfont/filled.css';
 import App from './App.vue'
 import router from "./router/index.js"
 
 const pinia = createPinia()
+
 
 const app = createApp(App)
 app.config.performance = true;
