@@ -57,7 +57,7 @@
     "resolution_9": "0.5°C   (93.75 ms)",
     "resolution_10": "0.25°C  (187.5 ms)",
     "resolution_11": "0.125°C (375 ms)",
-    "resolution_12": "0.625°C (750 ms)"
+    "resolution_12": "0.0625°C (750 ms)"
   },
   "heaters": {
     "title": "Konfiguracja grzałek"
@@ -74,7 +74,8 @@
     "title": "Logi urządzenia",
     "id": "Kod",
     "timestamp": "Czas",
-    "message": "Wiadomość"
+    "message": "Wiadomość",
+    "reset_skipped": "Przywróc wszystkie błędy"
   },
   "errors": {
     "submit": "OK",

@@ -3,7 +3,7 @@
     <h1>{{ $t('logs.title') }}</h1>
     <el-container class="log-box" style="height: 80%">
       <el-header>
-        <el-button type="warning" @click="errStore.reset_skipped">Warning</el-button>
+        <el-button type="warning" size="large" @click="errStore.reset_skipped">{{ $t('logs.reset_skipped') }}</el-button>
       </el-header>
       <el-main>
         <el-table-v2 :columns="columns" :data="data" :width="750" :height="500" fixed />
@@ -61,6 +61,12 @@ const data = generateData(columns)
 <style lang="scss" scoped>
 h1 {
   margin-bottom: 2rem;
+}
+
+.el-header {
+  display: flex;
+  justify-content: space-around;
+
 }
 
 .el-table-v2 {
