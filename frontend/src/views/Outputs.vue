@@ -3,7 +3,7 @@
         <h1>{{ $t('outputs.title') }}</h1>
         <div v-for="(gpio, index) in gpioStore.gpios" :key="index">
             <section class="gpio-box">
-                <el-row :gutter="20" align="middle">
+                <el-row align="middle">
                     <el-col :span="3">
                         <div> {{ gpio.name }} </div>
                     </el-col>

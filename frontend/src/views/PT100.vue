@@ -3,7 +3,7 @@
         <h1>{{ $t('pt100.title') }}</h1>
         <div v-for="(pt, index) in ptStore.pt" :key="index">
             <section class="pt-box">
-                <el-row :gutter="20" align="middle">
+                <el-row align="middle">
                     <el-col :span="3">
                         <el-switch v-model="pt.enable" :active-text="pt.name" size="large" />
                     </el-col>
@@ -22,7 +22,7 @@
                         <input v-model="pt.temperature">
                     </el-col>
                 </el-row>
-                <el-row :gutter="20" align="middle">
+                <el-row align="middle">
                     <el-col :span="4" :offset="4" v-if="pt.enable">
                         <label>{{ $t('pt100.samples') }}</label>
                     </el-col>

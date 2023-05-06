@@ -3,7 +3,7 @@
         <h1>{{ $t('heaters.title') }}</h1>
         <div v-for="(heater, index) in heatersStore.heaters" :key="index">
             <section class="heater-box">
-                <el-row :gutter="20" align="middle">
+                <el-row align="middle">
                     <el-col :span="3">
                         <el-switch v-model="heater.enable" :active-text="heater.name" size="large" />
                     </el-col>
