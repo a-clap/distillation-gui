@@ -60,6 +60,10 @@ func (b *Backend) Startup(ctx context.Context) {
 	ds.Refresh()
 	pt.Refresh()
 	phases.Refresh()
+
+	if errs := loadSaver.Load(); errs != nil {
+		logger.Warn("Parameters Load errors", logging.Reflect("errors", errs))
+	}
 }
 
 func (b *Backend) handleErrors() {
