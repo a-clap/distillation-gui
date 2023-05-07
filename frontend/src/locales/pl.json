@@ -16,6 +16,8 @@
   },
   "phases": {
     "title": "Ustawienia procesu",
+    "load": "Wczytaj parametry",
+    "save": "Zapisz parametry",
     "main": "Główne",
     "phase": "Faza",
     "count": "Liczba faz",

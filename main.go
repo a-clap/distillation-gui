@@ -4,6 +4,7 @@ import (
 	"embed"
 	"flag"
 	"log"
+	"os"
 
 	"github.com/a-clap/distillation-gui/backend"
 	"github.com/wailsapp/wails/v2"
@@ -28,6 +29,12 @@ func main() {
 	} else {
 		opts = getopts(*addr)
 	}
+
+	p, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+	opts = append(opts, backend.WithLoadSaver(&saver{path: p}))
 
 	// Create backend
 	b, err := backend.New(

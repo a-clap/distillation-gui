@@ -4,6 +4,14 @@
     <el-tabs v-model="activated" type="card" tabPosition="left" class="demo-tabs">
       <el-tab-pane :label="$t('phases.main')" name="main" class="main-tab">
         <el-row :gutter="20" align="middle">
+          <el-col :span="7" :offset="3">
+            <el-button type="primary" size="large" @click="() => LoadParameters()">{{ $t('phases.load') }}</el-button>
+          </el-col>
+          <el-col :span="7" :offset="3">
+            <el-button type="primary" size="large" @click="() => SaveParameters()">{{ $t('phases.save') }}</el-button>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20" align="middle">
           <el-col :span="5" :offset="5">
             <label>{{ $t('phases.count') }}</label>
           </el-col>
@@ -35,7 +43,7 @@
             </el-col>
             <el-col :span="6">
               <el-select v-model="gpio.sensor_id" size="large" class="m-2">
-                <el-option v-for="sensor in phaseStore.sensors" :label="sensor" :value="sensor" />
+                <el-option v-for="sensor in phaseStore.phases.sensors" :label="sensor" :value="sensor" />
               </el-select>
             </el-col>
             <el-col :span="5" :offset="2">
@@ -93,7 +101,7 @@
           </el-col>
           <el-col :span="5">
             <el-select v-model="phase.next_sensor" size="large" class="m-2">
-              <el-option v-for="sensor in phase.next_avail_sensors" :label="sensor" :value="sensor" />
+              <el-option v-for="sensor in phaseStore.phases.sensors" :label="sensor" :value="sensor" />
             </el-select>
           </el-col>
           <el-col :span="6" :offset="4">
@@ -186,6 +194,7 @@
 import Keyboard from "../components/Keyboard.vue"
 import { onMounted, ref } from "vue";
 import { usePhasesStore } from "../stores/phases";
+import {LoadParameters, SaveParameters} from "../../wailsjs/go/backend/Backend";
 
 const activated = ref('main')
 const phaseStore = usePhasesStore()

@@ -8,6 +8,7 @@ require (
 	github.com/a-clap/logging v0.0.0-20230503053547-d9ae4a43c7a4
 	github.com/wailsapp/wails/v2 v2.4.1
 	golang.org/x/exp v0.0.0-20230425010034-47ecfdc1ba53
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
@@ -61,7 +62,6 @@ require (
 	google.golang.org/grpc v1.54.0 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
 	periph.io/x/conn/v3 v3.7.0 // indirect
 	periph.io/x/host/v3 v3.8.2 // indirect
 )

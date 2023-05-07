@@ -4,6 +4,7 @@ import (
 	"github.com/a-clap/distillation-gui/backend/ds"
 	"github.com/a-clap/distillation-gui/backend/gpio"
 	"github.com/a-clap/distillation-gui/backend/heater"
+	"github.com/a-clap/distillation-gui/backend/loadSaver"
 	"github.com/a-clap/distillation-gui/backend/phases"
 	"github.com/a-clap/distillation-gui/backend/pt"
 	"github.com/a-clap/distillation-gui/backend/wifi"
@@ -56,6 +57,13 @@ func WithPhaseClient(c phases.Client) Option {
 	return func(b *Backend) error {
 		b.phaseChan = make(chan error, 10)
 		phases.Init(c, b.phaseChan, b.interval)
+		return nil
+	}
+}
+
+func WithLoadSaver(c loadSaver.LoadSaver) Option {
+	return func(b *Backend) error {
+		loadSaver.Init(c)
 		return nil
 	}
 }

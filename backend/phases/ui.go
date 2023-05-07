@@ -77,9 +77,13 @@ func Apply(config process.Config) []error {
 		errs = append(errs, err)
 		return errs
 	}
+	if err := SetGlobalGPIO(config.GlobalGPIO); err != nil {
+		errs = append(errs, err)
+		return errs
+	}
 
-	for i, c := range config.Phases {
-		if err := SetConfig(i, distillation.ProcessPhaseConfig{PhaseConfig: c}); err != nil {
+	for i := 0; uint(i) < config.PhaseNumber && i < len(config.Phases); i++ {
+		if err := SetConfig(i, distillation.ProcessPhaseConfig{PhaseConfig: config.Phases[i]}); err != nil {
 			errs = append(errs, err)
 		}
 	}

@@ -32,3 +32,8 @@ const (
 	ErrPhasesMoveToNext
 	ErrPhasesSetGlobalGPIO
 )
+
+const (
+	ErrSave = iota + 70
+	ErrLoad = 71
+)

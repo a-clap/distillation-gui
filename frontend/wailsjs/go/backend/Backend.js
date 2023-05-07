@@ -46,6 +46,10 @@ export function HeatersGet() {
   return window['go']['backend']['Backend']['HeatersGet']();
 }
 
+export function LoadParameters() {
+  return window['go']['backend']['Backend']['LoadParameters']();
+}
+
 export function PTEnable(arg1, arg2) {
   return window['go']['backend']['Backend']['PTEnable'](arg1, arg2);
 }
@@ -100,6 +104,10 @@ export function PhasesSetPhaseCount(arg1) {
 
 export function PhasesValidateConfig() {
   return window['go']['backend']['Backend']['PhasesValidateConfig']();
+}
+
+export function SaveParameters() {
+  return window['go']['backend']['Backend']['SaveParameters']();
 }
 
 export function WifiAPList() {

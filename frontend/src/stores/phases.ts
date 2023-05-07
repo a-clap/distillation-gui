@@ -8,7 +8,6 @@ export const usePhasesStore = defineStore('phases', {
     state: () => {
         return {
             phases: new Phases() as Phases,
-            sensors: [] as string[],
         }
     },
     actions: {
@@ -34,17 +33,16 @@ export const usePhasesStore = defineStore('phases', {
         },
 
         updatePhases(value: process.Config) {
-            this.sensors = value.sensors
             let configs: ProcessPhaseConfig[] = []
 
             value.phases.forEach((v: distillation.ProcessPhaseConfig, i: number) => {
-                configs.push(new ProcessPhaseConfig(i, v.next, v.heaters, v.gpio, value.sensors))
+                configs.push(new ProcessPhaseConfig(i, v.next, v.heaters, v.gpio))
             })
-            this.phases = new Phases(configs, value.global_gpio)
+            this.phases = new Phases(configs, value.global_gpio, value.sensors)
         },
 
         phaseConfigUpdate(n: number, v: distillation.ProcessPhaseConfig) {
-            this.phases.phases[n] = new ProcessPhaseConfig(n, v.next, v.heaters, v.gpio, this.sensors)
+            this.phases.phases[n] = new ProcessPhaseConfig(n, v.next, v.heaters, v.gpio)
         },
     }
 })

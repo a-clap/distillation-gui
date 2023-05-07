@@ -7,7 +7,9 @@ import (
 	"github.com/a-clap/distillation-gui/backend/ds"
 	"github.com/a-clap/distillation-gui/backend/gpio"
 	"github.com/a-clap/distillation-gui/backend/heater"
+	"github.com/a-clap/distillation-gui/backend/loadSaver"
 	"github.com/a-clap/distillation-gui/backend/parameters"
+	"github.com/a-clap/distillation-gui/backend/phases"
 	"github.com/a-clap/distillation-gui/backend/pt"
 	"github.com/a-clap/distillation-gui/backend/wifi"
 	"github.com/a-clap/embedded/pkg/ds18b20"
@@ -49,6 +51,15 @@ func (b *Backend) Startup(ctx context.Context) {
 	b.ctx = ctx
 	b.eventEmitter.init(ctx)
 	b.handleErrors()
+	if err := loadSaver.Run(); err != nil {
+		logger.Warn("loadSaver error ", logging.String("error", err.Error()))
+	}
+
+	heater.Refresh()
+	gpio.Refresh()
+	ds.Refresh()
+	pt.Refresh()
+	phases.Refresh()
 }
 
 func (b *Backend) handleErrors() {
@@ -186,5 +197,20 @@ func (b *Backend) GPIOSetState(id string, value bool) {
 	if err := gpio.SetState(id, value); err != nil {
 		logger.Error("GPIOSetState", logging.String("error", err.Error()))
 		b.eventEmitter.OnError(ErrGPIOSetState)
+	}
+}
+func (b *Backend) SaveParameters() {
+	err := loadSaver.Save()
+	if err != nil {
+		b.eventEmitter.OnError(ErrSave)
+	}
+}
+func (b *Backend) LoadParameters() {
+	err := loadSaver.Load()
+	if err != nil {
+		for _, e := range err {
+			logger.Debug("error on load: ", logging.String("error", e.Error()))
+		}
+		b.eventEmitter.OnError(ErrLoad)
 	}
 }

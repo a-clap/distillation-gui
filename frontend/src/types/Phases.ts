@@ -89,14 +89,12 @@ export class ProcessPhaseConfig {
     private next: MoveToNextConfig;
     private heaters_: HeaterPhaseConfig[];
     private gpios_: GPIOConfig[];
-    private sensors: string[];
 
-    constructor(id: number, next: process.MoveToNextConfig, heaters: process.HeaterPhaseConfig[], gpios: process.GPIOConfig[], sensors: string[]) {
+    constructor(id: number, next: process.MoveToNextConfig, heaters: process.HeaterPhaseConfig[], gpios: process.GPIOConfig[]) {
         this.id = id
         this.next = new MoveToNextConfig(next, this.update, this)
         this.heaters_ = []
         this.gpios_ = []
-        this.sensors = sensors
 
         if (heaters != null) {
             heaters.forEach((v: process.HeaterPhaseConfig) => {
@@ -166,10 +164,6 @@ export class ProcessPhaseConfig {
         return this.next.sensorThreshold
     }
 
-    get next_avail_sensors(): string[] {
-        return this.sensors
-    }
-
     get next_sensor(): string {
         return this.next.sensorID
     }
@@ -192,12 +186,14 @@ export class Phases {
     phases: ProcessPhaseConfig[];
     gpios: GPIOConfig[];
     phaseCount: Parameter;
+    sensors: string[]
 
-    constructor(phases: ProcessPhaseConfig[] = [], gpios: process.GPIOConfig[] = []) {
+    constructor(phases: ProcessPhaseConfig[] = [], gpios: process.GPIOConfig[] = [], sensors: string[] = []) {
         let self = this
 
         this.phases = phases
         this.gpios = []
+        this.sensors = sensors
 
         if (gpios != null) {
             gpios.forEach((v: process.GPIOConfig) => {
