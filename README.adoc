@@ -2,11 +2,42 @@
 :toc: preamble
 :toclevels: 7
 :distro-link: https://github.com/a-clap/distillation-distro
-:distro-apps: https://github.com/a-clap/distillation
+:embedded-link: https://github.com/a-clap/embedded
+:distillation: https://github.com/a-clap/distillation
+:element-plus-link: https://element-plus.org
+:vue-link: https://vuejs.org
+:wails-link: https://github.com/wailsapp/wails
 :imagesdir: docs/images/
 
-This repo is part of personal distillation project based on https://wiki.banana-pi.org/Banana_Pi_BPI-M2_ZERO[BananaPi Zero], with {distro-link}[distillation distro] and {distro-apps}[apps].
+This repo is part of personal distillation project based on https://wiki.banana-pi.org/Banana_Pi_BPI-M2_ZERO[BananaPi Zero], with {distro-link}[distillation distro],  {embedded-link}[embedded background] and {distillation}[distillation process handling].
 
 == What is this?
 
-GUI based on Wails and Vue3.
+GUI baked with {wails-link}[Wails], {vue-link}[Vue3] and sugar-coated with {element-plus-link}[Element Plus].
+
+Main goal of this project is to provide user interface for my distillation machine.
+
+=== Frontend
+
+Frontend, as mentioned earlier, is made in Vue3 + TypeScript. This is my first project based on those technologies, so please be understanding. Nevertheless, I had a lot of fun doing frontend.
+
+=== Backend
+
+Thanks to {wails-link}[Wails] whole backend is written in GO:
+
+* data exchange with frontend:
+** frontend -> backend: just calling backend's functions,
+** backend -> frontend: emitting events
+* communication with other microservices (embedded, distillation) are made through gRPC + protobuf.
+
+== Samples
+
+Just few screenshots, although still need some work. Designed for polish user, however multi-language is already supported.
+
+image::global.png[]
+image::phases.png[]
+image::ds.png[]
+image::err.png[]
+image::logs.png[]
+
+
