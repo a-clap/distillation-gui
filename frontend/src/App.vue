@@ -21,6 +21,7 @@
 
   </html>
 </template>
+
 <script setup lang="ts">
 
 import Sidebar from "./components/Sidebar.vue";
@@ -32,11 +33,17 @@ import { useWIFIStore } from "./stores/wifi";
 import { usePhasesStore } from "./stores/phases";
 import { useErrorStore } from "./stores/errors";
 import { useLogStore } from "./stores/log";
+import { useProcessStore } from "./stores/process";
 
 const err = useErrorStore()
-err.init()
 
-let initFuncs: any[] = [
+interface StoreInitializer {
+  init: Function;
+}
+
+let initFuncs: StoreInitializer[] = [
+  useErrorStore(),
+  useProcessStore(),
   useGpioStore(),
   useDSStore(),
   useHeatersStore(),

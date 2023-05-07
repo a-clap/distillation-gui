@@ -11,7 +11,10 @@
   },
   "process": {
     "title": "Główne okno procesu",
-    "enable_btn": "Uruchom",
+    "enable": "Uruchom proces",
+    "disable": "Zatrzymaj proces",
+    "moveToNext": "Przejdź do kolejnej fazy",
+    "config_not_valid": "NIEPRAWIDŁOWA KONFIGURACJA",
     "hello": "hello message"
   },
   "phases": {
