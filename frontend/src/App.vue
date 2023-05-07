@@ -4,13 +4,13 @@
     <Sidebar />
     <el-dialog v-model="err.show" :title="err.title" width="70%" :modal=false :center=true :close-on-click-modal=false
       :show-close=false align-center>
-      <span style="margin:auto; font-size: 22px;">{{ err.msg }}</span>
+      <span class="dialog-message">{{ err.msg }}</span>
       <template #footer>
         <span class="dialog-footer">
-          <el-button type="success" @click="err.close">
+          <el-button type="success" size="large" @click="err.close">
             {{ $t('errors.submit') }}
           </el-button>
-          <el-button type="danger" @click="err.skip">
+          <el-button type="danger" size="large" @click="err.skip">
             {{ $t('errors.skip') }}
           </el-button>
         </span>
@@ -98,6 +98,18 @@ initFuncs.forEach((store) => {
   input:focus {
     outline: none !important;
     border: 1px solid var(--el-color-primary);
+  }
+
+  .dialog-message {
+    display: flex;
+    justify-content: space-around;
+    font-size: 1.5rem;
+
+  }
+
+  .dialog-footer {
+    display: flex;
+    justify-content: space-around;
   }
 }
 </style>
