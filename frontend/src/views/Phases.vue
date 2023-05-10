@@ -153,7 +153,7 @@
             </el-col>
             <el-col :span="6">
               <el-select v-model="gpio.sensor_id" size="large" class="m-2">
-                <el-option v-for="sensor in phase.next_avail_sensors" :label="sensor" :value="sensor" />
+                <el-option v-for="sensor in phaseStore.phases.sensors" :label="sensor" :value="sensor" />
               </el-select>
             </el-col>
             <el-col :span="5" :offset="2">
@@ -194,7 +194,7 @@
 import Keyboard from "../components/Keyboard.vue"
 import { onMounted, ref } from "vue";
 import { usePhasesStore } from "../stores/phases";
-import {LoadParameters, SaveParameters} from "../../wailsjs/go/backend/Backend";
+import { LoadParameters, SaveParameters } from "../../wailsjs/go/backend/Backend";
 
 const activated = ref('main')
 const phaseStore = usePhasesStore()

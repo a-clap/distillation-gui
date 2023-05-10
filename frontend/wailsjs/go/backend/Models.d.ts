@@ -17,6 +17,10 @@ export function HeaterPhaseStatus():Promise<process.HeaterPhaseStatus>;
 
 export function MoveToNextConfig():Promise<process.MoveToNextConfig>;
 
+export function MoveToNextStatus():Promise<process.MoveToNextStatus>;
+
+export function MoveToNextStatusTemperature():Promise<process.MoveToNextStatusTemperature>;
+
 export function ProcessConfigValidation():Promise<distillation.ProcessConfigValidation>;
 
 export function ProcessStatus():Promise<distillation.ProcessStatus>;

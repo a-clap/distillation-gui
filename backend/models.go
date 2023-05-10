@@ -51,6 +51,14 @@ func (*Models) GPIOActiveLevel() gpio.ActiveLevel {
 	return gpio.High
 }
 
+func (*Models) MoveToNextStatus() process.MoveToNextStatus {
+	return process.MoveToNextStatus{}
+}
+
+func (*Models) MoveToNextStatusTemperature() process.MoveToNextStatusTemperature {
+	return process.MoveToNextStatusTemperature{}
+}
+
 func (*Models) TemperatureErrorCodeWrongID() int {
 	return int(distillation.ErrorCodeWrongID)
 }

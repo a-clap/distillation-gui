@@ -57,6 +57,7 @@ func WithPhaseClient(c phases.Client) Option {
 	return func(b *Backend) error {
 		b.phaseChan = make(chan error, 10)
 		phases.Init(c, b.phaseChan, b.interval)
+		phases.Run()
 		return nil
 	}
 }

@@ -10,7 +10,6 @@ tasks:
   clean:
     cmds:
       - rm -rf frontend/node_modules
-      - rm -rf frontend/wailsjs
   dev:
     cmds:
       - wails dev

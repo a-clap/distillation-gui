@@ -26,6 +26,14 @@ export function MoveToNextConfig() {
   return window['go']['backend']['Models']['MoveToNextConfig']();
 }
 
+export function MoveToNextStatus() {
+  return window['go']['backend']['Models']['MoveToNextStatus']();
+}
+
+export function MoveToNextStatusTemperature() {
+  return window['go']['backend']['Models']['MoveToNextStatusTemperature']();
+}
+
 export function ProcessConfigValidation() {
   return window['go']['backend']['Models']['ProcessConfigValidation']();
 }

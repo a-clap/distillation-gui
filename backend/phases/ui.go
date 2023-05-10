@@ -117,7 +117,7 @@ func Stop() {
 func Run() {
 	if !handler.running.Load() {
 		handler.finish = make(chan struct{})
-		handler.enabled.Store(true)
+		handler.running.Store(true)
 		update()
 	}
 }

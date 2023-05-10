@@ -68,8 +68,7 @@ export namespace distillation {
 	    start_time: any;
 	    // Go type: time
 	    end_time: any;
-	    // Go type: process
-	    next: any;
+	    next: process.MoveToNextStatus;
 	    heaters: process.HeaterPhaseStatus[];
 	    temperature: process.TemperaturePhaseStatus[];
 	    gpio: process.GPIOPhaseStatus[];
@@ -86,7 +85,7 @@ export namespace distillation {
 	        this.phase_number = source["phase_number"];
 	        this.start_time = this.convertValues(source["start_time"], null);
 	        this.end_time = this.convertValues(source["end_time"], null);
-	        this.next = this.convertValues(source["next"], null);
+	        this.next = this.convertValues(source["next"], process.MoveToNextStatus);
 	        this.heaters = this.convertValues(source["heaters"], process.HeaterPhaseStatus);
 	        this.temperature = this.convertValues(source["temperature"], process.TemperaturePhaseStatus);
 	        this.gpio = this.convertValues(source["gpio"], process.GPIOPhaseStatus);
@@ -376,6 +375,55 @@ export namespace process {
 	        this.ID = source["ID"];
 	        this.power = source["power"];
 	    }
+	}
+	
+	export class MoveToNextStatusTemperature {
+	    sensor_id: string;
+	    sensor_threshold: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new MoveToNextStatusTemperature(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.sensor_id = source["sensor_id"];
+	        this.sensor_threshold = source["sensor_threshold"];
+	    }
+	}
+	export class MoveToNextStatus {
+	    type: number;
+	    time_left: number;
+	    temperature?: MoveToNextStatusTemperature;
+	
+	    static createFrom(source: any = {}) {
+	        return new MoveToNextStatus(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.type = source["type"];
+	        this.time_left = source["time_left"];
+	        this.temperature = this.convertValues(source["temperature"], MoveToNextStatusTemperature);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
 	}
 	
 	

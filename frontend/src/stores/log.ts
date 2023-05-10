@@ -1,14 +1,8 @@
 import { defineStore } from "pinia";
-import { ErrorListener } from "../types/ErrorListener";
 import { i18n } from "../main";
 
 function padTo2Digits(num: number) {
     return num.toString().padStart(2, '0');
-}
-
-export interface Column {
-    title: string;
-    width: number;
 }
 
 function formatDate(date: Date) {
@@ -25,6 +19,11 @@ function formatDate(date: Date) {
             date.getFullYear(),
         ].join('-')
     );
+}
+
+export interface Column {
+    title: string;
+    width: number;
 }
 
 export const useLogStore = defineStore('logs', {

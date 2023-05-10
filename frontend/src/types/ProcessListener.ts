@@ -134,6 +134,7 @@ class processListener {
 
     private NotifyPhasesValidate(...args: any) {
         try {
+            console.log(args)
             let t = new distillation.ProcessConfigValidation(args[0])
             this.validate.notify(t)
         } catch (e) {
@@ -161,8 +162,8 @@ class processListener {
 
     private NotifyPhasesStatus(...args: any) {
         try {
-            let t = new distillation.ProcessStatus(args[0])
-            this.status.notify(t)
+            let a: distillation.ProcessStatus = args[0]
+            this.status.notify(a)
         } catch (e) {
             console.log(e)
         }

@@ -15,6 +15,17 @@
     "disable": "Zatrzymaj proces",
     "moveToNext": "Przejdź do kolejnej fazy",
     "config_not_valid": "NIEPRAWIDŁOWA KONFIGURACJA",
+    "running": "TRWA DESTYLACJA...",
+    "done": "PROCES ZAKOŃCZONY",
+    "start_time": "Czas rozpoczęcia",
+    "end_time": "Czas zakończenia",
+    "current_phase": "Aktualna faza",
+    "move_to_next_type": "Warunek końca:",
+    "move_to_next_type_time": "czas",
+    "move_to_next_type_temperature": "temperatura",
+    "timeleft": "Czas do końca (s):",
+    "sensor": "Czujnik:",
+    "sensor_threshold": "Wymagana temperatura (°C):",
     "hello": "hello message"
   },
   "phases": {
