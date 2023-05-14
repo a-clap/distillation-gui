@@ -5,11 +5,13 @@ const (
 	ErrDSEnable
 	ErrDSSetSamples
 	ErrDSSetResolution
+	ErrDSSetName
 )
 const (
 	ErrPTSetCorrection = iota + 20
 	ErrPTEnable
 	ErrPTSetSamples
+	ErrPTSetName
 )
 const (
 	ErrGPIOSetActiveLevel = iota + 30
@@ -35,5 +37,11 @@ const (
 
 const (
 	ErrSave = iota + 70
-	ErrLoad = 71
+	ErrLoad
+)
+
+const (
+	ErrConnDS = iota + 80
+	ErrConnPT
+	ErrConnPhase
 )

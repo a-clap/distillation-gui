@@ -43,10 +43,10 @@ export const useDSStore = defineStore('ds', {
                     })
 
                     this.ds = newDses.sort((a: DS, b: DS) => {
-                        if (a.name > b.name) {
+                        if (a.name.view > b.name.view) {
                             return 1
                         }
-                        if (a.name < b.name) {
+                        if (a.name.view < b.name.view) {
                             return -1
                         }
                         return 0
@@ -85,7 +85,6 @@ export const useDSStore = defineStore('ds', {
                 }
                 this.ds[idx].temperature = t.temperature
             }
-        },
-
+        }
     }
 })

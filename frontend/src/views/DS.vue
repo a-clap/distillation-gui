@@ -5,7 +5,7 @@
             <section class="ds-box">
                 <el-row align="middle">
                     <el-col :span="2">
-                        <el-switch v-model="ds.enable" :active-text="ds.name" size="large" />
+                        <el-switch v-model="ds.enable" :active-text="ds.name.view" size="large" />
                     </el-col>
                     <el-col :span="4" :offset="2" v-if="ds.enable">
                         <label>{{ $t('ds.correction') }}</label>

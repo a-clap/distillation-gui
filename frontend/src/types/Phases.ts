@@ -1,8 +1,12 @@
 import { PhasesSetConfig, PhasesSetGlobalGPIO, PhasesSetPhaseCount } from "../../wailsjs/go/backend/Backend";
 import { distillation, process } from "../../wailsjs/go/models";
 import Parameter, { writeCallbackType } from "./Parameter";
+import { useNameStore } from "../stores/names";
+import { ErrorListener } from "./ErrorListener";
+import { AppErrorCodes } from "../stores/error_codes";
 
 declare type Notify = (args: any) => void;
+
 class MoveToNextConfig {
     type: number;
     sensorID: string;
@@ -92,6 +96,15 @@ export class ProcessPhaseConfig {
 
     constructor(id: number, next: process.MoveToNextConfig, heaters: process.HeaterPhaseConfig[], gpios: process.GPIOConfig[]) {
         this.id = id
+        // Change ids of sensor to names
+        let [newName, got] = useNameStore().id_to_name(next.sensor_id)
+        if (got) {
+            next.sensor_id = newName
+        } else {
+            ErrorListener.sendError(AppErrorCodes.SensorIDNotFound)
+        }
+
+
         this.next = new MoveToNextConfig(next, this.update, this)
         this.heaters_ = []
         this.gpios_ = []
@@ -103,6 +116,13 @@ export class ProcessPhaseConfig {
         }
         if (gpios != null) {
             gpios.forEach((v: process.GPIOConfig) => {
+                let [newName, got] = useNameStore().id_to_name(v.sensor_id)
+                if (got) {
+                    v.sensor_id = newName
+                } else {
+                    ErrorListener.sendError(AppErrorCodes.SensorIDNotFound)
+                }
+
                 this.gpios_.push(new GPIOConfig(v, this.update, this))
             })
         }
@@ -117,7 +137,14 @@ export class ProcessPhaseConfig {
         // Next
         let next = new process.MoveToNextConfig()
         next.type = p.next.type
-        next.sensor_id = p.next.sensorID
+        let [id, got] = useNameStore().name_to_id(p.next.sensorID)
+        if (got) {
+            next.sensor_id = id
+        } else {
+            next.sensor_id = p.next.sensorID
+            ErrorListener.sendError(AppErrorCodes.SensorIDNotFound)
+        }
+
         next.sensor_threshold = Number(p.next.sensorThreshold.value)
         next.time_left = Number(p.next.timeleft.value)
         cfg.next = next
@@ -132,9 +159,16 @@ export class ProcessPhaseConfig {
         // GPIO
         p.gpios.forEach((value: GPIOConfig) => {
             let gpio = new process.GPIOConfig()
+            let [id, got] = useNameStore().name_to_id(value.sensor_id)
+            if (got) {
+                gpio.sensor_id = id
+            } else {
+                gpio.sensor_id = value.sensor_id
+                ErrorListener.sendError(AppErrorCodes.SensorIDNotFound)
+            }
+
             gpio.enabled = value.enable
             gpio.id = value.id
-            gpio.sensor_id = value.sensor_id
             gpio.t_low = Number(value.t_low.value)
             gpio.t_high = Number(value.t_high.value)
             gpio.hysteresis = Number(value.hysteresis.value)
@@ -193,7 +227,19 @@ export class Phases {
 
         this.phases = phases
         this.gpios = []
-        this.sensors = sensors
+        this.sensors = []
+        let sensorNames: string[] = []
+        sensors.forEach((v) => {
+            let [name, got] = useNameStore().id_to_name(v)
+            if (got) {
+                sensorNames.push(name)
+            } else {
+                ErrorListener.sendError(AppErrorCodes.SensorIDNotFound)
+                sensorNames.push(v)
+            }
+
+        })
+        this.sensors = sensorNames
 
         if (gpios != null) {
             gpios.forEach((v: process.GPIOConfig) => {

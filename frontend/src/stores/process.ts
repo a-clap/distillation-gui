@@ -2,6 +2,9 @@ import { defineStore } from "pinia";
 import { PhasesDisable, PhasesEnable, PhasesMoveToNext, PhasesValidateConfig } from "../../wailsjs/go/backend/Backend";
 import { ProcessListener } from "../types/ProcessListener";
 import { backend, distillation } from "../../wailsjs/go/models";
+import { useNameStore } from "./names";
+import { ErrorListener } from "../types/ErrorListener";
+import { AppErrorCodes } from "./error_codes";
 
 export interface Button {
     is_enabled: boolean;
@@ -34,7 +37,7 @@ function formatDate(date: Date) {
             padTo2Digits(date.getHours()),
             padTo2Digits(date.getMinutes()),
             padTo2Digits(date.getSeconds()),
-        ].join(':') 
+        ].join(':')
     );
 }
 
@@ -57,6 +60,7 @@ export const useProcessStore = defineStore('process', {
             phase_timeleft: "",
             phase_sensor: "",
             phase_sensor_threshold: "",
+            names: useNameStore(),
         }
     },
     actions: {
@@ -76,14 +80,23 @@ export const useProcessStore = defineStore('process', {
 
         onStatus(v: backend.ProcessStatus) {
             this.running = v.running
-            if(v.running || v.done) {
+            if (v.running || v.done) {
                 this.current_phase = v.phase_number.toString()
                 // Time
                 this.current_type_time = v.next.type == 0
                 this.phase_timeleft = v.next.time_left.toString()
-                if (v.next.temperature) {
+                // type == 1 is temperature
+                if (v.next.type == 1 && v.next.temperature) {
                     this.phase_sensor_threshold = v.next.temperature?.sensor_threshold.toFixed(2).toString()
-                    this.phase_sensor = v.next.temperature?.sensor_id.toString()
+                    let id = v.next.temperature?.sensor_id.toString()
+                    let [name, got] = this.names.id_to_name(id)
+                    if (got) {
+                        id = name
+                    } else {
+                        ErrorListener.sendError(AppErrorCodes.SensorIDNotFound)
+                    }
+
+                    this.phase_sensor = id
                 }
                 this.start_time = formatDate(new Date(v.unix_start_time * 1000))
                 if (v.done) {
@@ -94,7 +107,7 @@ export const useProcessStore = defineStore('process', {
 
                 let heaters: Heater[] = []
                 v.heaters.forEach((v) => {
-                    let h: Heater = {id: v.ID, pwr: v.power.toString()}
+                    let h: Heater = { id: v.ID, pwr: v.power.toString() }
                     heaters.push(h)
                 })
 
@@ -109,8 +122,8 @@ export const useProcessStore = defineStore('process', {
                 })
 
                 let outputs: Output[] = []
-                v.gpio.forEach(( v) => {
-                    let o : Output = {id: v.id, state:v.state}
+                v.gpio.forEach((v) => {
+                    let o: Output = { id: v.id, state: v.state }
                     outputs.push(o)
                 })
 
@@ -126,7 +139,13 @@ export const useProcessStore = defineStore('process', {
 
                 let sensors: Sensor[] = []
                 v.temperature.forEach((v) => {
-                    let s: Sensor = {id: v.ID, temperature: v.temperature.toFixed(2).toString()}
+                    let [name, got] = this.names.id_to_name(v.ID)
+                    if (got) {
+                        v.ID = name
+                    } else {
+                        ErrorListener.sendError(AppErrorCodes.SensorIDNotFound)
+                    }
+                    let s: Sensor = { id: v.ID, temperature: v.temperature.toFixed(2).toString() }
                     sensors.push(s)
                 })
 
@@ -145,11 +164,11 @@ export const useProcessStore = defineStore('process', {
             this.updateButtons()
             this.show_status = v.running || v.done
         },
-        
+
         updateButtons() {
             this.moveToNext.is_enabled = this.running
             this.disable.is_enabled = this.running
-            
+
             this.enable.is_enabled = !this.running && this.is_valid
         },
 

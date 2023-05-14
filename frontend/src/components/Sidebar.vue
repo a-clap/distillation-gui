@@ -37,6 +37,10 @@
         <span class="material-icons">output</span>
         <span class="text">{{ $t('menu.outputs') }}</span>
       </router-link>
+      <router-link class="button" to="/names">
+        <span class="material-icons">text_snippet</span>
+        <span class="text">{{ $t('menu.names') }}</span>
+      </router-link>
       <router-link class="button" to="/logs">
         <span class="material-icons">text_snippet</span>
         <span class="text">{{ $t('menu.logs') }}</span>

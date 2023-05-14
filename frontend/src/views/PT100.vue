@@ -5,7 +5,7 @@
             <section class="pt-box">
                 <el-row align="middle">
                     <el-col :span="3">
-                        <el-switch v-model="pt.enable" :active-text="pt.name" size="large" />
+                        <el-switch v-model="pt.enable" :active-text="pt.name.view" size="large" />
                     </el-col>
                     <el-col :span="4" :offset="1" v-if="pt.enable">
                         <label>{{ $t('pt100.correction') }}</label>

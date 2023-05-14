@@ -14,6 +14,10 @@ export function DSSetCorrection(arg1, arg2) {
   return window['go']['backend']['Backend']['DSSetCorrection'](arg1, arg2);
 }
 
+export function DSSetName(arg1, arg2) {
+  return window['go']['backend']['Backend']['DSSetName'](arg1, arg2);
+}
+
 export function DSSetResolution(arg1, arg2) {
   return window['go']['backend']['Backend']['DSSetResolution'](arg1, arg2);
 }
@@ -60,6 +64,10 @@ export function PTGet() {
 
 export function PTSetCorrection(arg1, arg2) {
   return window['go']['backend']['Backend']['PTSetCorrection'](arg1, arg2);
+}
+
+export function PTSetName(arg1, arg2) {
+  return window['go']['backend']['Backend']['PTSetName'](arg1, arg2);
 }
 
 export function PTSetSamples(arg1, arg2) {

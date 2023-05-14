@@ -113,6 +113,11 @@ func Apply(config []parameters.DS) []error {
 		if err := Enable(c.ID, c.Enabled); err != nil {
 			errs = append(errs, err)
 		}
+
+		// Enable
+		if err := SetName(c.ID, c.Name); err != nil {
+			errs = append(errs, err)
+		}
 	}
 	return errs
 }
@@ -141,6 +146,25 @@ func Get() []parameters.DS {
 		return i.ID < j.ID
 	})
 	return sensors
+}
+
+func SetName(id string, name string) error {
+	cfg, ok := handler.sensors[id]
+	if !ok {
+		err := &Error{ID: id, Op: "SetName", Err: ErrIDNotFound.Error()}
+		return err
+	}
+
+	setCfg := cfg.DSConfig
+	setCfg.Name = name
+	newCfg, err := handler.client.Configure(setCfg)
+	if err != nil {
+		err = &Error{ID: id, Op: "SetName.Configure", Err: err.Error()}
+	} else {
+		cfg.DSConfig.Name = newCfg.Name
+	}
+	notifyConfig(cfg.DS)
+	return err
 }
 
 func Enable(id string, enable bool) error {

@@ -82,7 +82,7 @@
           </el-col>
         </el-row>
         <el-row justify="center" align="middle">
-          <el-col class="bold-text" span="25">
+          <el-col class="bold-text" :span="25">
             {{ $t('process.heaters') }}
           </el-col>
         </el-row>
@@ -98,7 +98,7 @@
           </template>
         </el-row>
         <el-row justify="center" align="middle">
-          <el-col class="bold-text" span="25">
+          <el-col class="bold-text" :span="25">
             {{ $t('process.sensors') }}
           </el-col>
         </el-row>
@@ -114,7 +114,7 @@
           </template>
         </el-row>
         <el-row justify="center" align="middle">
-          <el-col class="bold-text" span="25">
+          <el-col class="bold-text" :span="25">
             {{ $t('process.outputs') }}
           </el-col>
         </el-row>

@@ -46,10 +46,10 @@ export const usePTStore = defineStore('pt', {
                     })
 
                     this.pt = newPT.sort((a: PT100, b: PT100) => {
-                        if (a.name > b.name) {
+                        if (a.name.value > b.name.value) {
                             return 1
                         }
-                        if (a.name < b.name) {
+                        if (a.name.value < b.name.value) {
                             return -1
                         }
                         return 0
@@ -87,7 +87,6 @@ export const usePTStore = defineStore('pt', {
                 }
                 this.pt[idx].temperature = t.temperature.toFixed(2)
             }
-        },
-
+        }
     }
 })

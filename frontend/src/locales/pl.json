@@ -7,6 +7,7 @@
     "ds": "DS18B20",
     "heaters": "Grzałki",
     "outputs": "Wyjścia",
+    "names": "Nazwy",
     "logs": "Logi"
   },
   "process": {
@@ -98,6 +99,11 @@
     "message": "Wiadomość",
     "reset_skipped": "Przywróc wszystkie błędy"
   },
+  "names": {
+    "title": "Nazwy",
+    "pt": "Czujniki PT100",
+    "ds": "Czujniki DS18B20"
+  },
   "errors": {
     "submit": "OK",
     "skip": "Pomiń",
@@ -108,9 +114,11 @@
     "11": "Nieudane włączenie DS",
     "12": "Nieudane ustawienie próbek DS",
     "13": "Nieudane ustawienie rozdzielczości DS",
+    "14": "Nieudana zmiana nazwy DS",
     "20": "Nieudane ustawienie korekty PT",
     "21": "Nieudane włączenie PT",
     "22": "Nieudane ustawienie próbek PT",
+    "23": "Nieudana zmiana nazwy PT",
     "30": "Nieudane ustawienie aktywnego poziomu GPIO",
     "31": "Nieudane ustawienie stanu GPIO",
     "40": "Nieudane pobranie listy sieci",
@@ -124,6 +132,11 @@
     "57": "Nieudane zatrzymanie procesu",
     "58": "Nieudane przejście do kolejnej fazy",
     "59": "Nieudana konfiguracja wyjść globalnych",
+    "79": "Nieudane zapisanie parametrów",
+    "71": "Nieudane załadowanie parametrów",
+    "80": "Błąd połączenia z czujnikami",
+    "81": "Błąd połączenia z czujnikami",
+    "82": "Błąd połączenia z czujnikami",
     "100": "Wewnętrzny błąd czujnika PT100 - czy jest prawidłowo podłączony?",
     "101": "Wewnętrzny błąd czujnika DS18B20 - czy jest prawidłowo podłączony?"
   }

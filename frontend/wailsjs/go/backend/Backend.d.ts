@@ -11,6 +11,8 @@ export function DSGet():Promise<Array<parameters.DS>>;
 
 export function DSSetCorrection(arg1:string,arg2:number):Promise<void>;
 
+export function DSSetName(arg1:string,arg2:string):Promise<void>;
+
 export function DSSetResolution(arg1:string,arg2:number):Promise<void>;
 
 export function DSSetSamples(arg1:string,arg2:number):Promise<void>;
@@ -34,6 +36,8 @@ export function PTEnable(arg1:string,arg2:boolean):Promise<void>;
 export function PTGet():Promise<Array<parameters.PT>>;
 
 export function PTSetCorrection(arg1:string,arg2:number):Promise<void>;
+
+export function PTSetName(arg1:string,arg2:string):Promise<void>;
 
 export function PTSetSamples(arg1:string,arg2:number):Promise<void>;
 

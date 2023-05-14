@@ -130,16 +130,25 @@ func (b *Backend) DSEnable(id string, ena bool) {
 
 func (b *Backend) DSSetSamples(id string, samples uint) {
 	if err := ds.SetSamples(id, samples); err != nil {
-		logger.Error("SetSamples error ", logging.String("ID", id), logging.Uint("samples", samples))
+		logger.Error("DSSetSamples error ", logging.String("ID", id), logging.Uint("samples", samples))
 		b.eventEmitter.OnError(ErrDSSetSamples)
 	}
 
 }
+
 func (b *Backend) DSSetResolution(id string, res uint) {
 	logger.Debug("SetResolution", logging.String("ID", id), logging.Uint("resolution", res))
 	if err := ds.SetResolution(id, ds18b20.Resolution(res)); err != nil {
-		logger.Error("SetResolution error ", logging.String("error", err.Error()))
+		logger.Error("DSSetResolution error ", logging.String("error", err.Error()))
 		b.eventEmitter.OnError(ErrDSSetResolution)
+	}
+}
+
+func (b *Backend) DSSetName(id, name string) {
+	logger.Debug("DSSetName", logging.String("ID", id), logging.String("name", name))
+	if err := ds.SetName(id, name); err != nil {
+		logger.Error("DSSetName error ", logging.String("error", err.Error()))
+		b.eventEmitter.OnError(ErrDSSetName)
 	}
 }
 
@@ -150,7 +159,7 @@ func (b *Backend) PTGet() []parameters.PT {
 func (b *Backend) PTSetCorrection(id string, correction float64) {
 	logger.Debug("SetCorrection ", logging.String("ID", id), logging.Float64("correction", correction))
 	if err := pt.SetCorrection(id, correction); err != nil {
-		logger.Error("SetCorrection error ", logging.String("ID", id), logging.Float64("correction", correction))
+		logger.Error("PTSetCorrection error ", logging.String("ID", id), logging.Float64("correction", correction))
 		b.eventEmitter.OnError(ErrPTSetCorrection)
 	}
 }
@@ -166,8 +175,15 @@ func (b *Backend) PTEnable(id string, ena bool) {
 func (b *Backend) PTSetSamples(id string, samples uint) {
 	logger.Debug("SetSamples ", logging.String("ID", id), logging.Uint("samples", samples))
 	if err := pt.SetSamples(id, samples); err != nil {
-		logger.Error("SetSamples error ", logging.String("ID", id), logging.Uint("samples", samples))
+		logger.Error("PTSetSamples error ", logging.String("ID", id), logging.Uint("samples", samples))
 		b.eventEmitter.OnError(ErrPTSetSamples)
+	}
+}
+func (b *Backend) PTSetName(id, name string) {
+	logger.Debug("PTSetName", logging.String("ID", id), logging.String("name", name))
+	if err := pt.SetName(id, name); err != nil {
+		logger.Error("PTSetName error ", logging.String("error", err.Error()))
+		b.eventEmitter.OnError(ErrPTSetName)
 	}
 }
 

@@ -34,6 +34,7 @@ import { usePhasesStore } from "./stores/phases";
 import { useErrorStore } from "./stores/errors";
 import { useLogStore } from "./stores/log";
 import { useProcessStore } from "./stores/process";
+import { useNameStore } from "./stores/names";
 
 const err = useErrorStore()
 
@@ -51,6 +52,7 @@ let initFuncs: StoreInitializer[] = [
   useWIFIStore(),
   usePhasesStore(),
   useLogStore(),
+  useNameStore(),
 ]
 
 initFuncs.forEach((store) => {
