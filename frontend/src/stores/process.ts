@@ -13,6 +13,16 @@ export interface Heater {
     pwr: string;
 }
 
+export interface Sensor {
+    id: string;
+    temperature: string;
+}
+
+export interface Output {
+    id: string;
+    state: boolean;
+}
+
 
 function padTo2Digits(num: number) {
     return num.toString().padStart(2, '0');
@@ -35,6 +45,8 @@ export const useProcessStore = defineStore('process', {
             moveToNext: {} as Button,
             disable: {} as Button,
             heaters: [] as Heater[],
+            sensors: [] as Sensor[],
+            outputs: [] as Output[],
             is_valid: false,
             running: false,
             show_status: false,
@@ -62,17 +74,6 @@ export const useProcessStore = defineStore('process', {
             PhasesValidateConfig()
         },
 
-        toggle() {
-            this.is_valid = !this.is_valid
-            let v = new distillation.ProcessConfigValidation()
-            v.valid = this.is_valid
-            this.onValidate(v)
-
-            this.start_time = formatDate(new Date())
-            this.end_time = formatDate(new Date())
-            this.show_status = this.is_valid
-        },
-
         onStatus(v: distillation.ProcessStatus) {
             this.running = v.running
             if(v.running || v.done) {
@@ -81,7 +82,7 @@ export const useProcessStore = defineStore('process', {
                 this.current_type_time = v.next.type == 0
                 this.phase_timeleft = v.next.time_left.toString()
                 if (v.next.temperature) {
-                    this.phase_sensor_threshold = v.next.temperature?.sensor_threshold.toString()
+                    this.phase_sensor_threshold = v.next.temperature?.sensor_threshold.toFixed(2).toString()
                     this.phase_sensor = v.next.temperature?.sensor_id.toString()
                 }
                 this.start_time = v.start_time
@@ -94,8 +95,9 @@ export const useProcessStore = defineStore('process', {
                 let heaters: Heater[] = []
                 v.heaters.forEach((v) => {
                     let h: Heater = {id: v.ID, pwr: v.power.toString()}
+                    heaters.push(h)
                 })
-                
+
                 this.heaters = heaters.sort((a: Heater, b: Heater) => {
                     if (a.id > b.id) {
                         return 1
@@ -105,6 +107,39 @@ export const useProcessStore = defineStore('process', {
                     }
                     return 0
                 })
+
+                let outputs: Output[] = []
+                v.gpio.forEach(( v) => {
+                    let o : Output = {id: v.id, state:v.state}
+                    outputs.push(o)
+                })
+
+                this.outputs = outputs.sort((a: Output, b: Output) => {
+                    if (a.id > b.id) {
+                        return 1
+                    }
+                    if (a.id < b.id) {
+                        return -1
+                    }
+                    return 0
+                })
+
+                let sensors: Sensor[] = []
+                v.temperature.forEach((v) => {
+                    let s: Sensor = {id: v.ID, temperature: v.temperature.toFixed(2).toString()}
+                    sensors.push(s)
+                })
+
+                this.sensors = sensors.sort((a: Sensor, b: Sensor) => {
+                    if (a.id > b.id) {
+                        return 1
+                    }
+                    if (a.id < b.id) {
+                        return -1
+                    }
+                    return 0
+                })
+
 
             }
             this.updateButtons()

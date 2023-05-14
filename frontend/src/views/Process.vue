@@ -1,11 +1,6 @@
 <template>
   <main class="process-page">
     <h1>{{ $t('process.title') }}</h1>
-    <el-button text @click="() => {
-      process.toggle()
-    }">
-      click to open the Dialog
-    </el-button>
     <section class="process-box">
       <el-row justify="space-between">
         <el-col :span="6">
@@ -28,7 +23,7 @@
         </el-col>
       </el-row>
       <el-row justify="center">
-        <el-col :span="25" :style="'font-weight: 800'">
+        <el-col :span="25" class="bold-text">
           <label v-if="!is_valid"> {{ $t('process.config_not_valid') }}</label>
           <label v-if="process.show_status && process.running"> {{ $t('process.running') }}</label>
           <label v-if="process.show_status && !process.running"> {{ $t('process.done') }}</label>
@@ -54,54 +49,84 @@
             {{ $t('process.current_phase') }}
           </el-col>
           <el-col :span="1" :offset="1">
-            {{ process.current_phase }}
+            <input class="small-input" v-model="process.current_phase" />
           </el-col>
         </el-row>
-        <el-row justify="center">
+        <el-row justify="center" align="middle">
           <el-col :span="4">
-            {{  $t('process.move_to_next_type') }}
-          </el-col >
-          <el-col :span="3" >
+            {{ $t('process.move_to_next_type') }}
+          </el-col>
+          <el-col :span="3" class="bold-text">
             <label v-if="process.current_type_time">{{ $t('process.move_to_next_type_time') }}</label>
             <label v-else>{{ $t('process.move_to_next_type_temperature') }}</label>
           </el-col>
-          <el-col :span="5" :offset="1">
-            {{  $t('process.timeleft') }}
-          </el-col >
-          <el-col :span="3" >
-             {{ process.phase_timeleft }}
+          <el-col :span="5" :offset="3">
+            {{ $t('process.timeleft') }}
+          </el-col>
+          <el-col :span="3">
+            <input class="small-input" v-model="process.phase_timeleft" />
           </el-col>
         </el-row>
         <el-row v-if="!process.current_type_time" justify="center">
           <el-col :span="2">
-            <label>{{  $t('process.sensor') }}</label>
+            <label>{{ $t('process.sensor') }}</label>
           </el-col>
           <el-col :span="3" :offset="1">
             <label> {{ process.phase_sensor }}</label>
           </el-col>
           <el-col :span="8">
-            <label>{{  $t('process.sensor_threshold') }}</label>
+            <label>{{ $t('process.sensor_threshold') }}</label>
           </el-col>
           <el-col :span="3" :offset="1">
-            <label> {{ process.phase_sensor_threshold }}</label>
+            <input class="small-input" v-model="process.phase_sensor_threshold" />
           </el-col>
         </el-row>
-        <el-row justify="center">
-          <el-col>
+        <el-row justify="center" align="middle">
+          <el-col class="bold-text" span="25">
             {{ $t('process.heaters') }}
           </el-col>
         </el-row>
-        <el-row justify="center">
-          <el-col v-for="heater in process.heaters" >
-            <el-col :span="3">
-              blah1
+        <el-row align="middle">
+          <template v-for="heater in process.heaters">
+            <el-col :span="3" :offset=1>
+              {{ heater.id }}
             </el-col>
             <el-col :span="3">
-              blah2
+              <input class="small-input" v-model="heater.pwr" />
+              {{ $t('process.power_sign') }}
             </el-col>
-            
+          </template>
+        </el-row>
+        <el-row justify="center" align="middle">
+          <el-col class="bold-text" span="25">
+            {{ $t('process.sensors') }}
           </el-col>
-          <!-- <el-option v-for="sensor in phaseStore.phases.sensors" :label="sensor" :value="sensor" /> -->
+        </el-row>
+        <el-row align="middle">
+          <template v-for="sensor in process.sensors">
+            <el-col :span="3" :offset=1>
+              {{ sensor.id }}
+            </el-col>
+            <el-col :span="3">
+              <input class="small-input" v-model="sensor.temperature" />
+              {{ $t('process.temperature_sign') }}
+            </el-col>
+          </template>
+        </el-row>
+        <el-row justify="center" align="middle">
+          <el-col class="bold-text" span="25">
+            {{ $t('process.outputs') }}
+          </el-col>
+        </el-row>
+        <el-row align="middle">
+          <template v-for="output in process.outputs">
+            <el-col :span="3" :offset=1>
+              {{ output.id }}
+            </el-col>
+            <el-col :span="3">
+              <el-checkbox v-model="output.state" :label="$t('outputs.manual_control_force')" size="large" border />
+            </el-col>
+          </template>
         </el-row>
       </template>
     </section>
@@ -128,6 +153,14 @@ h1 {
   margin-bottom: 2rem;
 }
 
+.bold-text {
+  font-weight: 800;
+}
+
+.small-input {
+  width: 75px
+}
+
 .el-row {
   margin-bottom: 20px;
 }
@@ -143,6 +176,11 @@ h1 {
 .grid-content {
   border-radius: 4px;
   min-height: 36px;
+}
+
+.el-checkbox {
+  --el-color-primary: var(--el-color-danger);
+  --el-checkbox-text-color: var(--el-color-danger);
 }
 </style>
 

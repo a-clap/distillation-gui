@@ -91,7 +91,6 @@ func (e *eventEmitter) OnPhasesCountChange(count distillation.ProcessPhaseCount)
 
 // OnStatusChange implements phases.Listener
 func (e *eventEmitter) OnStatusChange(status distillation.ProcessStatus) {
-	logger.Debug("OnStatusChange")
 	runtime.EventsEmit(e.ctx, NotifyPhasesStatus, status)
 }
 

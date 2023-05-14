@@ -16,7 +16,7 @@ import (
 var assets embed.FS
 
 var (
-	mock = flag.Bool("mock", true, "use mocks")
+	mock = flag.Bool("mock", false, "use mocks")
 	addr = flag.String("addr", "localhost:50002", "the distillation port")
 )
 

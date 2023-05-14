@@ -21,11 +21,16 @@
     "end_time": "Czas zakończenia",
     "current_phase": "Aktualna faza",
     "move_to_next_type": "Warunek końca:",
-    "move_to_next_type_time": "czas",
-    "move_to_next_type_temperature": "temperatura",
+    "move_to_next_type_time": "CZAS",
+    "move_to_next_type_temperature": "TEMPERATURA",
     "timeleft": "Czas do końca (s):",
     "sensor": "Czujnik:",
     "sensor_threshold": "Wymagana temperatura (°C):",
+    "power_sign": "%",
+    "temperature_sign": "°C",
+    "heaters": "GRZAŁKI",
+    "sensors": "CZUJNIKI",
+    "outputs": "WYJŚCIA",
     "hello": "hello message"
   },
   "phases": {

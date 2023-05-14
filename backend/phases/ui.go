@@ -270,18 +270,16 @@ func update() {
 			case <-handler.finish:
 				handler.running.Store(false)
 			case <-time.After(handler.interval):
-				if handler.enabled.Load() {
-					s, err := handler.client.Status()
-					if err != nil {
-						err := &Error{Op: "process.Status", Err: err.Error()}
-						notifyError(err)
-						continue
-					}
-					handler.status = s
-					notifyStatus(s)
-					if !handler.status.Running {
-						handler.enabled.Store(false)
-					}
+				s, err := handler.client.Status()
+				if err != nil {
+					err := &Error{Op: "process.Status", Err: err.Error()}
+					notifyError(err)
+					continue
+				}
+				handler.status = s
+				notifyStatus(s)
+				if !handler.status.Running {
+					handler.enabled.Store(false)
 				}
 			}
 		}
