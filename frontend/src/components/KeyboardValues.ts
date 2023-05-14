@@ -13,7 +13,7 @@ export class FloatValue implements KeyboardValue {
     private firstKey: boolean;
     private value_: string;
     constructor(v: number) {
-        this.value_ = v.toString()
+        this.value_ = v.toFixed(2)
         if (!this.value.includes('.')) {
             this.value_ += ".0"
         }
@@ -52,7 +52,7 @@ export class FloatValue implements KeyboardValue {
 
     clr(): void {
         this.firstKey = true;
-        this.value = "0.0"
+        this.value = "0.00"
     }
 
     get(): number {

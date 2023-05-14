@@ -13,6 +13,19 @@ export default class Parameter {
         this.show = false
         this.writeCallback = writeCallback
     }
+    set view(s: string){
+        
+    }
+
+    get view(): string {
+        if (typeof this.value === 'number') { 
+            if(this.isFloat) {
+                return this.value.toFixed(2 )
+            }
+            return this.value.toString()
+        }
+        return this.value
+    }
 
     showKeyboard() {
         this.show = true

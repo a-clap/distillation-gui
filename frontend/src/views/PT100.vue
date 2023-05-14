@@ -11,7 +11,7 @@
                         <label>{{ $t('pt100.correction') }}</label>
                     </el-col>
                     <el-col :span="4" v-if="pt.enable">
-                        <input v-model="pt.correction.value" @click="() => pt.correction.showKeyboard()">
+                        <input v-model="pt.correction.view" @click="() => pt.correction.showKeyboard()">
                         <Keyboard v-bind="pt.correction" :write="(e: number) => pt.writeCorrection(e)"
                             :cancel="() => pt.correction.cancel()" />
                     </el-col>
@@ -27,7 +27,7 @@
                         <label>{{ $t('pt100.samples') }}</label>
                     </el-col>
                     <el-col :span="4" v-if="pt.enable">
-                        <input v-model="pt.samples.value" @click="() => pt.samples.showKeyboard()">
+                        <input v-model="pt.samples.view" @click="() => pt.samples.showKeyboard()">
                         <Keyboard v-bind="pt.samples" :write="(e: number) => pt.writeSamples(e)"
                             :cancel="() => pt.samples.cancel()" />
                     </el-col>

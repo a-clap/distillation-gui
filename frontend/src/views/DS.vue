@@ -3,15 +3,15 @@
         <h1>{{ $t('ds.title') }}</h1>
         <div v-for="(ds, index) in dsStore.ds" :key="index">
             <section class="ds-box">
-                <el-row>
+                <el-row align="middle">
                     <el-col :span="2">
                         <el-switch v-model="ds.enable" :active-text="ds.name" size="large" />
                     </el-col>
-                    <el-col :span="4" :offset="3" v-if="ds.enable">
+                    <el-col :span="4" :offset="2" v-if="ds.enable">
                         <label>{{ $t('ds.correction') }}</label>
                     </el-col>
                     <el-col :span="4" v-if="ds.enable">
-                        <input v-model="ds.correction.value" @click="() => ds.correction.showKeyboard()">
+                        <input v-model="ds.correction.view" @click="() => ds.correction.showKeyboard()">
                         <Keyboard v-bind="ds.correction" :write="(e: number) => ds.writeCorrection(e)"
                             :cancel="() => ds.correction.cancel()" />
                     </el-col>
@@ -23,11 +23,11 @@
                     </el-col>
                 </el-row>
                 <el-row align="middle">
-                    <el-col :span="4" :offset=5 v-if="ds.enable">
+                    <el-col :span="4" :offset=4 v-if="ds.enable">
                         <label>{{ $t('ds.samples') }}</label>
                     </el-col>
                     <el-col :span="4" v-if="ds.enable">
-                        <input v-model="ds.samples.value" @click="() => ds.samples.showKeyboard()">
+                        <input v-model="ds.samples.view" @click="() => ds.samples.showKeyboard()">
                         <Keyboard v-bind="ds.samples" :write="(e: number) => ds.writeSamples(e)"
                             :cancel="() => ds.samples.cancel()" />
                     </el-col>

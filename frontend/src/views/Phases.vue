@@ -16,8 +16,7 @@
             <label>{{ $t('phases.count') }}</label>
           </el-col>
           <el-col :span="7" :offset="3">
-            <input v-model="phaseStore.phases.phaseCount.value"
-              @click="() => phaseStore.phases.phaseCount.showKeyboard()">
+            <input v-model="phaseStore.phases.phaseCount.view" @click="() => phaseStore.phases.phaseCount.showKeyboard()">
             <Keyboard v-bind="phaseStore.phases.phaseCount" :write="(e: number) => phaseStore.phases.phaseCount.write(e)"
               :cancel="() => phaseStore.phases.phaseCount.cancel()" />
           </el-col>
@@ -50,7 +49,7 @@
               <label>{{ $t('phases.gpio_hysteresis') }}</label>
             </el-col>
             <el-col :span="3" :offset="1">
-              <input v-model="gpio.hysteresis.value" @click="() => gpio.hysteresis.showKeyboard()">
+              <input v-model="gpio.hysteresis.view" @click="() => gpio.hysteresis.showKeyboard()">
               <Keyboard v-bind="gpio.hysteresis" :write="(e: number) => gpio.hysteresis.write(e)"
                 :cancel="() => gpio.hysteresis.cancel()" />
             </el-col>
@@ -60,7 +59,7 @@
               <label>{{ $t('phases.gpio_temp_min') }}</label>
             </el-col>
             <el-col :span="3">
-              <input v-model="gpio.t_low.value" @click="() => gpio.t_low.showKeyboard()">
+              <input v-model="gpio.t_low.view" @click="() => gpio.t_low.showKeyboard()">
               <Keyboard v-bind="gpio.t_low" :write="(e: number) => gpio.t_low.write(e)"
                 :cancel="() => gpio.t_low.cancel()" />
             </el-col>
@@ -68,7 +67,7 @@
               <label>{{ $t('phases.gpio_temp_max') }}</label>
             </el-col>
             <el-col :span="3">
-              <input v-model="gpio.t_high.value" @click="() => gpio.t_high.showKeyboard()">
+              <input v-model="gpio.t_high.view" @click="() => gpio.t_high.showKeyboard()">
               <Keyboard v-bind="gpio.t_high" :write="(e: number) => gpio.t_high.write(e)"
                 :cancel="() => gpio.t_high.cancel()" />
             </el-col>
@@ -90,7 +89,7 @@
             <label v-else>{{ $t('phases.timeleft_temp') }}</label>
           </el-col>
           <el-col :span="3">
-            <input v-model="phase.next_timeleft.value" @click="() => phase.next_timeleft.showKeyboard()">
+            <input v-model="phase.next_timeleft.view" @click="() => phase.next_timeleft.showKeyboard()">
             <Keyboard v-bind="phase.next_timeleft" :write="(e: number) => phase.next_timeleft.write(e)"
               :cancel="() => phase.next_timeleft.cancel()" />
           </el-col>
@@ -108,7 +107,7 @@
             <label v-if="phase.next_type">{{ $t('phases.sensor_threshold') }}</label>
           </el-col>
           <el-col :span="3" :offset="1">
-            <input v-model="phase.next_sensor_threshold.value" @click="() => phase.next_sensor_threshold.showKeyboard()">
+            <input v-model="phase.next_sensor_threshold.view" @click="() => phase.next_sensor_threshold.showKeyboard()">
             <Keyboard v-bind="phase.next_sensor_threshold" :write="(e: number) => phase.next_sensor_threshold.write(e)"
               :cancel="() => phase.next_sensor_threshold.cancel()" />
           </el-col>
@@ -124,7 +123,7 @@
             <label>{{ heater.id }}</label>
           </el-col>
           <el-col :span="4">
-            <input v-model="heater.power.value" @click="() => heater.power.showKeyboard()">
+            <input v-model="heater.power.view" @click="() => heater.power.showKeyboard()">
             <Keyboard v-bind="heater.power" :write="(e: number) => heater.power.write(e)"
               :cancel="() => heater.power.cancel()" />
           </el-col>
@@ -160,7 +159,7 @@
               <label>{{ $t('phases.gpio_hysteresis') }}</label>
             </el-col>
             <el-col :span="3" :offset="1">
-              <input v-model="gpio.hysteresis.value" @click="() => gpio.hysteresis.showKeyboard()">
+              <input v-model="gpio.hysteresis.view" @click="() => gpio.hysteresis.showKeyboard()">
               <Keyboard v-bind="gpio.hysteresis" :write="(e: number) => gpio.hysteresis.write(e)"
                 :cancel="() => gpio.hysteresis.cancel()" />
             </el-col>
@@ -170,7 +169,7 @@
               <label>{{ $t('phases.gpio_temp_min') }}</label>
             </el-col>
             <el-col :span="3">
-              <input v-model="gpio.t_low.value" @click="() => gpio.t_low.showKeyboard()">
+              <input v-model="gpio.t_low.view" @click="() => gpio.t_low.showKeyboard()">
               <Keyboard v-bind="gpio.t_low" :write="(e: number) => gpio.t_low.write(e)"
                 :cancel="() => gpio.t_low.cancel()" />
             </el-col>
@@ -178,7 +177,7 @@
               <label>{{ $t('phases.gpio_temp_max') }}</label>
             </el-col>
             <el-col :span="3">
-              <input v-model="gpio.t_high.value" @click="() => gpio.t_high.showKeyboard()">
+              <input v-model="gpio.t_high.view" @click="() => gpio.t_high.showKeyboard()">
               <Keyboard v-bind="gpio.t_high" :write="(e: number) => gpio.t_high.write(e)"
                 :cancel="() => gpio.t_high.cancel()" />
             </el-col>
