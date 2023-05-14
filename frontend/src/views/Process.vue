@@ -150,7 +150,7 @@ onMounted(() => {
 </script>
 <style lang="scss" scoped>
 h1 {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .bold-text {
@@ -162,7 +162,7 @@ h1 {
 }
 
 .el-row {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .el-row:last-child {

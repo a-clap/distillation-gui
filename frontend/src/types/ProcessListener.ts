@@ -6,14 +6,14 @@ import {
     NotifyPhasesStatus,
     NotifyPhasesValidate,
 } from '../../wailsjs/go/backend/Events'
-import { distillation, process } from '../../wailsjs/go/models';
+import { backend, distillation, process } from '../../wailsjs/go/models';
 import { Listener } from './Listener';
 
 declare type PhaseCallbackConfig = (c: distillation.ProcessPhaseConfig) => void;
 declare type PhaseCallbackValidate = (v: distillation.ProcessConfigValidation) => void;
 declare type PhaseCallbackPhaseConfig = (n: number, v: distillation.ProcessPhaseConfig) => void;
 declare type PhaseCallbackPhaseCount = (v: distillation.ProcessPhaseCount) => void;
-declare type PhaseCallbackStatus = (v: distillation.ProcessStatus) => void;
+declare type PhaseCallbackStatus = (v: backend.ProcessStatus) => void;
 declare type PhaseCallbackGlobalConfig = (v: process.Config) => void;
 
 class processListener {
@@ -162,7 +162,7 @@ class processListener {
 
     private NotifyPhasesStatus(...args: any) {
         try {
-            let a: distillation.ProcessStatus = args[0]
+            let a: backend.ProcessStatus = args[0]
             this.status.notify(a)
         } catch (e) {
             console.log(e)

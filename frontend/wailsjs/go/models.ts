@@ -1,3 +1,63 @@
+export namespace backend {
+	
+	
+	export class ProcessStatus {
+	    unix_start_time: number;
+	    unix_end_time: number;
+	    running: boolean;
+	    done: boolean;
+	    phase_number: number;
+	    // Go type: time
+	    start_time: any;
+	    // Go type: time
+	    end_time: any;
+	    next: process.MoveToNextStatus;
+	    heaters: process.HeaterPhaseStatus[];
+	    temperature: process.TemperaturePhaseStatus[];
+	    gpio: process.GPIOPhaseStatus[];
+	    errors: string[];
+	
+	    static createFrom(source: any = {}) {
+	        return new ProcessStatus(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.unix_start_time = source["unix_start_time"];
+	        this.unix_end_time = source["unix_end_time"];
+	        this.running = source["running"];
+	        this.done = source["done"];
+	        this.phase_number = source["phase_number"];
+	        this.start_time = this.convertValues(source["start_time"], null);
+	        this.end_time = this.convertValues(source["end_time"], null);
+	        this.next = this.convertValues(source["next"], process.MoveToNextStatus);
+	        this.heaters = this.convertValues(source["heaters"], process.HeaterPhaseStatus);
+	        this.temperature = this.convertValues(source["temperature"], process.TemperaturePhaseStatus);
+	        this.gpio = this.convertValues(source["gpio"], process.GPIOPhaseStatus);
+	        this.errors = source["errors"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+
+}
+
 export namespace distillation {
 	
 	export class ProcessConfigValidation {

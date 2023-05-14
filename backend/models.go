@@ -27,7 +27,7 @@ func (*Models) ProcessConfigValidation() distillation.ProcessConfigValidation {
 	return distillation.ProcessConfigValidation{}
 }
 
-func (*Models) ProcessStatus() distillation.ProcessStatus {
+func (*Models) DistillationProcessStatus() distillation.ProcessStatus {
 	return distillation.ProcessStatus{}
 }
 
@@ -69,4 +69,8 @@ func (*Models) TemperatureErrorCodeEmptyBuffer() int {
 
 func (*Models) TemperatureErrorCodeInternal() int {
 	return int(distillation.ErrorCodeInternal)
+}
+
+func (*Models) ProcessStatus() ProcessStatus {
+	return ProcessStatus{}
 }

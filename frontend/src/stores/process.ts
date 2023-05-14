@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { PhasesDisable, PhasesEnable, PhasesMoveToNext, PhasesValidateConfig } from "../../wailsjs/go/backend/Backend";
 import { ProcessListener } from "../types/ProcessListener";
-import { distillation } from "../../wailsjs/go/models";
+import { backend, distillation } from "../../wailsjs/go/models";
 
 export interface Button {
     is_enabled: boolean;
@@ -74,7 +74,7 @@ export const useProcessStore = defineStore('process', {
             PhasesValidateConfig()
         },
 
-        onStatus(v: distillation.ProcessStatus) {
+        onStatus(v: backend.ProcessStatus) {
             this.running = v.running
             if(v.running || v.done) {
                 this.current_phase = v.phase_number.toString()
@@ -85,9 +85,9 @@ export const useProcessStore = defineStore('process', {
                     this.phase_sensor_threshold = v.next.temperature?.sensor_threshold.toFixed(2).toString()
                     this.phase_sensor = v.next.temperature?.sensor_id.toString()
                 }
-                this.start_time = v.start_time
+                this.start_time = formatDate(new Date(v.unix_start_time * 1000))
                 if (v.done) {
-                    this.end_time = v.end_time
+                    this.end_time = formatDate(new Date(v.unix_end_time * 1000))
                 } else {
                     this.end_time = ""
                 }
@@ -144,8 +144,6 @@ export const useProcessStore = defineStore('process', {
             }
             this.updateButtons()
             this.show_status = v.running || v.done
-
-            console.log(v)
         },
         
         updateButtons() {

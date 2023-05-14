@@ -14,6 +14,12 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
+type ProcessStatus struct {
+	StartTime int64 `json:"unix_start_time"`
+	EndTime   int64 `json:"unix_end_time"`
+	distillation.ProcessStatus
+}
+
 type eventEmitter struct {
 	ctx context.Context
 }
@@ -91,7 +97,13 @@ func (e *eventEmitter) OnPhasesCountChange(count distillation.ProcessPhaseCount)
 
 // OnStatusChange implements phases.Listener
 func (e *eventEmitter) OnStatusChange(status distillation.ProcessStatus) {
-	runtime.EventsEmit(e.ctx, NotifyPhasesStatus, status)
+	p := ProcessStatus{
+		StartTime:     status.StartTime.Unix(),
+		EndTime:       status.EndTime.Unix(),
+		ProcessStatus: status,
+	}
+
+	runtime.EventsEmit(e.ctx, NotifyPhasesStatus, p)
 }
 
 // OnGlobalConfig implements phases.Listener
