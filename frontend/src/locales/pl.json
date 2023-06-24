@@ -34,6 +34,11 @@
     "outputs": "WYJŚCIA",
     "hello": "hello message"
   },
+  "status": {
+    "title": "Status procesu",
+    "current_phase": "FAZA",
+    "temperature_sign": "°C"
+  },
   "phases": {
     "title": "Ustawienia procesu",
     "load": "Wczytaj parametry",

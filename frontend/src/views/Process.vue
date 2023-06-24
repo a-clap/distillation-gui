@@ -1,6 +1,11 @@
 <template>
   <main class="process-page">
+    <div class="header">
     <h1>{{ $t('process.title') }}</h1>
+      <router-link to="/status">
+        <el-button size="large" type="primary" :icon="ArrowRightBold" />
+      </router-link>
+    </div>
     <section class="process-box">
       <el-row justify="space-between">
         <el-col :span="6">
@@ -138,6 +143,7 @@
 import { onMounted } from 'vue';
 import { useProcessStore } from '../stores/process';
 import { storeToRefs } from 'pinia';
+import { ArrowRightBold } from '@element-plus/icons-vue'
 
 const process = useProcessStore()
 const { is_valid } = storeToRefs(process)
@@ -149,8 +155,21 @@ onMounted(() => {
 
 </script>
 <style lang="scss" scoped>
-h1 {
-  margin-bottom: 1rem;
+
+.header{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  .el-button{
+    width: 100px;
+    font-size: 20px;
+    margin-right: 10px;
+  }
+}
+
+.header {
+  margin-bottom: 3rem;
 }
 
 .bold-text {
