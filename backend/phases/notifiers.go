@@ -6,8 +6,6 @@
 package phases
 
 import (
-	"log"
-
 	"github.com/a-clap/distillation/pkg/distillation"
 	"github.com/a-clap/distillation/pkg/process"
 	"golang.org/x/exp/slices"
@@ -15,7 +13,6 @@ import (
 
 // notifyProcessCount notifies listeners about distillation.ProcessPhaseCount change
 func notifyProcessCount(count distillation.ProcessPhaseCount) {
-	log.Println("notifypcount")
 	for _, listener := range handler.listeners {
 		listener.OnPhasesCountChange(count)
 	}
