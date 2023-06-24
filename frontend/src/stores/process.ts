@@ -81,7 +81,8 @@ export const useProcessStore = defineStore('process', {
         onStatus(v: backend.ProcessStatus) {
             this.running = v.running
             if (v.running || v.done) {
-                this.current_phase = v.phase_number.toString()
+                // Current phase from backend starts from 0
+                this.current_phase = (v.phase_number + 1).toString()
                 // Time
                 this.current_type_time = v.next.type == 0
                 this.phase_timeleft = v.next.time_left.toString()
