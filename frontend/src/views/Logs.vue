@@ -9,6 +9,10 @@
         <el-table-v2 :columns="columns" :data="data" :width="750" :height="500" fixed />
       </el-main>
     </el-container>
+    <v-idle
+        @idle="onidle"
+        :loop="true"
+        :duration="300" />
   </main>
 </template>
   
@@ -56,6 +60,14 @@ const generateData = (
 
 const columns = generateColumns()
 const data = generateData(columns)
+
+
+function onidle() {
+  console.log("onidle")
+}
+function onremind() {
+  console.log("onremind")
+}
 
 </script>
 <style lang="scss" scoped>

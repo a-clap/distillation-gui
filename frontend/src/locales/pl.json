@@ -7,7 +7,7 @@
     "ds": "DS18B20",
     "heaters": "Grzałki",
     "outputs": "Wyjścia",
-    "names": "Nazwy",
+    "system": "System",
     "logs": "Logi"
   },
   "process": {
@@ -104,7 +104,7 @@
     "message": "Wiadomość",
     "reset_skipped": "Przywróc wszystkie błędy"
   },
-  "names": {
+  "system": {
     "title": "Nazwy",
     "pt": "Czujniki PT100",
     "ds": "Czujniki DS18B20"

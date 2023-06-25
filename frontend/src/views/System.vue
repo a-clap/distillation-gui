@@ -1,9 +1,9 @@
 <template>
     <main>
-        <h1>{{ $t('names.title') }}</h1>
+        <h1>{{ $t('system.title') }}</h1>
         <el-row>
             <el-col class="bold-text" span="25">
-                {{ $t('names.ds') }}
+                {{ $t('system.ds') }}
             </el-col>
         </el-row>
         <template v-for="(ds, index) in dsStore.ds" :key="index">
@@ -19,7 +19,7 @@
         </template>
         <el-row>
             <el-col class="bold-text" span="25">
-                {{ $t('names.pt') }}
+                {{ $t('system.pt') }}
             </el-col>
         </el-row>
         <template v-for="(pt, index) in ptStore.pt" :key="index">

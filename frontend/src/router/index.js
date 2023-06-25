@@ -32,8 +32,8 @@ const router = createRouter({
             component: () => import('../views/Outputs.vue')
         },
         {
-            path: '/names',
-            component: () => import('../views/Names.vue')
+            path: '/system',
+            component: () => import('../views/System.vue')
         },
         {
             path: '/logs',

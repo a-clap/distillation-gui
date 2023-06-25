@@ -6,7 +6,7 @@ require (
 	github.com/a-clap/distillation v0.0.0-20230507114012-5559d37bb4f5
 	github.com/a-clap/embedded v0.0.0-20230503172447-7331fca0a662
 	github.com/a-clap/logging v0.0.0-20230503053547-d9ae4a43c7a4
-	github.com/wailsapp/wails/v2 v2.4.1
+	github.com/wailsapp/wails/v2 v2.5.1
 	golang.org/x/exp v0.0.0-20230425010034-47ecfdc1ba53
 	gopkg.in/yaml.v3 v3.0.1
 )

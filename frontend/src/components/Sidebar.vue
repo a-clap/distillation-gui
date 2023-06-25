@@ -26,7 +26,7 @@
         <span class="text">{{ $t('menu.pt100') }}</span>
       </router-link>
       <router-link class="button" to="/ds">
-        <span class="material-icons">thermostat</span>
+        <span class="material-icons">dew_point</span>
         <span class="text">{{ $t('menu.ds') }}</span>
       </router-link>
       <router-link class="button" to="/heaters">
@@ -37,13 +37,13 @@
         <span class="material-icons">output</span>
         <span class="text">{{ $t('menu.outputs') }}</span>
       </router-link>
-      <router-link class="button" to="/names">
-        <span class="material-icons">text_snippet</span>
-        <span class="text">{{ $t('menu.names') }}</span>
-      </router-link>
       <router-link class="button" to="/logs">
-        <span class="material-icons">text_snippet</span>
+        <span class="material-icons">wysiwyg</span>
         <span class="text">{{ $t('menu.logs') }}</span>
+      </router-link>
+      <router-link class="button" to="/system">
+        <span class="material-icons">settings_suggest</span>
+        <span class="text">{{ $t('menu.system') }}</span>
       </router-link>
     </div>
   </aside>
