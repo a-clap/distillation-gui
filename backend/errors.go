@@ -23,6 +23,11 @@ const (
 )
 
 const (
+	ErrSetNTP = iota + 45
+	ErrSetTime
+)
+
+const (
 	ErrPhaseGetCount = iota + 50
 	ErrPhaseGetPhaseConfigs
 	ErrPhaseGetGlobalConfig

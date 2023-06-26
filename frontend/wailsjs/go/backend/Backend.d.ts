@@ -31,6 +31,10 @@ export function HeatersGet():Promise<Array<parameters.Heater>>;
 
 export function LoadParameters():Promise<void>;
 
+export function NTPGet():Promise<boolean>;
+
+export function NTPSet(arg1:boolean):Promise<void>;
+
 export function PTEnable(arg1:string,arg2:boolean):Promise<void>;
 
 export function PTGet():Promise<Array<parameters.PT>>;
@@ -62,5 +66,7 @@ export function PhasesSetPhaseCount(arg1:number):Promise<void>;
 export function PhasesValidateConfig():Promise<void>;
 
 export function SaveParameters():Promise<void>;
+
+export function TimeSet(arg1:number):Promise<void>;
 
 export function WifiAPList():Promise<Array<string>>;

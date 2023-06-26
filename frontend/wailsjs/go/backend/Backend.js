@@ -54,6 +54,14 @@ export function LoadParameters() {
   return window['go']['backend']['Backend']['LoadParameters']();
 }
 
+export function NTPGet() {
+  return window['go']['backend']['Backend']['NTPGet']();
+}
+
+export function NTPSet(arg1) {
+  return window['go']['backend']['Backend']['NTPSet'](arg1);
+}
+
 export function PTEnable(arg1, arg2) {
   return window['go']['backend']['Backend']['PTEnable'](arg1, arg2);
 }
@@ -116,6 +124,10 @@ export function PhasesValidateConfig() {
 
 export function SaveParameters() {
   return window['go']['backend']['Backend']['SaveParameters']();
+}
+
+export function TimeSet(arg1) {
+  return window['go']['backend']['Backend']['TimeSet'](arg1);
 }
 
 export function WifiAPList() {

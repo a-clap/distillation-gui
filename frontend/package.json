@@ -9,11 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "dayjs": "^1.11.8",
     "element-plus": "^2.3.3",
     "material-icons": "^1.13.6",
     "pinia": "^2.0.35",
-    "v-idle": "^0.2.1",
-    "v-idle-3": "^0.3.14",
     "vue": "^3.2.37",
     "vue-i18n": "^9.2.2",
     "vue-router": "^4.1.6"

@@ -229,16 +229,18 @@ export class Phases {
         this.gpios = []
         this.sensors = []
         let sensorNames: string[] = []
-        sensors.forEach((v) => {
-            let [name, got] = useNameStore().id_to_name(v)
-            if (got) {
-                sensorNames.push(name)
-            } else {
-                ErrorListener.sendError(AppErrorCodes.SensorIDNotFound)
-                sensorNames.push(v)
-            }
+        if(sensors) {
+            sensors.forEach((v) => {
+                let [name, got] = useNameStore().id_to_name(v)
+                if (got) {
+                    sensorNames.push(name)
+                } else {
+                    ErrorListener.sendError(AppErrorCodes.SensorIDNotFound)
+                    sensorNames.push(v)
+                }
 
-        })
+            })
+        }
         this.sensors = sensorNames
 
         if (gpios != null) {

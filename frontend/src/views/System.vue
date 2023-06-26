@@ -1,62 +1,153 @@
 <template>
-    <main>
-        <h1>{{ $t('system.title') }}</h1>
-        <el-row>
-            <el-col class="bold-text" span="25">
-                {{ $t('system.ds') }}
-            </el-col>
-        </el-row>
+  <main>
+    <h1>{{ $t('system.title') }}</h1>
+    <el-tabs v-model="activated" type="card" tabPosition="left" class="demo-tabs">
+      <el-tab-pane :label="$t('system.names')" name="names">
+        <div class="name-container">{{ $t('system.ds') }}</div>
         <template v-for="(ds, index) in dsStore.ds" :key="index">
-            <el-row align="middle">
-                <el-col :span="5">
-                    {{ ds.id }}
-                </el-col>
-                <el-col :span="4" :offset="2">
-                    <input class="name-input" v-model="ds.name.view" @click="() => ds.name.showKeyboard()">
-                    <Keyboard v-bind="ds.name" :write="(e: string) => ds.writeName(e)" :cancel="() => ds.name.cancel()" />
-                </el-col>
-            </el-row>
+          <section class="name-container">
+            <div class="name-elem">{{ ds.id }}</div>
+            <input class="name-input" v-model="ds.name.view" @click="() => ds.name.showKeyboard()">
+            <Keyboard v-bind="ds.name" :write="(e: string) => ds.writeName(e)" :cancel="() => ds.name.cancel()"/>
+          </section>
         </template>
-        <el-row>
-            <el-col class="bold-text" span="25">
-                {{ $t('system.pt') }}
-            </el-col>
-        </el-row>
+        <div class="name-container">{{ $t('system.pt') }}</div>
         <template v-for="(pt, index) in ptStore.pt" :key="index">
-            <el-row align="middle">
-                <el-col :span="5">
-                    {{ pt.id }}
-                </el-col>
-                <el-col :span="4" :offset="2">
-                    <input class="name-input" v-model="pt.name.view" @click="() => pt.name.showKeyboard()">
-                    <Keyboard v-bind="pt.name" :write="(e: string) => pt.writeName(e)" :cancel="() => pt.name.cancel()" />
-                </el-col>
-            </el-row>
+          <section class="name-container">
+            <div class="name-elem">{{ pt.id }}</div>
+            <input class="name-input" v-model="pt.name.view" @click="() => pt.name.showKeyboard()">
+            <Keyboard v-bind="pt.name" :write="(e: string) => pt.writeName(e)" :cancel="() => pt.name.cancel()"/>
+          </section>
         </template>
-    </main>
+      </el-tab-pane>
+      <el-tab-pane :label="$t('system.time')" name="time">
+        <div class="ntp-container">
+          <div>{{ $t('system.time_now') }}: {{ timeNow }}</div>
+          <el-switch v-model="ntp" :active-text="$t('system.ntp_time')" size="large"/>
+        </div>
+
+        <div class="time-picker" v-if=!ntpEnabled>
+          <el-time-picker
+              v-model="currentTime"
+              :placeholder="$t('system.pick_time')"
+              :clearable=false
+              size="large"
+          />
+          <el-date-picker
+              v-model="currentDate"
+              type="date"
+              :placeholder="$t('system.pick_date')"
+              :clearable=false
+              size="large"
+          />
+          <el-button type="primary" size="large" @click="setTime">
+            {{ $t('system.set_time') }}
+          </el-button>
+        </div>
+      </el-tab-pane>
+    </el-tabs>
+  </main>
 </template>
 
 <script setup lang="ts">
 
-import Keyboard from "../components/Keyboard.vue"
-import { useDSStore } from "../stores/ds";
-import { usePTStore } from "../stores/pt";
+import {useDSStore} from "../stores/ds";
+import {usePTStore} from "../stores/pt";
+import {computed, onMounted, ref} from "vue";
+import Keyboard from "../components/Keyboard.vue";
+import dayjs from 'dayjs'
+import {NTPGet, NTPSet, TimeSet} from "../../wailsjs/go/backend/Backend";
 
+const currentDate = ref(new Date())
+const currentTime = ref(new Date())
+const activated = ref('names')
 const dsStore = useDSStore()
 const ptStore = usePTStore()
+
+const ntpEnabled = ref(false)
+const ntp = computed({
+  get: () => ntpEnabled.value,
+  set: (v: boolean) => {
+    if (!v) {
+      currentTime.value = new Date()
+    }
+
+    NTPSet(v).then((err: any) => {
+      console.log(err)
+      if (!err) {
+        ntpEnabled.value = v
+      }
+    })
+  }
+})
+
+const timeNow = ref('')
+onMounted(() => {
+
+  NTPGet().then((value: boolean) => {
+    ntp.value = value
+  })
+
+  timeNow.value = dayjs().format('HH:mm:ss DD/MM/YYYY')
+  setInterval(() => {
+    timeNow.value = dayjs().format('HH:mm:ss DD/MM/YYYY')
+  }, 1000)
+})
+
+function setTime() {
+  let fullDate = currentTime.value
+  fullDate.setFullYear(currentDate.value.getFullYear())
+  fullDate.setMonth(currentDate.value.getMonth())
+  fullDate.setDate(currentDate.value.getDate())
+
+  TimeSet(fullDate.getTime())
+}
 
 </script>
 
 <style lang="scss" scoped>
 h1 {
-    margin-bottom: 1rem;
+  margin-bottom: 1rem;
 }
 
 .name-input {
-    width: 150px
+  width: 150px
 }
 
-.el-row {
-    margin-bottom: 0.5rem;
+.name-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+
+  .name-input {
+    margin-left: 3rem;
+  }
+
+  .keyboard-window {
+    font-size: initial;
+  }
 }
+
+.ntp-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.ntp-container > * {
+  margin-bottom: 2rem;
+}
+
+.time-picker {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+
+}
+
+
 </style>

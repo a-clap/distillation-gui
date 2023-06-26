@@ -102,12 +102,18 @@
     "id": "Kod",
     "timestamp": "Czas",
     "message": "Wiadomość",
-    "reset_skipped": "Przywróc wszystkie błędy"
+    "reset_skipped": "Przywróć wszystkie błędy"
   },
   "system": {
-    "title": "Nazwy",
+    "title": "System",
     "pt": "Czujniki PT100",
-    "ds": "Czujniki DS18B20"
+    "ds": "Czujniki DS18B20",
+    "names": "Nazwy",
+    "set_time": "Ustaw czas",
+    "time": "Czas",
+    "time_now": "Aktualny czas",
+    "ntp_time": "Czas z Internetu",
+    "pick_time": "Ustaw czas"
   },
   "errors": {
     "submit": "OK",
