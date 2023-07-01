@@ -67,7 +67,9 @@
   "wifi": {
     "title": "Konfiguracja WIFI",
     "enable": "WIFI",
-    "reload_ap": "Pobierz sieci"
+    "reload_ap": "Pobierz sieci",
+    "status": "Status",
+    "ap_status": "Nazwa"
   },
   "pt100": {
     "title": "Konfiguracja czujników PT100",
@@ -113,7 +115,10 @@
     "time": "Czas",
     "time_now": "Aktualny czas",
     "ntp_time": "Czas z Internetu",
-    "pick_time": "Ustaw czas"
+    "pick_time": "Ustaw czas",
+    "net": "Sieć",
+    "net_interface": "Interfejs",
+    "net_ip": "Adres IP"
   },
   "errors": {
     "submit": "OK",
