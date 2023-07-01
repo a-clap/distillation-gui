@@ -52,8 +52,8 @@
         </section>
         <section v-for="(netInterface, index) in netInterfaces" :key="index">
           <section class="net-interface">
-            <div> {{  netInterface.name }} </div>
-            <div> {{ netInterface.ip_addr }} </div>
+            <div> {{ netInterface.name }}</div>
+            <div> {{ netInterface.ip_addr }}</div>
           </section>
         </section>
       </el-tab-pane>
@@ -70,6 +70,9 @@ import Keyboard from "../components/Keyboard.vue";
 import dayjs from 'dayjs'
 import {ListInterfaces, NTPGet, NTPSet, TimeSet} from "../../wailsjs/go/backend/Backend";
 import {backend} from "../../wailsjs/go/models";
+import {Loader} from "../types/Loader";
+import {AppErrorCodes} from "../stores/error_codes";
+import {i18n} from "../i18n";
 import NetInterface = backend.NetInterface;
 
 const currentDate = ref(new Date())
@@ -82,22 +85,26 @@ const ntpEnabled = ref(false)
 const ntp = computed({
   get: () => ntpEnabled.value,
   set: (v: boolean) => {
+
+    let msg = i18n.global.t('system.ntp_loading')
+    Loader.show(AppErrorCodes.NTPFailed, 5000, msg)
     if (!v) {
       currentTime.value = new Date()
     }
 
     NTPSet(v).then((err: any) => {
-      console.log(err)
       if (!err) {
         ntpEnabled.value = v
       }
+      Loader.close()
     })
   }
 })
 
 const netInterfaces = ref<NetInterface[]>([])
-
 const timeNow = ref('')
+
+
 onMounted(() => {
 
   NTPGet().then((value: boolean) => {
@@ -122,7 +129,9 @@ function setTime() {
   fullDate.setMonth(currentDate.value.getMonth())
   fullDate.setDate(currentDate.value.getDate())
 
-  TimeSet(fullDate.getTime())
+  TimeSet(fullDate.getTime()).then(() => {
+
+  })
 }
 
 </script>

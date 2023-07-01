@@ -17,7 +17,8 @@ var assets embed.FS
 
 var (
 	mock = flag.Bool("mock", false, "use mocks")
-	addr = flag.String("addr", "bananapi-zero.local:50002", "the distillation port")
+	// addr = flag.String("addr", "bananapi-zero.local:50002", "the distillation port")
+	addr = flag.String("addr", "localhost:50002", "the distillation port")
 )
 
 func main() {

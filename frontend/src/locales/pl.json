@@ -118,7 +118,11 @@
     "pick_time": "Ustaw czas",
     "net": "Sieć",
     "net_interface": "Interfejs",
-    "net_ip": "Adres IP"
+    "net_ip": "Adres IP",
+    "ntp_loading": "Przestawiam źródło czasu..."
+  },
+  "loader": {
+    "loading": "Ładuję..."
   },
   "errors": {
     "submit": "OK",
@@ -154,6 +158,8 @@
     "81": "Błąd połączenia z czujnikami",
     "82": "Błąd połączenia z czujnikami",
     "100": "Wewnętrzny błąd czujnika PT100 - czy jest prawidłowo podłączony?",
-    "101": "Wewnętrzny błąd czujnika DS18B20 - czy jest prawidłowo podłączony?"
+    "101": "Wewnętrzny błąd czujnika DS18B20 - czy jest prawidłowo podłączony?",
+    "102": "Nie znaleziono zapisanych czujników",
+    "103": "Nieudane przestawienie źródła czasu"
   }
 }

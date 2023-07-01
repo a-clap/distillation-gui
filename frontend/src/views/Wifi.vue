@@ -25,10 +25,6 @@
         <div v-if="connected"> {{ ap }}</div>
       </section>
     </section>
-
-    <section class="status" v-if="connected">
-
-    </section>
     <section class="aplist" v-if="wifi.enabled">
       <el-scrollbar>
         <el-table :data="wifi.apList"
@@ -53,6 +49,7 @@ import {onMounted, ref} from "vue";
 import {WifiIsConnected} from "../../wailsjs/go/backend/Backend";
 import {backend} from "../../wailsjs/go/models";
 import {Check, Close} from "@element-plus/icons-vue";
+import {Loader} from "../types/Loader";
 
 const wifi = useWIFIStore()
 
