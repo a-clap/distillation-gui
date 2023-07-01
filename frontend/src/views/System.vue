@@ -45,6 +45,18 @@
           </el-button>
         </div>
       </el-tab-pane>
+      <el-tab-pane :label="$t('system.net')" name="net">
+        <section class="net-interface">
+          <h3>{{ $t(('system.net_interface')) }}</h3>
+          <h3>{{ $t(('system.net_ip')) }}</h3>
+        </section>
+        <section v-for="(netInterface, index) in netInterfaces" :key="index">
+          <section class="net-interface">
+            <div> {{  netInterface.name }} </div>
+            <div> {{ netInterface.ip_addr }} </div>
+          </section>
+        </section>
+      </el-tab-pane>
     </el-tabs>
   </main>
 </template>
@@ -56,7 +68,9 @@ import {usePTStore} from "../stores/pt";
 import {computed, onMounted, ref} from "vue";
 import Keyboard from "../components/Keyboard.vue";
 import dayjs from 'dayjs'
-import {NTPGet, NTPSet, TimeSet} from "../../wailsjs/go/backend/Backend";
+import {ListInterfaces, NTPGet, NTPSet, TimeSet} from "../../wailsjs/go/backend/Backend";
+import {backend} from "../../wailsjs/go/models";
+import NetInterface = backend.NetInterface;
 
 const currentDate = ref(new Date())
 const currentTime = ref(new Date())
@@ -81,6 +95,8 @@ const ntp = computed({
   }
 })
 
+const netInterfaces = ref<NetInterface[]>([])
+
 const timeNow = ref('')
 onMounted(() => {
 
@@ -92,6 +108,12 @@ onMounted(() => {
   setInterval(() => {
     timeNow.value = dayjs().format('HH:mm:ss DD/MM/YYYY')
   }, 1000)
+
+  ListInterfaces().then((interfaces: NetInterface[]) => {
+    netInterfaces.value = interfaces
+    console.log(interfaces)
+  })
+
 })
 
 function setTime() {
@@ -139,6 +161,16 @@ h1 {
 
 .ntp-container > * {
   margin-bottom: 2rem;
+}
+
+.net-interface {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  * {
+    margin-bottom: 1rem;
+  }
 }
 
 .time-picker {

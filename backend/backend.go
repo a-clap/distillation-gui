@@ -11,7 +11,6 @@ import (
 	"github.com/a-clap/distillation-gui/backend/parameters"
 	"github.com/a-clap/distillation-gui/backend/phases"
 	"github.com/a-clap/distillation-gui/backend/pt"
-	"github.com/a-clap/distillation-gui/backend/wifi"
 	"github.com/a-clap/embedded/pkg/ds18b20"
 	embeddedgpio "github.com/a-clap/embedded/pkg/gpio"
 	"github.com/a-clap/logging"
@@ -185,17 +184,6 @@ func (b *Backend) PTSetName(id, name string) {
 		logger.Error("PTSetName error ", logging.String("error", err.Error()))
 		b.eventEmitter.OnError(ErrPTSetName)
 	}
-}
-
-func (b *Backend) WifiAPList() []string {
-	logger.Debug("WifiAPList")
-	aps, err := wifi.AP()
-	if err != nil {
-		logger.Error("WifiAPList", logging.String("error", err.Error()))
-		b.eventEmitter.OnError(ErrWIFIAPList)
-		return nil
-	}
-	return aps
 }
 
 func (b *Backend) GPIOGet() []parameters.GPIO {

@@ -1,0 +1,167 @@
+heaters:
+    - id: heater_1
+      enabled: true
+    - id: heater_2
+      enabled: false
+    - id: heater_3
+      enabled: false
+ds:
+    - dsconfig:
+        dssensorconfig:
+            enabled: false
+            sensorconfig:
+                name: ds 2
+                id: ds_2
+                correction: 0
+                resolution: 12
+                pollinterval: 0s
+                samples: 10
+    - dsconfig:
+        dssensorconfig:
+            enabled: false
+            sensorconfig:
+                name: ds
+                id: ds_1
+                correction: 0
+                resolution: 12
+                pollinterval: 0s
+                samples: 10
+pt:
+    - ptconfig:
+        ptsensorconfig:
+            enabled: true
+            sensorconfig:
+                name: T1
+                id: PT_1
+                correction: 0
+                asyncpoll: false
+                pollinterval: 0s
+                samples: 10
+    - ptconfig:
+        ptsensorconfig:
+            enabled: true
+            sensorconfig:
+                name: T2
+                id: PT_2
+                correction: 0
+                asyncpoll: false
+                pollinterval: 0s
+                samples: 10
+    - ptconfig:
+        ptsensorconfig:
+            enabled: false
+            sensorconfig:
+                name: p3
+                id: PT_3
+                correction: 0
+                asyncpoll: false
+                pollinterval: 0s
+                samples: 10
+gpio:
+    - gpioconfig:
+        gpioconfig:
+            config:
+                id: gpio_1
+                direction: 0
+                activelevel: 1
+                value: false
+    - gpioconfig:
+        gpioconfig:
+            config:
+                id: gpio_2
+                direction: 1
+                activelevel: 1
+                value: false
+process:
+    phasenumber: 3
+    phases:
+        - next:
+            type: 0
+            sensors: []
+            sensorid: PT_1
+            sensorthreshold: 0
+            timeleft: 999999
+          heaters:
+            - id: heater_1
+              power: 0
+          gpio:
+            - enabled: false
+              id: gpio_1
+              sensorid: PT_1
+              tlow: 0
+              thigh: 0
+              hysteresis: 0
+              inverted: false
+            - enabled: false
+              id: gpio_2
+              sensorid: PT_1
+              tlow: 0
+              thigh: 0
+              hysteresis: 0
+              inverted: false
+        - next:
+            type: 0
+            sensors: []
+            sensorid: PT_1
+            sensorthreshold: 0
+            timeleft: 1
+          heaters:
+            - id: heater_1
+              power: 0
+          gpio:
+            - enabled: false
+              id: gpio_1
+              sensorid: PT_1
+              tlow: 0
+              thigh: 0
+              hysteresis: 0
+              inverted: false
+            - enabled: false
+              id: gpio_2
+              sensorid: PT_1
+              tlow: 0
+              thigh: 0
+              hysteresis: 0
+              inverted: false
+        - next:
+            type: 0
+            sensors: []
+            sensorid: PT_1
+            sensorthreshold: 0
+            timeleft: 1
+          heaters:
+            - id: heater_1
+              power: 0
+          gpio:
+            - enabled: false
+              id: gpio_1
+              sensorid: PT_1
+              tlow: 0
+              thigh: 0
+              hysteresis: 0
+              inverted: false
+            - enabled: false
+              id: gpio_2
+              sensorid: PT_1
+              tlow: 0
+              thigh: 0
+              hysteresis: 0
+              inverted: false
+    globalgpio:
+        - enabled: false
+          id: gpio_1
+          sensorid: PT_1
+          tlow: 0
+          thigh: 0
+          hysteresis: 0
+          inverted: false
+        - enabled: false
+          id: gpio_2
+          sensorid: PT_1
+          tlow: 0
+          thigh: 0
+          hysteresis: 0
+          inverted: false
+    sensors:
+        - PT_1
+        - PT_2

@@ -50,6 +50,10 @@ export function HeatersGet() {
   return window['go']['backend']['Backend']['HeatersGet']();
 }
 
+export function ListInterfaces() {
+  return window['go']['backend']['Backend']['ListInterfaces']();
+}
+
 export function LoadParameters() {
   return window['go']['backend']['Backend']['LoadParameters']();
 }
@@ -132,4 +136,8 @@ export function TimeSet(arg1) {
 
 export function WifiAPList() {
   return window['go']['backend']['Backend']['WifiAPList']();
+}
+
+export function WifiIsConnected() {
+  return window['go']['backend']['Backend']['WifiIsConnected']();
 }

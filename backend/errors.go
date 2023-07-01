@@ -20,6 +20,7 @@ const (
 
 const (
 	ErrWIFIAPList = iota + 40
+	ErrWifiIsConnected
 )
 
 const (

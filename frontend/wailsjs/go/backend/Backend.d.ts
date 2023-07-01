@@ -29,6 +29,8 @@ export function HeaterEnable(arg1:string,arg2:boolean):Promise<void>;
 
 export function HeatersGet():Promise<Array<parameters.Heater>>;
 
+export function ListInterfaces():Promise<Array<backend.NetInterface>>;
+
 export function LoadParameters():Promise<void>;
 
 export function NTPGet():Promise<boolean>;
@@ -70,3 +72,5 @@ export function SaveParameters():Promise<void>;
 export function TimeSet(arg1:number):Promise<void>;
 
 export function WifiAPList():Promise<Array<string>>;
+
+export function WifiIsConnected():Promise<backend.WifiConnected>;
