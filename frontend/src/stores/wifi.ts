@@ -1,6 +1,8 @@
-import { defineStore } from "pinia";
+import {defineStore} from "pinia";
 import Parameter from "../types/Parameter";
-import { WifiAPList } from "../../wailsjs/go/backend/Backend";
+import {WifiAPList, WifiConnect} from "../../wailsjs/go/backend/Backend";
+import {Loader} from "../types/Loader";
+import {AppErrorCodes} from "./error_codes";
 
 export const useWIFIStore = defineStore('wifi', {
     state: () => {
@@ -10,7 +12,8 @@ export const useWIFIStore = defineStore('wifi', {
             enabled: false,
             busy: false,
             connected: false,
-            password: new Parameter("", false, () => { }) as Parameter
+            password: new Parameter("", false, () => {
+            }) as Parameter
         }
     },
     actions: {
@@ -18,7 +21,10 @@ export const useWIFIStore = defineStore('wifi', {
             this.password = new Parameter("", false, this.connect)
         },
         connect(psk: string) {
-            console.log("connecting to " + this.ssid + " with password " + psk)
+            Loader.show(AppErrorCodes.WifiConnect, 2000)
+            WifiConnect(this.ssid, psk).then(() => {
+                Loader.close()
+            })
         },
         enable() {
             this.getAP()
@@ -32,14 +38,16 @@ export const useWIFIStore = defineStore('wifi', {
                 WifiAPList().then(
                     aps => {
                         aps.forEach(element => {
-                            newAps.push({ ssid: element })
+                            newAps.push({ssid: element})
                         });
                         this.apList = newAps
                         this.busy = false
                     },
                     error => {
                         console.debug(error)
-                        setTimeout(() => { this.getAP() }, 200);
+                        setTimeout(() => {
+                            this.getAP()
+                        }, 200);
                     })
             }
         }

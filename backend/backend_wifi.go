@@ -42,3 +42,12 @@ func (b *Backend) WifiIsConnected() WifiConnected {
 		AP:        ap,
 	}
 }
+
+func (b *Backend) WifiConnect(ap, psk string) {
+	logger.Debug("WifiConnect", logging.String("ap", ap))
+	_ = wifi.Disconnect()
+
+	if err := wifi.Connect(ap, psk); err != nil {
+		b.eventEmitter.OnError(ErrWifiConnect)
+	}
+}

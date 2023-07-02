@@ -73,4 +73,6 @@ export function TimeSet(arg1:number):Promise<void>;
 
 export function WifiAPList():Promise<Array<string>>;
 
+export function WifiConnect(arg1:string,arg2:string):Promise<void>;
+
 export function WifiIsConnected():Promise<backend.WifiConnected>;

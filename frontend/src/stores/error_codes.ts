@@ -4,4 +4,5 @@ export enum AppErrorCodes {
     DSInternalError = 101,
     SensorIDNotFound = 102,
     NTPFailed = 103,
+    WifiConnect = 110,
 }

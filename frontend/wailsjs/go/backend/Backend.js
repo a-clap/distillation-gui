@@ -138,6 +138,10 @@ export function WifiAPList() {
   return window['go']['backend']['Backend']['WifiAPList']();
 }
 
+export function WifiConnect(arg1, arg2) {
+  return window['go']['backend']['Backend']['WifiConnect'](arg1, arg2);
+}
+
 export function WifiIsConnected() {
   return window['go']['backend']['Backend']['WifiIsConnected']();
 }

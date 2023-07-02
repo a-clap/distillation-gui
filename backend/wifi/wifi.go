@@ -52,7 +52,7 @@ func Connect(ap, psk string) error {
 			ID:   0,
 			SSID: ap,
 		},
-		Password: "psk",
+		Password: psk,
 	}
 
 	return handler.Client.Connect(w)

@@ -160,6 +160,7 @@
     "100": "Wewnętrzny błąd czujnika PT100 - czy jest prawidłowo podłączony?",
     "101": "Wewnętrzny błąd czujnika DS18B20 - czy jest prawidłowo podłączony?",
     "102": "Nie znaleziono zapisanych czujników",
-    "103": "Nieudane przestawienie źródła czasu"
+    "103": "Nieudane przestawienie źródła czasu",
+    "110": "Błąd połączenia z WIfi"
   }
 }
