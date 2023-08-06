@@ -11,6 +11,10 @@
 
 This repo is part of personal distillation project based on https://wiki.banana-pi.org/Banana_Pi_BPI-M2_ZERO[BananaPi Zero], with {distro-link}[distillation distro],  {embedded-link}[embedded background] and {distillation}[distillation process handling].
 
+== Abandoned
+
+WARNING: This repo is abandoned in favor of a monorepo, which lives https://github.com/a-clap/distillation-project[here].
+
 == What is this?
 
 GUI baked with {wails-link}[Wails], {vue-link}[Vue3] and sugar-coated with {element-plus-link}[Element Plus].
